@@ -1,0 +1,22 @@
+{
+  "name": "smartslides",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gecanow/SmartSlides.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gecanow/SmartSlides/issues"
+  },
+  "homepage": "https://github.com/gecanow/SmartSlides#readme",
+  "dependencies": {
+    "googleapis": "^39.2.0"
+  }
+}

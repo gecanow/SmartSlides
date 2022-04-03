@@ -163,20 +163,20 @@ var processSpeech = function(transcript) {
     var said_prev_slide = userSaid(transcript.toLowerCase(), ["previous slide"]);
 
     // current speech recognition
-    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this"]);
-    var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight"]);
+    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw circle", "circle", "circle here"]);
+    var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight", "make highlight", "highlight here"]);
     var said_laser = userSaid(transcript.toLowerCase(), ["start laser pointer", "laser", "cursor", "laser pointer"]);
 
     if (said_create_circle) { // also change this else to recognize the create circle gesture
 
       // use cursorPosition variable and interact with google slide api
-      console.log("I am going to create a circle now");
+      console.log("I heard you wanted to draw a circle");
 
     }
 
     if (said_highlight) {
       //
-      console.log("Success in recognizing you said highlight");
+      console.log("I heard you wanted to make a highlight");
 
     }
 

@@ -12,7 +12,68 @@ var usingSpeech = true; // set to false if check the speechCheckbox, default is 
 //
 // MAIN GAME LOOP
 // Called every time the Leap provides a new frame of data
+Leap.loop({enableGestures: true}, function(frame){
 Leap.loop({ hand: function(hand) {
+
+  if(frame.valid && frame.gestures.length > 0){
+    frame.gestures.forEach(function(gesture){
+        let handType;
+        var handIds = gesture.handIds;
+        handIds.forEach(function(handId) {
+          let handNow = frame.hand(handId);
+          handType = handNow.type;
+          // console.log(hand)
+          console.log("hand: ", handNow.type)
+        });
+
+        switch (gesture.type){
+          case "circle":
+              console.log("Circle Gesture");
+              // CircleGesture circle = new CircleGesture(gesture);
+              var clockwise = false;
+              var pointableID = gesture.pointableIds[0];
+              var direction = frame.pointable(pointableID).direction;
+              var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+              if (dotProduct  >  0) clockwise = true;
+
+              if (clockwise){
+                console.log("Clockwise Circle Gesture")
+              } else {
+                console.log("Counterclockwise Circle Gesture")
+              }
+
+              break;
+          case "keyTap":
+              console.log("Key Tap Gesture");
+              break;
+          case "screenTap":
+              console.log("Screen Tap Gesture");
+              break;
+          case "swipe":
+              console.log("Swipe Gesture");
+
+              //Classify swipe as either horizontal or vertical
+              var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
+              //Classify as right-left or up-down
+            let swipeDirection;
+            if (isHorizontal) {
+              if (gesture.direction[0] > 0) {
+                swipeDirection = "right";
+              } else {
+                swipeDirection = "left";
+              }
+            } else { //vertical
+              if (gesture.direction[1] > 0) {
+                swipeDirection = "up";
+              } else {
+                swipeDirection = "down";
+              }
+            }
+              console.log(swipeDirection)
+              break;
+        }
+    });
+  }
 
   // Moving the cursor with Leap data
   // Use the hand data to control the cursor's screen position
@@ -25,7 +86,7 @@ Leap.loop({ hand: function(hand) {
 
   cursor.setScreenPosition(cursorPosition);
 
-  console.log(presentationState);
+  // console.log(presentationState);
 
   // // SETUP mode
   if (presentationState.get('state') == 'setup') {
@@ -44,10 +105,8 @@ Leap.loop({ hand: function(hand) {
 
     /// render the presentation
 
-
-
   }
-}}).use('screenPosition', {scale: LEAPSCALE});
+}}).use('screenPosition', {scale: LEAPSCALE})});
 
 
 // processSpeech(transcript)

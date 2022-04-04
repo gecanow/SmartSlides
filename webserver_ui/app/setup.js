@@ -14,6 +14,7 @@ var gridOrigin = [350, 35];
 
 var background, gestureCheckbox, speechCheckbox, startButton, otherFeedback, tile;
 var tile, tileTransformModifier, cursorModifier;
+var testingTextOutput, testingModifier, testingOpacityModifier;
 
 // USER INTERFACE SETUP
 var setupUserInterface = function() {
@@ -57,20 +58,6 @@ var setupUserInterface = function() {
   })
   mainContext.add(speechModifier).add(speechCheckbox);
 
-  startButton = new Surface({
-    content: "-- Start presenting",
-    size: [undefined, 50],
-    properties: {
-      backgroundColor: "rgb(34, 34, 34)",
-      color: "white"
-    }
-  });
-  var startModifier = new StateModifier({
-    origin: [0.0, 0.0],
-    align: [0.0, 0.45]
-  })
-  mainContext.add(startModifier).add(startButton);
-
   otherFeedback = new Surface({
     content: "",
     size: [undefined, 50],
@@ -84,6 +71,7 @@ var setupUserInterface = function() {
     align: [0.0, 1.0]
   })
   mainContext.add(otherModifier).add(otherFeedback);
+
 
   // // Draw the presentation title slide
   tile = new Surface({
@@ -102,6 +90,37 @@ var setupUserInterface = function() {
   });
   mainContext.add(tileTransformModifier).add(tileModifier).add(tile);
 
+  startButton = new Surface({
+    content: "Say Start to begin presentation mode",
+    size: [200, 150],
+    properties: {
+      backgroundColor: Colors.GREY,
+      color: "white"
+    }
+  });
+  var startModifier = new StateModifier({
+    origin: [0.0, 1.0],
+    align: [0.0, 0.4],
+    transform: Transform.translate(gridOrigin[0]+300, gridOrigin[1], 0)
+  })
+  mainContext.add(startModifier).add(startButton);
+
+  // testingTextOutput = new Surface({
+  //   content: "",
+  //   size: [undefined, 100],
+  //   properties: {
+  //     // backgroundColor: "black",
+  //     color: "white"
+  //   }
+  // });
+  // var testingModifier = new StateModifier({
+  //   origin: [0.0, 0.0],
+  //   align: [0.0, 0.4]
+  // });
+  // var testingOpacityModifier = new Modifier({
+  //   opacity: 0.0;
+  // });
+  // mainContext.add(testingModifier).add(testingOpacityModifier).add(testingTextOutput);
 
   // Draw the cursor
   var cursorSurface = new Surface({
@@ -124,3 +143,22 @@ var setupUserInterface = function() {
   mainContext.add(cursorOriginModifier).add(cursorModifier).add(cursorSurface);
 
 };
+
+// var setupUserInterface = function() {
+//   testingTextOutput = new Surface({
+//     content: "",
+//     size: [undefined, 100],
+//     properties: {
+//       backgroundColor: "black",
+//       color: "white"
+//     }
+//   });
+//   var testingModifier = new StateModifier({
+//     origin: [0.0, 0.0],
+//     align: [0.0, 0.4]
+//   });
+//   var testingOpacityModifier = new Modifier({
+//     opacity: 0.0;
+//   });
+//   mainContext.add(testingModifier).add(testingOpacityModifier).add(testingTextOutput);
+// }

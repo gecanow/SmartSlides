@@ -29,6 +29,7 @@ Leap.loop({ hand: function(hand) {
         switch (gesture.type){
           case "circle":
               console.log("Circle Gesture");
+              startButton.setContent("I detected you made a circle gesture!");
               // CircleGesture circle = new CircleGesture(gesture);
               var clockwise = false;
               var pointableID = gesture.pointableIds[0];
@@ -37,20 +38,25 @@ Leap.loop({ hand: function(hand) {
               if (dotProduct  >  0) clockwise = true;
 
               if (clockwise){
-                console.log("Clockwise Circle Gesture")
+                console.log("Clockwise Circle Gesture");
+                startButton.setContent("I detected a clockwise circle gesture");
               } else {
-                console.log("Counterclockwise Circle Gesture")
+                console.log("Counterclockwise Circle Gesture");
+                startButton.setContent("I detected a counterclockwise circle gesture");
               }
 
               break;
           case "keyTap":
               console.log("Key Tap Gesture");
+              startButton.setContent("I detected a key tap gesture.");
               break;
           case "screenTap":
               console.log("Screen Tap Gesture");
+              startButton.setContent("I detected a screen tap gesture.");
               break;
           case "swipe":
               console.log("Swipe Gesture");
+              startButton.setContent("I detected a swipe gesture.");
 
               //Classify swipe as either horizontal or vertical
               var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
@@ -59,14 +65,18 @@ Leap.loop({ hand: function(hand) {
             if (isHorizontal) {
               if (gesture.direction[0] > 0) {
                 swipeDirection = "right";
+                startButton.setContent("I detected a right swipe.");
               } else {
                 swipeDirection = "left";
+                startButton.setContent("I detected a left swipe.");
               }
             } else { //vertical
               if (gesture.direction[1] > 0) {
                 swipeDirection = "up";
+                startButton.setContent("I detected an up swipe.");
               } else {
                 swipeDirection = "down";
+                startButton.setContent("I detected a down swipe.");
               }
             }
               console.log(swipeDirection)
@@ -141,7 +151,7 @@ var processSpeech = function(transcript) {
 
       /// get rid of all text and go to full screen (currently black full screen)
       console.log("I am here yay");
-      startButton.setContent("");
+      startButton.setContent("Beginning Presentation!");
       speechCheckbox.setContent("");
       gestureCheckbox.setContent("");
       background.setContent("");
@@ -151,6 +161,7 @@ var processSpeech = function(transcript) {
       else tile.setSize([1800, 900]); // full screen
       tileTransformModifier.setTransform(Transform.translate(-250, -35));
       tile.setProperties({backgroundColor: "black"});
+      startButton.setProperties({backgroundColor: "black"});
       processed = true;
     }
   }
@@ -163,27 +174,46 @@ var processSpeech = function(transcript) {
     var said_prev_slide = userSaid(transcript.toLowerCase(), ["previous slide"]);
 
     // current speech recognition
-    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw circle", "circle", "circle here"]);
+    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle", "circle here"]);
     var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight", "make highlight", "highlight here"]);
     var said_laser = userSaid(transcript.toLowerCase(), ["start laser pointer", "laser", "cursor", "laser pointer"]);
+    var said_stop_laser = userSaid(transcript.toLowerCase(), ["stop laser pointer", "stop laser", "stop cursor", "stop laser pointer", "stop"]);
 
     if (said_create_circle) { // also change this else to recognize the create circle gesture
 
       // use cursorPosition variable and interact with google slide api
       console.log("I heard you wanted to draw a circle");
+      startButton.setContent("I heard you are trying to draw a circle!");
 
     }
 
     if (said_highlight) {
-      //
       console.log("I heard you wanted to make a highlight");
-
+      startButton.setContent("I heard you are trying to highlight!");
     }
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that
       console.log("I heard you wanted a laser");
+      startButton.setContent("I heard you wanted a laser (laser should be on screen now)!");
       cursorModifier.setOpacity(1);
 
+    }
+
+    if (said_stop_laser) {
+      console.log("I heard you wanted to stop the laser");
+      startButton.setContent("I heard you wanted to stop using the laser (laser should not be on screen now)!");
+      cursorModifier.setOpacity(0);
+    }
+
+    if (said_next_slide) {
+      console.log("I heard you wanted to go to the next slide.");
+      startButton.setContent("I heard you wanted to go to the next slide.");
+    }
+
+
+    if (said_prev_slide) {
+      console.log("I heard you wanted to go to the previous slide.");
+      startButton.setContent("I heard you wanted to go to the previous slide.");
     }
 
 

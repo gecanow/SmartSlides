@@ -12,13 +12,13 @@ var GridLayout = famous.views.GridLayout;
 // var tileModifiers = [];
 var gridOrigin = [350, 35];
 
-var background, gestureCheckbox, speechCheckbox, startButton, otherFeedback, tile;
-var tile, tileTransformModifier, cursorModifier;
+var background, startButton, otherFeedback, tile, mainContext;
+var tile, tileTransformModifier, cursorModifier, cursorSurface;
 var testingTextOutput, testingModifier, testingOpacityModifier;
 
 // USER INTERFACE SETUP
 var setupUserInterface = function() {
-  var mainContext = Engine.createContext();
+  mainContext = Engine.createContext();
   background = new Surface({
     content: "<h1>SmartSlides</h1>",
     properties: {
@@ -29,34 +29,34 @@ var setupUserInterface = function() {
 
 
   mainContext.add(background);
-  gestureCheckbox = new Surface({
-    content: "-- Do not recogize gestures",
-    size: [undefined, 150],
-    properties: {
-      backgroundColor: "rgb(34, 34, 34)",
-      color: "white"
-    }
-  });
-  var gestureModifier = new StateModifier({
-    origin: [0.0, 0.0],
-    align: [0.0, 0.35]
-  })
-  mainContext.add(gestureModifier).add(gestureCheckbox);
-
-
-  speechCheckbox = new Surface({
-    content: "-- Do not recognize speech",
-    size: [undefined, 50],
-    properties: {
-      backgroundColor: "rgb(34, 34, 34)",
-      color: "white"
-    }
-  });
-  var speechModifier = new StateModifier({
-    origin: [0.0, 0.0],
-    align: [0.0, 0.4]
-  })
-  mainContext.add(speechModifier).add(speechCheckbox);
+  // gestureCheckbox = new Surface({
+  //   content: "-- Do not recogize gestures",
+  //   size: [undefined, 150],
+  //   properties: {
+  //     backgroundColor: "rgb(34, 34, 34)",
+  //     color: "white"
+  //   }
+  // });
+  // var gestureModifier = new StateModifier({
+  //   origin: [0.0, 0.0],
+  //   align: [0.0, 0.35]
+  // })
+  // mainContext.add(gestureModifier).add(gestureCheckbox);
+  //
+  //
+  // speechCheckbox = new Surface({
+  //   content: "-- Do not recognize speech",
+  //   size: [undefined, 50],
+  //   properties: {
+  //     backgroundColor: "rgb(34, 34, 34)",
+  //     color: "white"
+  //   }
+  // });
+  // var speechModifier = new StateModifier({
+  //   origin: [0.0, 0.0],
+  //   align: [0.0, 0.4]
+  // })
+  // mainContext.add(speechModifier).add(speechCheckbox);
 
   otherFeedback = new Surface({
     content: "",
@@ -123,7 +123,7 @@ var setupUserInterface = function() {
   // mainContext.add(testingModifier).add(testingOpacityModifier).add(testingTextOutput);
 
   // Draw the cursor
-  var cursorSurface = new Surface({
+  cursorSurface = new Surface({
     size : [CURSORSIZE, CURSORSIZE],
     properties : {
         backgroundColor: Colors.RED,
@@ -134,7 +134,7 @@ var setupUserInterface = function() {
   });
   var cursorOriginModifier = new StateModifier({origin: [0.5, 0.5]});
   cursorModifier = new Modifier({
-    opacity: 1.0,
+    opacity: 0.0,
     transform : function(){
       var cursorPosition = this.get('screenPosition');
       return Transform.translate(cursorPosition[0], cursorPosition[1], 0);

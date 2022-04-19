@@ -8,8 +8,7 @@ var StateModifier = famous.modifiers.StateModifier;
 var Draggable = famous.modifiers.Draggable;
 var GridLayout = famous.views.GridLayout;
 
-// var tiles = [];
-// var tileModifiers = [];
+
 var gridOrigin = [350, 35];
 
 var background, startButton, otherFeedback, tile, mainContext;
@@ -26,37 +25,8 @@ var setupUserInterface = function() {
       color: "white"
     }
   });
-
-
   mainContext.add(background);
-  // gestureCheckbox = new Surface({
-  //   content: "-- Do not recogize gestures",
-  //   size: [undefined, 150],
-  //   properties: {
-  //     backgroundColor: "rgb(34, 34, 34)",
-  //     color: "white"
-  //   }
-  // });
-  // var gestureModifier = new StateModifier({
-  //   origin: [0.0, 0.0],
-  //   align: [0.0, 0.35]
-  // })
-  // mainContext.add(gestureModifier).add(gestureCheckbox);
-  //
-  //
-  // speechCheckbox = new Surface({
-  //   content: "-- Do not recognize speech",
-  //   size: [undefined, 50],
-  //   properties: {
-  //     backgroundColor: "rgb(34, 34, 34)",
-  //     color: "white"
-  //   }
-  // });
-  // var speechModifier = new StateModifier({
-  //   origin: [0.0, 0.0],
-  //   align: [0.0, 0.4]
-  // })
-  // mainContext.add(speechModifier).add(speechCheckbox);
+
 
   otherFeedback = new Surface({
     content: "",
@@ -105,23 +75,6 @@ var setupUserInterface = function() {
   })
   mainContext.add(startModifier).add(startButton);
 
-  // testingTextOutput = new Surface({
-  //   content: "",
-  //   size: [undefined, 100],
-  //   properties: {
-  //     // backgroundColor: "black",
-  //     color: "white"
-  //   }
-  // });
-  // var testingModifier = new StateModifier({
-  //   origin: [0.0, 0.0],
-  //   align: [0.0, 0.4]
-  // });
-  // var testingOpacityModifier = new Modifier({
-  //   opacity: 0.0;
-  // });
-  // mainContext.add(testingModifier).add(testingOpacityModifier).add(testingTextOutput);
-
   // Draw the cursor
   cursorSurface = new Surface({
     size : [CURSORSIZE, CURSORSIZE],
@@ -144,21 +97,85 @@ var setupUserInterface = function() {
 
 };
 
-// var setupUserInterface = function() {
-//   testingTextOutput = new Surface({
-//     content: "",
-//     size: [undefined, 100],
-//     properties: {
-//       backgroundColor: "black",
-//       color: "white"
-//     }
-//   });
-//   var testingModifier = new StateModifier({
-//     origin: [0.0, 0.0],
-//     align: [0.0, 0.4]
-//   });
-//   var testingOpacityModifier = new Modifier({
-//     opacity: 0.0;
-//   });
-//   mainContext.add(testingModifier).add(testingOpacityModifier).add(testingTextOutput);
-// }
+///////
+/// Switch slide UI
+////////
+var switchSlideUI = function() {
+  mainContext = Engine.createContext();
+  background = new Surface({
+    content: "",
+    properties: {
+      backgroundColor: "rgb(34, 34, 34)",
+      color: "white"
+    }
+  });
+  mainContext.add(background);
+
+  otherFeedback = new Surface({
+    content: "",
+    size: [undefined, 50],
+    properties: {
+      backgroundColor: "rgb(34, 34, 34)",
+      color: "white"
+    }
+  });
+  var otherModifier = new StateModifier({
+    origin: [0.0, 1.0],
+    align: [0.0, 1.0]
+  })
+  mainContext.add(otherModifier).add(otherFeedback);
+
+
+  // // Draw the presentation title slide
+  tile = new Surface({
+      size: [1800, 800],
+      properties: {
+          backgroundColor: "black",
+          color: "white",
+          border: "solid 1px black"
+      },
+  });
+  tileTransformModifier = new StateModifier({
+    transform: Transform.translate(-250, -35, 0)
+  });
+  var tileModifier = new Modifier({
+    opacity: 1.0
+  });
+  mainContext.add(tileTransformModifier).add(tileModifier).add(tile);
+
+  startButton = new Surface({
+    content: "Say Start to begin presentation mode",
+    size: [200, 150],
+    properties: {
+      backgroundColor: "black",
+      color: "white"
+    }
+  });
+  var startModifier = new StateModifier({
+    origin: [0.0, 1.0],
+    align: [0.0, 0.4],
+    transform: Transform.translate(gridOrigin[0]+300, gridOrigin[1], 0)
+  })
+  mainContext.add(startModifier).add(startButton);
+
+  // Draw the cursor
+  cursorSurface = new Surface({
+    size : [CURSORSIZE, CURSORSIZE],
+    properties : {
+        backgroundColor: Colors.RED,
+        borderRadius: CURSORSIZE/2 + 'px',
+        pointerEvents : 'none',
+        zIndex: 1
+    }
+  });
+  var cursorOriginModifier = new StateModifier({origin: [0.5, 0.5]});
+  cursorModifier = new Modifier({
+    opacity: 0.0,
+    transform : function(){
+      var cursorPosition = this.get('screenPosition');
+      return Transform.translate(cursorPosition[0], cursorPosition[1], 0);
+    }.bind(cursor)
+  });
+  mainContext.add(cursorOriginModifier).add(cursorModifier).add(cursorSurface);
+
+};

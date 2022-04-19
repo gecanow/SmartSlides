@@ -20,6 +20,7 @@ var usingSpeech = true; // set to false if check the speechCheckbox, default is 
 
 var cursorPosition;
 var highlightStart, highlightEnd;
+var highlightOn = true;
 
 //
 // MAIN GAME LOOP
@@ -106,21 +107,6 @@ Leap.loop({ hand: function(hand) {
   cursorPosition[1] = (handPosition[1] + y_offset);
 
   cursor.setScreenPosition(cursorPosition);
-  // console.log(highlighting);
-  // if (highlighting) {
-  //   var highlightSurface = new Surface({
-  //     size : [CURSORSIZE, CURSORSIZE],
-  //     properties : {
-  //         backgroundColor: Colors.YELLOW,
-  //         borderRadius: CURSORSIZE/2 + 'px'
-  //     }
-  //   });
-  //   var highlightModifier = new StateModifier(
-  //     {origin: [0.5, 0.5],
-  //     transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
-  //
-  //   mainContext.add(highlightSurface).add(highlightModifier);
-  // }
 
   // // SETUP mode
   if (presentationState.get('state') == 'setup') {
@@ -133,10 +119,7 @@ Leap.loop({ hand: function(hand) {
   else {
     if (presentationState.get('state') == 'presenting') {
       background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>presenting.../h3>");
-      // console.log(presentationState);
     }
-
-    /// render the presentation
 
   }
 }}).use('screenPosition', {scale: LEAPSCALE})});
@@ -168,15 +151,11 @@ var processSpeech = function(transcript) {
     // Detect the 'start' command, and start the game if it was said
     var said_start = userSaid(transcript, ["start"]); // start commmand is said
     if (said_start) {
-      // probably do not want the computer to say this out loud haha
-      // generateSpeech("New SmartSlides presentation started!");
       presentationState.startPresentation();
 
       /// get rid of all text and go to full screen (currently black full screen)
       console.log("I am here yay");
       startButton.setContent("Beginning Presentation!");
-      // speechCheckbox.setContent("");
-      // gestureCheckbox.setContent("");
       background.setContent("");
 
       if (DEBUGSPEECH) tile.setSize([1800, 800]); // use this if want to see the debug speech
@@ -190,7 +169,6 @@ var processSpeech = function(transcript) {
 
   else if (presentationState.get('state') == 'presenting') {
     console.log("I am recognizing speech and in presenting mode");
-    console.log("why is this not printing");
 
     // not implementing transitioning slides right now
     var said_next_slide = userSaid(transcript.toLowerCase(), ["next slide", "next"]);
@@ -199,22 +177,27 @@ var processSpeech = function(transcript) {
     // current speech recognition
     var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle", "circle here"]);
     var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight", "make highlight", "highlight here", "highlight", "high light"]);
-    var said_stop_highlight = userSaid(transcript.toLowerCase(), ["now stop", "stop"])
+    var said_stop_highlight = userSaid(transcript.toLowerCase(), ["stop highlight", "now stop"]);
+
     var said_laser = userSaid(transcript.toLowerCase(), ["start laser pointer", "laser", "cursor", "laser pointer"]);
     var said_stop_laser = userSaid(transcript.toLowerCase(), ["stop laser pointer", "stop laser", "stop cursor", "stop laser pointer"]);
+    if (userSaid(transcript.toLowerCase(), ["stop"]) && highlightOn) {
+      said_stop_highlight = true;
+    } else if (userSaid(transcript.toLowerCase(), ["stop"])) {
+      said_stop_laser = true;
+    }
+
+    if (said_stop_highlight) said_highlight = false;
 
     if (said_create_circle) { // also change this else to recognize the create circle gesture
-
       // use cursorPosition variable and interact with google slide api
       console.log("I heard you wanted to draw a circle");
       startButton.setContent("I heard you are trying to draw a circle!");
-      // cursorPosition = [500, 500];
 
       var circleSurface = new Surface({
         size : [200, 200],
         properties : {
             border: '4px solid #FF3333',
-            // boxShadow: '0 10px 10px 10px rgba(255, 0, 0, 1)',
             borderRadius: 200/2 + 'px',
             zIndex: 1
         }
@@ -223,8 +206,6 @@ var processSpeech = function(transcript) {
         {origin: [0.5, 0.5],
         transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
       mainContext.add(circleModifier).add(circleSurface);
-
-      // will want to do something so when we go to the next slide there is no more circle
     }
 
     if (said_highlight) {
@@ -232,9 +213,9 @@ var processSpeech = function(transcript) {
       startButton.setContent("I heard you are trying to highlight!");
       cursorSurface.setProperties({backgroundColor: Colors.YELLOW})
       cursorModifier.setOpacity(0.75);
-      highlighting = true;
       highlightStart = [cursorPosition[0], cursorPosition[1]];
       console.log(highlightStart);
+      highlightOn = true;
     }
 
     if (said_stop_highlight) {
@@ -245,10 +226,8 @@ var processSpeech = function(transcript) {
       console.log(highlightEnd);
       var highlightSurface = new Surface({
         size: [Math.abs(highlightEnd[0]-highlightStart[0]), Math.abs(highlightEnd[1]-highlightStart[1])],
-        // size: [500, 500],
         properties: {
           backgroundColor: Colors.YELLOW
-          // color: "white"
         }
       });
       var highlightModifier = new Modifier({
@@ -258,12 +237,13 @@ var processSpeech = function(transcript) {
         transform: Transform.translate(highlightStart[0], highlightStart[1], 0)
       });
       mainContext.add(highlightStateMod).add(highlightModifier).add(highlightSurface);
+      highlightOn = false;
     }
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that
       console.log("I heard you wanted a laser");
       startButton.setContent("I heard you wanted a laser (laser should be on screen now)!");
-      cursorSurface.setProperties({backgroundColor: Colors.RED})
+      cursorSurface.setProperties({backgroundColor: Colors.RED});
       cursorModifier.setOpacity(1);
 
     }
@@ -277,12 +257,14 @@ var processSpeech = function(transcript) {
     if (said_next_slide) {
       console.log("I heard you wanted to go to the next slide.");
       startButton.setContent("I heard you wanted to go to the next slide.");
+      switchSlideUI();
     }
 
 
     if (said_prev_slide) {
       console.log("I heard you wanted to go to the previous slide.");
       startButton.setContent("I heard you wanted to go to the previous slide.");
+      switchSlideUI();
     }
 
 

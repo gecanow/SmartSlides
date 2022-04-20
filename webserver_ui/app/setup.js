@@ -417,7 +417,7 @@ var switchSlideUI = function() {
   mainContext.add(tileTransformModifier).add(tileModifier).add(tile);
 
   startButton = new Surface({
-    content: "Say Start to begin presentation mode",
+    content: "",
     size: [200, 150],
     properties: {
       backgroundColor: "black",

@@ -186,7 +186,11 @@ var processSpeech = function(transcript) {
       startButton.setContent("Beginning Presentation!");
       background.setContent("");
       // backgroundModifier.setOpacity(0.0);
-
+      opacityModifiers.forEach(function (item, index) {
+        console.log(item);
+        console.log(index);
+        item.setOpacity(0);
+      });
       // switchSlideUI();
       processed = true;
     }
@@ -217,13 +221,12 @@ var processSpeech = function(transcript) {
     if (said_create_circle) { // also change this else to recognize the create circle gesture
       // use cursorPosition variable and interact with google slide api
       console.log("I heard you wanted to draw a circle");
-      startButton.setContent("I heard you are trying to draw a circle!");
 
       var circleSurface = new Surface({
-        size : [200, 200],
+        size : [100, 100],
         properties : {
             border: '4px solid #FF3333',
-            borderRadius: 200/2 + 'px',
+            borderRadius: 100/2 + 'px',
             zIndex: 1
         }
       });
@@ -234,12 +237,11 @@ var processSpeech = function(transcript) {
           opacity: 1.0
       });
       mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
-      addedElementModifiers.add(circleOpacity);
+      addedElementModifiers.push(circleOpacity);
     }
 
     if (said_highlight) {
       console.log("I heard you wanted to make a highlight");
-      startButton.setContent("I heard you are trying to highlight!");
       cursorSurface.setProperties({backgroundColor: Colors.YELLOW})
       cursorModifier.setOpacity(0.75);
       highlightStart = [cursorPosition[0], cursorPosition[1]];
@@ -249,7 +251,6 @@ var processSpeech = function(transcript) {
 
     if (said_stop_highlight) {
       console.log("I heard you wanted to stop the highlight");
-      startButton.setContent("I heard you are trying to stop the highlight!");
       cursorModifier.setOpacity(0);
       highlightEnd = [cursorPosition[0], cursorPosition[1]];
       console.log(highlightEnd);
@@ -267,11 +268,11 @@ var processSpeech = function(transcript) {
       });
       mainContext.add(highlightStateMod).add(highlightModifier).add(highlightSurface);
       highlightOn = false;
+      addedElementModifiers.push(highlightModifier);
     }
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that
       console.log("I heard you wanted a laser");
-      startButton.setContent("I heard you wanted a laser (laser should be on screen now)!");
       cursorSurface.setProperties({backgroundColor: Colors.RED});
       cursorModifier.setOpacity(1);
 
@@ -279,14 +280,11 @@ var processSpeech = function(transcript) {
 
     if (said_stop_laser) {
       console.log("I heard you wanted to stop the laser");
-      startButton.setContent("I heard you wanted to stop using the laser (laser should not be on screen now)!");
       cursorModifier.setOpacity(0);
     }
 
     if (said_next_slide) {
       console.log("I heard you wanted to go to the next slide.");
-      startButton.setContent("I heard you wanted to go to the next slide.");
-      // switchSlideUI();
       addedElementModifiers.forEach(function (item, index) {
         item.setOpacity(0);
       });
@@ -297,8 +295,6 @@ var processSpeech = function(transcript) {
 
     if (said_prev_slide) {
       console.log("I heard you wanted to go to the previous slide.");
-      startButton.setContent("I heard you wanted to go to the previous slide.");
-      // switchSlideUI();
       addedElementModifiers.forEach(function (item, index) {
         item.setOpacity(0);
       });

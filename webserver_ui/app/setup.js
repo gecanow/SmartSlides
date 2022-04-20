@@ -27,6 +27,14 @@ var setupUserInterface = function() {
   });
   mainContext.add(background);
 
+  // var Slide = new Surface({
+  //   content: "<h1>SmartSlides</h1>",
+  //   properties: {
+  //     backgroundColor: "rgb(34, 34, 34)",
+  //     color: "white"
+  //   }
+  // });
+
 
   otherFeedback = new Surface({
     content: "",
@@ -56,7 +64,7 @@ var setupUserInterface = function() {
     transform: Transform.translate(gridOrigin[0]-100, gridOrigin[1], 0)
   });
   var tileModifier = new Modifier({
-    opacity: 1.0
+    opacity: 0.0
   });
   mainContext.add(tileTransformModifier).add(tileModifier).add(tile);
 
@@ -374,7 +382,7 @@ var setupUserInterface = function() {
 /// Switch slide UI
 ////////
 var switchSlideUI = function() {
-  mainContext = Engine.createContext();
+  // mainContext = Engine.createContext();
   background = new Surface({
     content: "",
     properties: {
@@ -382,7 +390,7 @@ var switchSlideUI = function() {
       color: "white"
     }
   });
-  mainContext.add(background);
+  // mainContext.add(background);
 
   otherFeedback = new Surface({
     content: "",
@@ -412,9 +420,9 @@ var switchSlideUI = function() {
     transform: Transform.translate(-250, -35, 0)
   });
   var tileModifier = new Modifier({
-    opacity: 1.0
+    opacity: 0.0
   });
-  mainContext.add(tileTransformModifier).add(tileModifier).add(tile);
+  // mainContext.add(tileTransformModifier).add(tileModifier).add(tile);
 
   startButton = new Surface({
     content: "",
@@ -429,7 +437,7 @@ var switchSlideUI = function() {
     align: [0.0, 0.4],
     transform: Transform.translate(gridOrigin[0]+300, gridOrigin[1], 0)
   })
-  mainContext.add(startModifier).add(startButton);
+  // mainContext.add(startModifier).add(startButton);
 
   // Draw the cursor
   cursorSurface = new Surface({

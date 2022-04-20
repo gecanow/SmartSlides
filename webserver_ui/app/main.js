@@ -22,6 +22,8 @@ var cursorPosition;
 var highlightStart, highlightEnd;
 var highlightOn = true;
 
+var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
+
 //
 // MAIN GAME LOOP
 // Called every time the Leap provides a new frame of data
@@ -177,8 +179,9 @@ var processSpeech = function(transcript) {
       console.log("I am here yay");
       startButton.setContent("Beginning Presentation!");
       background.setContent("");
+      // backgroundModifier.setOpacity(0.0);
 
-      switchSlideUI();
+      // switchSlideUI();
       processed = true;
     }
   }
@@ -221,7 +224,11 @@ var processSpeech = function(transcript) {
       var circleModifier = new StateModifier(
         {origin: [0.5, 0.5],
         transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
-      mainContext.add(circleModifier).add(circleSurface);
+      var circleOpacity = new Modifier({
+          opacity: 1.0
+      });
+      mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+      addedElementModifiers.add(circleOpacity);
     }
 
     if (said_highlight) {
@@ -273,14 +280,20 @@ var processSpeech = function(transcript) {
     if (said_next_slide) {
       console.log("I heard you wanted to go to the next slide.");
       startButton.setContent("I heard you wanted to go to the next slide.");
-      switchSlideUI();
+      // switchSlideUI();
+      addedElementModifiers.forEach(function (item, index) {
+        item.setOpacity(0);
+      });
     }
 
 
     if (said_prev_slide) {
       console.log("I heard you wanted to go to the previous slide.");
       startButton.setContent("I heard you wanted to go to the previous slide.");
-      switchSlideUI();
+      // switchSlideUI();
+      addedElementModifiers.forEach(function (item, index) {
+        item.setOpacity(0);
+      });
     }
 
 

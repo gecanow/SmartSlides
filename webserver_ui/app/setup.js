@@ -54,7 +54,7 @@ var setupUserInterface = function() {
 
   // // Draw the presentation title slide
   tile = new Surface({
-      size: [1000, 500],
+      size: [1000, 550],
       properties: {
           backgroundColor: Colors.GREY,
           color: "white",
@@ -488,7 +488,7 @@ var switchSlideUI = function() {
 
   // // Draw the presentation title slide
   tile = new Surface({
-      size: [1800, 800],
+      size: [1900, 800],
       properties: {
           backgroundColor: "black",
           color: "white",

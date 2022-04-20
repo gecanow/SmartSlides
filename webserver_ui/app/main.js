@@ -77,10 +77,10 @@ Leap.loop({ hand: function(hand) {
             if (isHorizontal) {
               if (gesture.direction[0] > 0) {
                 swipeDirection = "right";
-                startButton.setContent("I detected a right swipe.");
+                // startButton.setContent("I detected a right swipe.");
               } else {
                 swipeDirection = "left";
-                startButton.setContent("I detected a left swipe.");
+                // startButton.setContent("I detected a left swipe.");
               }
             } else { //vertical
               if (gesture.direction[1] > 0) {
@@ -88,7 +88,7 @@ Leap.loop({ hand: function(hand) {
                 startButton.setContent("I detected an up swipe.");
               } else {
                 swipeDirection = "down";
-                startButton.setContent("I detected a down swipe.");
+                // startButton.setContent("I detected a down swipe.");
               }
             }
             // if(frame.pointables.length > 0){
@@ -106,8 +106,8 @@ Leap.loop({ hand: function(hand) {
         }
     });
     // testing getting last gesture
-    console.log("all gestures: ")
-    console.log(frame.gestures)
+    // console.log("all gestures: ")
+    // console.log(frame.gestures)
     // console.log("last gesture: ")
     // console.log(frame.gestures[-1])
     // for (gest in frame.gestures) {

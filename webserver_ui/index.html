@@ -32,7 +32,50 @@
     <script type="text/javascript" src="app/helpers.js"></script>
     <script type="text/javascript" src="app/main.js"></script>
     <script type="text/javascript" src="app/setupSpeech.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
   </head>
-  <body>
-  </body>
+    <body id="body" bgcolor="black">
+        <div class="jumbotron" style="display: flex; justify-content: center;">
+            <div style="flex-direction:column; align-items: center;">
+                <h1>SmartSlides</h1>
+                <div>
+                    <button id="left" onclick="document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'ArrowLeft'}));">left</button>
+                    <button id="right" onclick="document.dispatchEvent(new KeyboardEvent('keydown', {'key': 'ArrowRight'}));">right</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="stageArea" style="margin-top:100px;">
+            <div id="stage" class="stage">
+            </div>
+            <div id="hyperlinkPlane" class="stage">
+            </div>
+        </div>
+        <div id="slideshowNavigator">
+        </div>
+        <div id="slideNumberControl">
+        </div>
+        <div id="slideNumberDisplay">
+        </div>
+        <div id="helpPlacard">
+        </div>
+        <div id="waitingIndicator">
+            <div id="waitingSpinner">
+            </div>
+        </div>
+
+        <script type="text/javascript" src="assets/player/pdfjs/bcmaps.js"></script></body>
+        <script type="text/javascript" src="assets/player/pdfjs/web/compatibility.js"></script></body>
+        <script type="text/javascript" src="assets/player/pdfjs/pdf.js"></script></body>
+        <script type="text/javascript" src="assets/player/main.js"></script></body>
+        </div>
+
+        <!-- <script>
+            document.onkeydown = e => alert(e.key);
+        </script> -->
+    </body>
 </html>

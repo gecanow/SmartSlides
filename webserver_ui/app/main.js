@@ -24,6 +24,24 @@ var highlightOn = true;
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
 
+var CAN_ADVANCE_SLIDESHOW = true;
+var goToNextSlide = function() {
+  if (!CAN_ADVANCE_SLIDESHOW) return;
+  // go to next slide
+  let stage = document.getElementById("stageArea");
+  console.log("found stage", stage);
+  // var e = document.createEvent("KeyEvents");
+  // e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0x40, 0x40);
+
+  // stage.focus();
+  // let event = stage.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
+  // console.log("dispatched event", event);
+  stage.click(); // only thing working right now
+
+  CAN_ADVANCE_SLIDESHOW = false;
+  setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 1000);
+}
+
 //
 // MAIN GAME LOOP
 // Called every time the Leap provides a new frame of data
@@ -41,33 +59,33 @@ Leap.loop({ hand: function(hand) {
         });
 
         switch (gesture.type){
-          case "circle":
-              // console.log("Circle Gesture");
-              // startButton.setContent("I detected you made a circle gesture!");
-              // CircleGesture circle = new CircleGesture(gesture);
-              var clockwise = false;
-              var pointableID = gesture.pointableIds[0];
-              var direction = frame.pointable(pointableID).direction;
-              var dotProduct = Leap.vec3.dot(direction, gesture.normal);
-              if (dotProduct  >  0) clockwise = true;
-
-              if (clockwise){
-                // console.log("Clockwise Circle Gesture");
-                // startButton.setContent("I detected a clockwise circle gesture");
-              } else {
-                // console.log("Counterclockwise Circle Gesture");
-                // startButton.setContent("I detected a counterclockwise circle gesture");
-              }
-
-              break;
-          case "keyTap":
-              // console.log("Key Tap Gesture");
-              // startButton.setContent("I detected a key tap gesture.");
-              break;
-          case "screenTap":
-              // console.log("Screen Tap Gesture");
-              // startButton.setContent("I detected a screen tap gesture.");
-              break;
+          // case "circle":
+          //     // console.log("Circle Gesture");
+          //     // startButton.setContent("I detected you made a circle gesture!");
+          //     // CircleGesture circle = new CircleGesture(gesture);
+          //     var clockwise = false;
+          //     var pointableID = gesture.pointableIds[0];
+          //     var direction = frame.pointable(pointableID).direction;
+          //     var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+          //     if (dotProduct  >  0) clockwise = true;
+          //
+          //     if (clockwise){
+          //       // console.log("Clockwise Circle Gesture");
+          //       // startButton.setContent("I detected a clockwise circle gesture");
+          //     } else {
+          //       // console.log("Counterclockwise Circle Gesture");
+          //       // startButton.setContent("I detected a counterclockwise circle gesture");
+          //     }
+          //
+          //     break;
+          // case "keyTap":
+          //     // console.log("Key Tap Gesture");
+          //     // startButton.setContent("I detected a key tap gesture.");
+          //     break;
+          // case "screenTap":
+          //     // console.log("Screen Tap Gesture");
+          //     // startButton.setContent("I detected a screen tap gesture.");
+          //     break;
           case "swipe":
               console.log("Swipe Gesture");
               // startButton.setContent("I detected a swipe gesture.");
@@ -88,35 +106,23 @@ Leap.loop({ hand: function(hand) {
               if (gesture.direction[1] > 0) {
                 swipeDirection = "up";
                 startButton.setContent("I detected an up swipe.");
+                console.log(`Found hand type: ${handType}`);
+                if (handType == "right") {
+                  // go to next slide
+                  goToNextSlide();
+                } else {
+                  // go to prev slide
+                }
+                // start delay
               } else {
                 swipeDirection = "down";
                 // startButton.setContent("I detected a down swipe.");
               }
             }
-            // if(frame.pointables.length > 0){
-            //   frame.gestures.forEach(function(gesture){
-            //       var pointableIds = gesture.pointableIds;
-            //       pointableIds.forEach(function(pointableId){
-            //         console.log("pointable: ")
-            //         var pointable = frame.pointable(pointableId);
-            //         console.log(pointable);
-            //       });
-            //   });
-            // }
               console.log(swipeDirection)
               break;
         }
     });
-    // testing getting last gesture
-    // console.log("all gestures: ")
-    // console.log(frame.gestures)
-    // console.log("last gesture: ")
-    // console.log(frame.gestures[-1])
-    // for (gest in frame.gestures) {
-    //     console.log("gest: ", gest)
-    //     // console.log("gest: ", frame.gestures.gest)
-    // }
-
   }
 
   // Moving the cursor with Leap data
@@ -284,6 +290,8 @@ var processSpeech = function(transcript) {
       addedElementModifiers.forEach(function (item, index) {
         item.setOpacity(0);
       });
+
+      goToNextSlide();
     }
 
 

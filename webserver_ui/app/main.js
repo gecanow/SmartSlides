@@ -39,7 +39,7 @@ Leap.loop({ hand: function(hand) {
 
         switch (gesture.type){
           case "circle":
-              console.log("Circle Gesture");
+              // console.log("Circle Gesture");
               // startButton.setContent("I detected you made a circle gesture!");
               // CircleGesture circle = new CircleGesture(gesture);
               var clockwise = false;
@@ -49,20 +49,20 @@ Leap.loop({ hand: function(hand) {
               if (dotProduct  >  0) clockwise = true;
 
               if (clockwise){
-                console.log("Clockwise Circle Gesture");
-                startButton.setContent("I detected a clockwise circle gesture");
+                // console.log("Clockwise Circle Gesture");
+                // startButton.setContent("I detected a clockwise circle gesture");
               } else {
-                console.log("Counterclockwise Circle Gesture");
-                startButton.setContent("I detected a counterclockwise circle gesture");
+                // console.log("Counterclockwise Circle Gesture");
+                // startButton.setContent("I detected a counterclockwise circle gesture");
               }
 
               break;
           case "keyTap":
-              console.log("Key Tap Gesture");
+              // console.log("Key Tap Gesture");
               // startButton.setContent("I detected a key tap gesture.");
               break;
           case "screenTap":
-              console.log("Screen Tap Gesture");
+              // console.log("Screen Tap Gesture");
               // startButton.setContent("I detected a screen tap gesture.");
               break;
           case "swipe":
@@ -90,10 +90,30 @@ Leap.loop({ hand: function(hand) {
                 startButton.setContent("I detected a down swipe.");
               }
             }
+            // if(frame.pointables.length > 0){
+            //   frame.gestures.forEach(function(gesture){
+            //       var pointableIds = gesture.pointableIds;
+            //       pointableIds.forEach(function(pointableId){
+            //         console.log("pointable: ")
+            //         var pointable = frame.pointable(pointableId);
+            //         console.log(pointable);
+            //       });
+            //   });
+            // }
               console.log(swipeDirection)
               break;
         }
     });
+    // testing getting last gesture
+    console.log("all gestures: ")
+    console.log(frame.gestures)
+    // console.log("last gesture: ")
+    // console.log(frame.gestures[-1])
+    // for (gest in frame.gestures) {
+    //     console.log("gest: ", gest)
+    //     // console.log("gest: ", frame.gestures.gest)
+    // }
+
   }
 
   // Moving the cursor with Leap data

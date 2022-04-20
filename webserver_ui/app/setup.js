@@ -91,8 +91,8 @@ var setupUserInterface = function() {
   mainContext.add(helpModifier).add(helpDescription);
 
   var commandsSurface = new Surface({
-    content: "Speech and Gesture Commands",
-    size: [210, 150],
+    content: "SPEECH AND GESTURE COMMANDS",
+    size: [250, 150],
     properties: {
       backgroundColor: Colors.GREY,
       color: "black"
@@ -101,7 +101,7 @@ var setupUserInterface = function() {
   var commandsModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+285, gridOrigin[1]-20, 0)
+    transform: Transform.translate(gridOrigin[0]+275, gridOrigin[1]-20, 0)
   })
   mainContext.add(commandsModifier).add(commandsSurface);
 

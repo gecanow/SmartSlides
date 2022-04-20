@@ -180,7 +180,11 @@ var processSpeech = function(transcript) {
       startButton.setContent("Beginning Presentation!");
       background.setContent("");
       // backgroundModifier.setOpacity(0.0);
-
+      opacityModifiers.forEach(function (item, index) {
+        console.log(item);
+        console.log(index);
+        item.setOpacity(0);
+      });
       // switchSlideUI();
       processed = true;
     }
@@ -228,7 +232,7 @@ var processSpeech = function(transcript) {
           opacity: 1.0
       });
       mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
-      addedElementModifiers.add(circleOpacity);
+      addedElementModifiers.push(circleOpacity);
     }
 
     if (said_highlight) {
@@ -261,6 +265,7 @@ var processSpeech = function(transcript) {
       });
       mainContext.add(highlightStateMod).add(highlightModifier).add(highlightSurface);
       highlightOn = false;
+      addedElementModifiers.push(highlightModifier);
     }
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that
@@ -281,7 +286,9 @@ var processSpeech = function(transcript) {
       console.log("I heard you wanted to go to the next slide.");
       startButton.setContent("I heard you wanted to go to the next slide.");
       // switchSlideUI();
+      console.log(addedElementModifiers);
       addedElementModifiers.forEach(function (item, index) {
+        console.log(item);
         item.setOpacity(0);
       });
     }

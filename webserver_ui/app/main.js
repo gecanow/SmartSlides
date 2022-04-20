@@ -157,12 +157,8 @@ var processSpeech = function(transcript) {
       console.log("I am here yay");
       startButton.setContent("Beginning Presentation!");
       background.setContent("");
-
-      if (DEBUGSPEECH) tile.setSize([1800, 800]); // use this if want to see the debug speech
-      else tile.setSize([1800, 900]); // full screen
-      tileTransformModifier.setTransform(Transform.translate(-250, -35));
-      tile.setProperties({backgroundColor: "black"});
-      startButton.setProperties({backgroundColor: "black"});
+      
+      switchSlideUI();
       processed = true;
     }
   }

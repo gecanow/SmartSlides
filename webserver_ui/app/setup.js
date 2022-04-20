@@ -54,7 +54,7 @@ var setupUserInterface = function() {
 
   // // Draw the presentation title slide
   tile = new Surface({
-      size: [1000, 700],
+      size: [1000, 500],
       properties: {
           backgroundColor: Colors.GREY,
           color: "white",
@@ -62,7 +62,7 @@ var setupUserInterface = function() {
       },
   });
   tileTransformModifier = new StateModifier({
-    transform: Transform.translate(gridOrigin[0]-100, gridOrigin[1], 0)
+    transform: Transform.translate(gridOrigin[0]-100, gridOrigin[1]+150, 0)
   });
   var tileModifier = new Modifier({
     opacity: 1.0
@@ -72,10 +72,11 @@ var setupUserInterface = function() {
 
   startButton = new Surface({
     content: "Say START to begin presentation mode",
-    size: [250, 150],
+    size: [250, 50],
     properties: {
       backgroundColor: Colors.GREY,
       color: "black"
+      // border: "solid 1px black"
     }
   });
   var startModifier = new StateModifier({
@@ -100,7 +101,7 @@ var setupUserInterface = function() {
   var helpModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+50, gridOrigin[1]-160, 0)
+    transform: Transform.translate(gridOrigin[0]+50, gridOrigin[1]-85, 0)
   });
   var helpOpacity = new Modifier({
     opacity: 1.0
@@ -110,7 +111,7 @@ var setupUserInterface = function() {
 
   var commandsSurface = new Surface({
     content: "SPEECH AND GESTURE COMMANDS",
-    size: [250, 150],
+    size: [235, 25],
     properties: {
       backgroundColor: Colors.GREY,
       color: "black"
@@ -119,7 +120,7 @@ var setupUserInterface = function() {
   var commandsModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+275, gridOrigin[1]-20, 0)
+    transform: Transform.translate(gridOrigin[0]+275, gridOrigin[1]-50, 0)
   });
   var opacity1 = new Modifier({
     opacity: 1.0
@@ -139,7 +140,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+145, gridOrigin[1]-100, 0)
+    transform: Transform.translate(gridOrigin[0]+145, gridOrigin[1]-25, 0)
   });
   var opacity2 = new Modifier({
     opacity: 1.0
@@ -147,25 +148,25 @@ var setupUserInterface = function() {
   opacityModifiers.push(opacity2);
   mainContext.add(speechModifier).add(opacity2).add(speechSurface);
 
-  var speechSurface = new Surface({
-    content: "----SPEECH----",
-     // next slide, next\n previous slide, previous\n laser, start laser, laser pointer\n stop laser, stop\n highlight\n stop highlight, stop\n circle, draw circle",
-    size: [100, 25],
-    properties: {
-      backgroundColor: Colors.GREY,
-      color: "black"
-    }
-  });
-  var speechModifier = new StateModifier({
-    origin: [0.0, 1.0],
-    align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+145, gridOrigin[1]-100, 0)
-  });
-  var opacity3 = new Modifier({
-    opacity: 0.0
-  });
-  opacityModifiers.push(opacity3);
-  mainContext.add(speechModifier).add(opacity3).add(speechSurface);
+  // var speechSurface = new Surface({
+  //   content: "----SPEECH----",
+  //    // next slide, next\n previous slide, previous\n laser, start laser, laser pointer\n stop laser, stop\n highlight\n stop highlight, stop\n circle, draw circle",
+  //   size: [100, 25],
+  //   properties: {
+  //     backgroundColor: Colors.GREY,
+  //     color: "black"
+  //   }
+  // });
+  // var speechModifier = new StateModifier({
+  //   origin: [0.0, 1.0],
+  //   align: [0.0, 0.4],
+  //   transform: Transform.translate(gridOrigin[0]+145, gridOrigin[1]-100, 0)
+  // });
+  // var opacity3 = new Modifier({
+  //   opacity: 0.0
+  // });
+  // opacityModifiers.push(opacity3);
+  // mainContext.add(speechModifier).add(opacity3).add(speechSurface);
 
   var speechSurface = new Surface({
     content: "NEXT SLIDE: next, next slide",
@@ -178,10 +179,10 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]-75, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1], 0)
   });
   var opacity4 = new Modifier({
-    opacity: 0.0
+    opacity: 1.0
   });
   opacityModifiers.push(opacity4);
   mainContext.add(speechModifier).add(opacity4).add(speechSurface);
@@ -197,7 +198,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]-45, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+30, 0)
   });
   var opacity5 = new Modifier({
     opacity: 1.0
@@ -216,7 +217,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+5, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+65, 0)
   });
   var opacity6 = new Modifier({
     opacity: 1.0
@@ -235,7 +236,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+105, gridOrigin[1]+45, 0)
+    transform: Transform.translate(gridOrigin[0]+105, gridOrigin[1]+95, 0)
   });
   var opacity7 = new Modifier({
     opacity: 1.0
@@ -254,7 +255,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+70, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+125, 0)
   });
   var opacity8 = new Modifier({
     opacity: 1.0
@@ -273,7 +274,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+100, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+155, 0)
   });
   var opacity9 = new Modifier({
     opacity: 1.0
@@ -292,7 +293,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+105, gridOrigin[1]+120, 0)
+    transform: Transform.translate(gridOrigin[0]+105, gridOrigin[1]+185, 0)
   });
   var opacity10 = new Modifier({
     opacity: 1.0
@@ -311,7 +312,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+170, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+225, 0)
   });
   var opacity12 = new Modifier({
     opacity: 1.0
@@ -330,7 +331,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+200, 0)
+    transform: Transform.translate(gridOrigin[0]+95, gridOrigin[1]+255, 0)
   });
   var opacity13 = new Modifier({
     opacity: 1.0
@@ -349,7 +350,7 @@ var setupUserInterface = function() {
   var speechModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+105, gridOrigin[1]+220, 0)
+    transform: Transform.translate(gridOrigin[0]+105, gridOrigin[1]+285, 0)
   });
   var opacity14 = new Modifier({
     opacity: 1.0
@@ -369,7 +370,7 @@ var setupUserInterface = function() {
   var gestureModifier = new StateModifier({
     origin: [0.0, 1.0],
     align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+545, gridOrigin[1]-100, 0)
+    transform: Transform.translate(gridOrigin[0]+545, gridOrigin[1]-25, 0)
   });
   var opacity15 = new Modifier({
     opacity: 1.0
@@ -378,46 +379,8 @@ var setupUserInterface = function() {
   mainContext.add(gestureModifier).add(opacity15).add(gestureSurface);
 
   var gestureSurface = new Surface({
-    content: "NEXT SLIDE: hand swipe left or up",
+    content: "NEXT SLIDE: hand swipe up with right hand",
     size: [225, 25],
-    properties: {
-      backgroundColor: Colors.GREY,
-      color: "black"
-    }
-  });
-  var gestureModifier = new StateModifier({
-    origin: [0.0, 1.0],
-    align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+495, gridOrigin[1]-70, 0)
-  });
-  var opacity16 = new Modifier({
-    opacity: 1.0
-  });
-  opacityModifiers.push(opacity16);
-  mainContext.add(gestureModifier).add(opacity16).add(gestureSurface);
-
-  var gestureSurface = new Surface({
-    content: "PREVIOUS SLIDE: hand swipe right or down",
-    size: [200, 25],
-    properties: {
-      backgroundColor: Colors.GREY,
-      color: "black"
-    }
-  });
-  var gestureModifier = new StateModifier({
-    origin: [0.0, 1.0],
-    align: [0.0, 0.4],
-    transform: Transform.translate(gridOrigin[0]+495, gridOrigin[1]-40, 0)
-  });
-  var opacity17 = new Modifier({
-    opacity: 1.0
-  });
-  opacityModifiers.push(opacity17);
-  mainContext.add(gestureModifier).add(opacity17).add(gestureSurface);
-
-  var gestureSurface = new Surface({
-    content: "DRAW CIRCLE: pointer finger circle gesture",
-    size: [250, 25],
     properties: {
       backgroundColor: Colors.GREY,
       color: "black"
@@ -428,11 +391,49 @@ var setupUserInterface = function() {
     align: [0.0, 0.4],
     transform: Transform.translate(gridOrigin[0]+495, gridOrigin[1]+10, 0)
   });
-  var opacity18 = new Modifier({
+  var opacity16 = new Modifier({
     opacity: 1.0
   });
-  opacityModifiers.push(opacity18);
-  mainContext.add(gestureModifier).add(opacity18).add(gestureSurface);
+  opacityModifiers.push(opacity16);
+  mainContext.add(gestureModifier).add(opacity16).add(gestureSurface);
+
+  var gestureSurface = new Surface({
+    content: "PREVIOUS SLIDE: hand swipe up with left hand",
+    size: [200, 25],
+    properties: {
+      backgroundColor: Colors.GREY,
+      color: "black"
+    }
+  });
+  var gestureModifier = new StateModifier({
+    origin: [0.0, 1.0],
+    align: [0.0, 0.4],
+    transform: Transform.translate(gridOrigin[0]+495, gridOrigin[1]+40, 0)
+  });
+  var opacity17 = new Modifier({
+    opacity: 1.0
+  });
+  opacityModifiers.push(opacity17);
+  mainContext.add(gestureModifier).add(opacity17).add(gestureSurface);
+
+  // var gestureSurface = new Surface({
+  //   content: "DRAW CIRCLE: pointer finger circle gesture",
+  //   size: [250, 25],
+  //   properties: {
+  //     backgroundColor: Colors.GREY,
+  //     color: "black"
+  //   }
+  // });
+  // var gestureModifier = new StateModifier({
+  //   origin: [0.0, 1.0],
+  //   align: [0.0, 0.4],
+  //   transform: Transform.translate(gridOrigin[0]+495, gridOrigin[1]+10, 0)
+  // });
+  // var opacity18 = new Modifier({
+  //   opacity: 1.0
+  // });
+  // opacityModifiers.push(opacity18);
+  // mainContext.add(gestureModifier).add(opacity18).add(gestureSurface);
 
   // Draw the cursor
   cursorSurface = new Surface({

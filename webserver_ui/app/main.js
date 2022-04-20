@@ -157,7 +157,7 @@ var processSpeech = function(transcript) {
       console.log("I am here yay");
       startButton.setContent("Beginning Presentation!");
       background.setContent("");
-      
+
       switchSlideUI();
       processed = true;
     }

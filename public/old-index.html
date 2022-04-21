@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartSlides</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    body { padding-top: 50px; }
+  </style>
+
+  <!-- Script Setups -->
+  <!-- <script type="application/javascript;charset=utf-8" src="/public/setupSpeech.js"></script> -->
+  <!-- <link rel="stylesheet" href="./PPTXjs-1.21.1/css/pptxjs.css"> -->
+  <!-- <link rel="stylesheet" href="./PPTXjs-1.21.1/css/nv.d3.min.css"> for charts graphs -->
+
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+  <meta name="viewport" content="initial-scale = 1.0, minimum-scale = 1.0, maximum-scale = 1.0, user-scalable = no, width = device-width" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
+
+  <script type="application/javascript;charset=utf-8" src="/public/triggers.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <h1>SmartSlides</h1>
+    </div>
+    <button id="laserButton">Laser</button>
+  </div>
+  <!-- <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSzbtv2mUulHJfEJSJDx_nVQsrnJh6tZq6rLi9QAmCDz8m8cQaJJoLmg30EV_pVP8d9Daz5lPduUCSG/embed?slide=5&start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="600" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allow="camera; microphone" id="pres"></iframe> -->
+
+  <!-- <script>
+    //   $('#pres').load("./presentation/index.html");
+    // $('#pres').pptxToHtml({
+    //     pptxFileUrl: "./presentation.pptx", 
+    //     // fileInputId: "upload_pptx_fiile",
+    //     slideMode: true,
+    //     slidesScale: "55%",
+    //     keyBoardShortCut: true, 
+    //     mediaProcess: true, /** true,false: if true then process video and audio files */ 
+    //     slideModeConfig: { //on slide mode (slideMode: true) 
+    //         first: 1, 
+    //         nav: true, /** true,false : show or not nav buttons*/ 
+    //         navTxtColor: "white", /** color */ 
+    //         showPlayPauseBtn: true,/** true,false */ 
+    //         showSlideNum: true, /** true,false */ 
+    //         showTotalSlideNum: true, /** true,false */ 
+    //         autoSlide: 2, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */ 
+    //         randomAutoSlide: false, /** true,false ,autoSlide:true */ 
+    //         loop: false, /** true,false */ 
+    //         background: "black", /** false or color*/ 
+    //         transition: "slid", /** transition type: &quot;slid&quot;,&quot;fade&quot;,&quot;default&quot;,&quot;random&quot; , to show transition efects :transitionTime &gt; 0.5 */ 
+    //         transitionTime: 1 /** transition time in seconds */ 
+    //     } 
+    // }); 
+  </script> -->
+    <div id="pres">
+        <div id="stageArea">
+            <div id="stage" class="stage">
+            </div>
+            <div id="hyperlinkPlane" class="stage">
+            </div>
+        </div>
+        <div id="slideshowNavigator">
+        </div>
+        <div id="slideNumberControl">
+        </div>
+        <div id="slideNumberDisplay">
+        </div>
+        <div id="helpPlacard">
+        </div>
+        <div id="waitingIndicator">
+            <div id="waitingSpinner">
+            </div>
+        </div>
+        <script type="text/javascript" src="assets/player/pdfjs/bcmaps.js"></script></body>
+        <script type="text/javascript" src="assets/player/pdfjs/web/compatibility.js"></script></body>
+        <script type="text/javascript" src="assets/player/pdfjs/pdf.js"></script></body>
+        <script type="text/javascript" src="assets/player/main.js"></script></body>
+    </div>
+
+    <script>
+        // document.getElementById("laserButton").onclick = function() {
+            // console.log("laser toggling by button");
+            // element = document.getElementById("pres");
+            // element.contentWindow.focus();
+            // element.contentWindow.dispatchEvent(new KeyboardEvent('keydown', {'key': 'l'}));
+        // }
+    </script>
+</body>
+</html>

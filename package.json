@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node --require source-map-support/register index.js",
+    "browserify": "tsc && browserify index.js -o public/presentation/dist/bundle.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,8 +19,12 @@
   },
   "homepage": "https://github.com/gecanow/SmartSlides#readme",
   "dependencies": {
+    "applescript": "^1.0.0",
+    "async_hooks": "^1.0.0",
+    "browserify": "^17.0.0",
     "express": "^4.18.0",
-    "googleapis": "^39.2.0",
+    "googleapis": "^100.0.0",
+    "run-applescript": "^6.0.0",
     "source-map-support": "^0.5.21"
   }
 }

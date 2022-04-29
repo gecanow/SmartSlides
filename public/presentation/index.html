@@ -5,16 +5,18 @@
         <meta name="viewport" content="initial-scale = 1.0, minimum-scale = 1.0, maximum-scale = 1.0, user-scalable = no, width = device-width" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+        <script src="/bundle.js"></script>
     </head>
     <body id="body" bgcolor="black">
 
-        <div class="jumbotron" style="display: flex; justify-content: center;">
+        <!-- <div class="jumbotron" style="display: flex; justify-content: center;">
             <div style="flex-direction:column; align-items: center;">
                 <h1>SmartSlides</h1>
                 <input id="slideX"></input>
+                <button id="appleBttn">Run Apple Script</button>
             </div>
-        </div>
+        </div> -->
 
         <div id="stageArea">
             <div id="stage" class="stage">
@@ -39,29 +41,37 @@
         <script type="text/javascript" src="assets/player/pdfjs/pdf.js"></script></body>
         <script type="text/javascript" src="assets/player/main.js"></script></body>
 
+        <!-- <script>var exports = {};</script>  -->
         <script type="module">
-            import {setup, prev, next, jumpSlide, jumpScene} from "/dist/presentation-control.js";
-            setup();
-            document.addEventListener('keydown', function (e) {
-                // console.log(e);
-                console.log(gShowController);
+            import {setup} from "/src/presentation-control.js";
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("calling setup");
+                setup(gShowController);
+            }, false);
+            // document.addEventListener('keydown', function (e) {
+            //     // console.log(e);
+            //     console.log(gShowController);
 
-                if (e.key === 'r') {
-                    prev(gShowController);
-                }
-                else if (e.key === 't') {
-                    next(gShowController);
-                }
-                else if (e.key === 'y') {
-                    let value = parseInt(document.getElementById("slideX").value);
-                    jumpSlide(gShowController, value);
-                }
-                else if (e.key === 'u') {
-                    let value = parseInt(document.getElementById("slideX").value);
-                    jumpScene(gShowController, value);
-                }
+            //     if (e.key === 'r') {
+            //         pres.prev(gShowController);
+            //     }
+            //     else if (e.key === 't') {
+            //         pres.next(gShowController);
+            //     }
+            //     else if (e.key === 'y') {
+            //         let value = parseInt(document.getElementById("slideX").value);
+            //         pres.jumpSlide(gShowController, value);
+            //     }
+            //     else if (e.key === 'u') {
+            //         let value = parseInt(document.getElementById("slideX").value);
+            //         pres.jumpScene(gShowController, value);
+            //     }
 
-            });
+            // });
+
+            // document.getElementById("appleBttn").addEventListener("onclick", function(e) {
+            //     pres.convertToHTML();
+            // });
         </script>
     </body>
 </html>

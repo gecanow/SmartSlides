@@ -15,9 +15,6 @@ var GridLayout = famous.views.GridLayout;
 // UI SETUP
 setupUserInterface();
 
-var usingGestures = true; // set to false if check gestureCheckbox, default is to recognize gestures
-var usingSpeech = true; // set to false if check the speechCheckbox, default is on
-
 var cursorPosition;
 var highlightStart, highlightEnd;
 var highlightOn = true;
@@ -153,6 +150,7 @@ Leap.loop({ hand: function(hand) {
 }}).use('screenPosition', {scale: LEAPSCALE})});
 
 
+
 // processSpeech(transcript)
 //  Is called anytime speech is recognized by the Web Speech API
 // Input:
@@ -167,6 +165,33 @@ var processSpeech = function(transcript) {
         return true;
     }
     return false;
+  };
+
+
+  // draw circle on screen
+  // circleSize: int of pixel size (diameter of circle), default is 100
+  // circleColor: string of hex values, default is red "#FF3333"
+  var drawCircle = function(circleSize = 100, circleColor = '#FF3333') {
+    console.log("I heard you wanted to draw a circle");
+    // console.log(circleSize);
+    // console.log(circleColor);
+    // circleSize = 48;
+    var circleSurface = new Surface({
+      size : [circleSize, circleSize],
+      properties : {
+          border: '4px solid ' + circleColor,
+          borderRadius: circleSize/2 + 'px',
+          zIndex: 1
+      }
+    });
+    var circleModifier = new StateModifier(
+      {origin: [0.5, 0.5],
+      transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
+    var circleOpacity = new Modifier({
+        opacity: 1.0
+    });
+    mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+    addedElementModifiers.push(circleOpacity);
   };
 
   var processed = false;
@@ -187,8 +212,8 @@ var processSpeech = function(transcript) {
       background.setContent("");
       // backgroundModifier.setOpacity(0.0);
       opacityModifiers.forEach(function (item, index) {
-        console.log(item);
-        console.log(index);
+        // console.log(item);
+        // console.log(index);
         item.setOpacity(0);
       });
       // switchSlideUI();
@@ -199,76 +224,100 @@ var processSpeech = function(transcript) {
   else if (presentationState.get('state') == 'presenting') {
     console.log("I am recognizing speech and in presenting mode");
 
-    // not implementing transitioning slides right now
+    // moving to next and previous slides
     var said_next_slide = userSaid(transcript.toLowerCase(), ["next slide", "next"]);
     var said_prev_slide = userSaid(transcript.toLowerCase(), ["previous slide", "previous"]);
 
     // current speech recognition
-    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle", "circle here"]);
-    var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight", "make highlight", "highlight here", "highlight", "high light"]);
-    var said_stop_highlight = userSaid(transcript.toLowerCase(), ["stop highlight", "now stop"]);
 
-    var said_laser = userSaid(transcript.toLowerCase(), ["start laser pointer", "laser", "cursor", "laser pointer"]);
+    // default circle
+    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle", "circle here"]);
+
+    // circle options
+    var said_small_circle = userSaid(transcript.toLowerCase(), ["small circle"]);
+    var said_big_circle = userSaid(transcript.toLowerCase(), ["big circle", "large circle"]);
+    var said_blue_circle = userSaid(transcript.toLowerCase(), ["blue circle"]);
+    var said_green_circle = userSaid(transcript.toLowerCase(), ["green circle"]);
+    var said_small_green_circle = userSaid(transcript.toLowerCase(), ["small green circle"]);
+    var said_small_blue_circle = userSaid(transcript.toLowerCase(), ["small blue circle"]);
+    var said_big_green_circle = userSaid(transcript.toLowerCase(), ["big green circle", "large green circle"]);
+    var said_big_blue_circle = userSaid(transcript.toLowerCase(), ["big blue circle", "large blue circle"]);
+
+    // highlight -- probably going to get rid of this
+    var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight", "make highlight", "highlight here", "highlight", "high light"]);
+    var said_off_highlight = userSaid(transcript.toLowerCase(), ["turn off highlight", "turn off highlights"]);
+    var said_start_highlight = userSaid(transcript.toLowerCase(), ["start"]);
+
+    // laser
+    var said_laser = userSaid(transcript.toLowerCase(), ["laser", "cursor", "laser pointer"]);
     var said_stop_laser = userSaid(transcript.toLowerCase(), ["stop laser pointer", "stop laser", "stop cursor", "stop laser pointer"]);
+
     if (userSaid(transcript.toLowerCase(), ["stop"]) && highlightOn) {
-      said_stop_highlight = true;
+      var said_stop_highlight = true;
     } else if (userSaid(transcript.toLowerCase(), ["stop"])) {
       said_stop_laser = true;
     }
 
     if (said_stop_highlight) said_highlight = false;
 
-    if (said_create_circle) { // also change this else to recognize the create circle gesture
-      // use cursorPosition variable and interact with google slide api
-      console.log("I heard you wanted to draw a circle");
-
-      var circleSurface = new Surface({
-        size : [100, 100],
-        properties : {
-            border: '4px solid #FF3333',
-            borderRadius: 100/2 + 'px',
-            zIndex: 1
-        }
-      });
-      var circleModifier = new StateModifier(
-        {origin: [0.5, 0.5],
-        transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
-      var circleOpacity = new Modifier({
-          opacity: 1.0
-      });
-      mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
-      addedElementModifiers.push(circleOpacity);
+    if (said_small_blue_circle) {
+      drawCircle(48, '#0040ff');
+    } else if (said_big_green_circle) {
+      drawCircle(240, '#00CC44');
+    } else if (said_small_green_circle) {
+      drawCircle(48, '#00CC44');
+    } else if (said_big_blue_circle) {
+      drawCircle(240, '#0040ff');
+    } else if (said_blue_circle) {
+      drawCircle(100, '#0040ff');
+    } else if (said_green_circle) {
+      drawCircle(100, '#00CC44');
+    } else if (said_small_circle) {
+      drawCircle(48, '#FF3333'); // red
+    } else if (said_big_circle) {
+      drawCircle(240, '#FF3333'); // red
+    } else if (said_create_circle) { // default circle
+      drawCircle(); // red, regular size
     }
 
     if (said_highlight) {
       console.log("I heard you wanted to make a highlight");
       cursorSurface.setProperties({backgroundColor: Colors.YELLOW})
       cursorModifier.setOpacity(0.75);
-      highlightStart = [cursorPosition[0], cursorPosition[1]];
       console.log(highlightStart);
       highlightOn = true;
     }
 
+    if (said_start_highlight && highlightOn) {
+      highlightStart = [cursorPosition[0], cursorPosition[1]];
+    }
+
     if (said_stop_highlight) {
       console.log("I heard you wanted to stop the highlight");
-      cursorModifier.setOpacity(0);
+
       highlightEnd = [cursorPosition[0], cursorPosition[1]];
       console.log(highlightEnd);
       var highlightSurface = new Surface({
-        size: [Math.abs(highlightEnd[0]-highlightStart[0]), Math.abs(highlightEnd[1]-highlightStart[1])],
+        // size: [Math.abs(highlightEnd[0]-highlightStart[0]), Math.abs(highlightEnd[1]-highlightStart[1])],
+        size: [Math.abs(highlightEnd[0]-highlightStart[0]), 80], // set standard highlight height
         properties: {
           backgroundColor: Colors.YELLOW
         }
       });
       var highlightModifier = new Modifier({
-        opacity: 0.75
+        opacity: 0.70
       })
       var highlightStateMod = new StateModifier({
         transform: Transform.translate(highlightStart[0], highlightStart[1], 0)
       });
       mainContext.add(highlightStateMod).add(highlightModifier).add(highlightSurface);
-      highlightOn = false;
+      // highlightOn = false;
       addedElementModifiers.push(highlightModifier);
+    }
+
+    if (said_off_highlight) {
+      cursorModifier.setOpacity(0);
+      highlightOn = false;
     }
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that

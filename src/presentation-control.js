@@ -1,4 +1,4 @@
-export function setup() {
+function setup() {
     console.log("...setting up...");
 
     // configure the head
@@ -51,6 +51,9 @@ export function setup() {
             let value = parseInt(document.getElementById("slideX")?.nodeValue ?? gShowController.currentSlideIndex);
             jumpScene(value);
         }
+        else if (e.key === 'i') {
+            convertToHTML();
+        }
 
     });
 
@@ -60,56 +63,56 @@ export function setup() {
 }
 
 // Programmatically move to the prev slide
-export function prev() {
+function prev() {
     console.log("prev");
     let event = new KeyboardEvent('keydown', {'charCode': 37 /*kKeyCode_LeftArrow*/});
     gShowController.handleKeyDownEvent(event);
 }
 
 // Programmatically move to the next slide
-export function next() {
+function next() {
     console.log("next");
     let event = new KeyboardEvent('keydown', {'charCode': 39 /*kKeyCode_RightArrow*/});
     gShowController.handleKeyDownEvent(event);
 }
 
 // Programmatically move to slide X
-export function jumpSlide(x) {
+function jumpSlide(x) {
     console.log("jumpSlide");
     gShowController.jumpToSlide(x);
 }
 
 // Programmatically move to scene X
-export function jumpScene(x) {
+function jumpScene(x) {
     console.log("jumpScene");
     gShowController.jumpToScene(x);
 }
 
 // Programmatically rewinds X slides back
-export function rewindSlide(x) {
+function rewindSlide(x) {
     console.log("rewindSlide");
     jumpSlide(gShowController, gShowController.currentSlideIndex - x);
 }
 
 // Programmatically rewinds X scenes back
-export function rewindScene(x) {
+function rewindScene(x) {
     console.log("rewindScene");
     jumpScene(gShowController, gShowController.currentSlideIndex - x);
 }
 
 // Programmatically fast-forwards X slides back
-export function ffSlide(x) {
+function ffSlide(x) {
     console.log("ffSlide");
     jumpSlide(gShowController, gShowController.currentSlideIndex + x);
 }
 
 // Programmatically fast-forwards  X scenes back
-export function ffScene(x) {
+function ffScene(x) {
     console.log("ffScene");
     jumpScene(gShowController, gShowController.currentSlideIndex + x);
 }
 
-export async function convertToHTML() {
+async function convertToHTML() {
     // Very basic AppleScript command. Returns the song name of each
     // currently selected track in iTunes as an 'Array' of 'String's.
     const script = `
@@ -145,8 +148,16 @@ export async function convertToHTML() {
     end tell
     `;
 
-    // console.log(`attempting to run ${script}`);
     // const runAppleScript = require('run-applescript');
+    console.log(`attempting to run ${script}`);
     // const result = await runAppleScript(script);
-    // console.log(result);
+    console.log(result);
 }
+
+
+/**
+ * ---------------- Start
+ */
+ document.addEventListener('DOMContentLoaded', function() {
+    setup(gShowController);
+}, false);

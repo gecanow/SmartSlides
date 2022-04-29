@@ -8,7 +8,8 @@ const app = express();
 const port = 8000;
 
 // main prezzy
-app.use(express.static(path.join(__dirname, 'public/presentation')));
+// app.use(express.static(path.join(__dirname, 'public/presentation')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // where to find node_mods
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules')));

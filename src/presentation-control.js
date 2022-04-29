@@ -25,12 +25,10 @@ function setup() {
     document.body.insertBefore(jumboDiv, document.body.firstChild);
 
     // restyle the stagingArea
-    const stage = document.getElementById("stageArea");
-    if (stage) {
-        stage.style.display = 'none';
-        stage.style.marginTop = "100px";
-        stage.style.display = 'block';
-    }
+    const stage = document.getElementById("div");
+    stage.style.display = 'none';
+    stage.style.marginTop = "100px";
+    stage.style.display = 'block';
 
     // finally, connect the script!
     document.addEventListener('keydown', function (e) {
@@ -150,7 +148,7 @@ async function convertToHTML() {
 
     // const runAppleScript = require('run-applescript');
     console.log(`attempting to run ${script}`);
-    // const result = await runAppleScript(script);
+    const result = await runAppleScript(script);
     console.log(result);
 }
 

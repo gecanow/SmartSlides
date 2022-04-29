@@ -16,8 +16,9 @@ var GridLayout = famous.views.GridLayout;
 setupUserInterface();
 
 var cursorPosition;
-var highlightStart, highlightEnd;
-var highlightOn = true;
+var highlightStart, highlightEnd, previousHighlightStart = [0,0];
+var CAN_DRAW_CIRCLE = true; // drawing circle timeout
+var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
 
@@ -52,7 +53,7 @@ Leap.loop({ hand: function(hand) {
           let handNow = frame.hand(handId);
           handType = handNow.type;
           // console.log(hand)
-          console.log("hand: ", handNow.type)
+          // console.log("hand: ", handNow.type)
         });
 
         switch (gesture.type){
@@ -126,8 +127,10 @@ Leap.loop({ hand: function(hand) {
   // Use the hand data to control the cursor's screen position
   cursorPosition = [0, 0];
   var handPosition = hand.screenPosition();
-  var x_offset = 100;;
+  var x_offset = 50;
   var y_offset = 300;
+  // var x_offset = 200;
+  // var y_offset = 600;
   cursorPosition[0] = (handPosition[0] + x_offset);
   cursorPosition[1] = (handPosition[1] + y_offset);
 
@@ -172,6 +175,7 @@ var processSpeech = function(transcript) {
   // circleSize: int of pixel size (diameter of circle), default is 100
   // circleColor: string of hex values, default is red "#FF3333"
   var drawCircle = function(circleSize = 100, circleColor = '#FF3333') {
+    if (!CAN_DRAW_CIRCLE) return;
     console.log("I heard you wanted to draw a circle");
     // console.log(circleSize);
     // console.log(circleColor);
@@ -192,6 +196,8 @@ var processSpeech = function(transcript) {
     });
     mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
     addedElementModifiers.push(circleOpacity);
+    CAN_DRAW_CIRCLE = false;
+    setTimeout(() => CAN_DRAW_CIRCLE = true, 1000);
   };
 
   var processed = false;
@@ -218,6 +224,7 @@ var processSpeech = function(transcript) {
       });
       // switchSlideUI();
       processed = true;
+      highlightOn = false;
     }
   }
 
@@ -244,21 +251,27 @@ var processSpeech = function(transcript) {
     var said_big_blue_circle = userSaid(transcript.toLowerCase(), ["big blue circle", "large blue circle"]);
 
     // highlight -- probably going to get rid of this
-    var said_highlight = userSaid(transcript.toLowerCase(), ["highlight this", "create highlight", "make highlight", "highlight here", "highlight", "high light"]);
-    var said_off_highlight = userSaid(transcript.toLowerCase(), ["turn off highlight", "turn off highlights"]);
+    var said_highlight = userSaid(transcript.toLowerCase(), ["turn on highlight", "highlight", "highlights"]);
+    var said_pink_highlight = userSaid(transcript.toLowerCase(), ["turn on pink highlight", "pink highlight"]); // '#FF00FF'
+    var said_orange_highlight = userSaid(transcript.toLowerCase(), ["turn on orange highlight", "orange highlight"]); // '#FF9900'
+
+    var said_off_highlight = userSaid(transcript.toLowerCase(), ["turn off", "turn off highlight", "turn off highlights", "turn off my light"]); // commonly mishears turn off highlight as turn off my light
     var said_start_highlight = userSaid(transcript.toLowerCase(), ["start"]);
 
-    // laser
-    var said_laser = userSaid(transcript.toLowerCase(), ["laser", "cursor", "laser pointer"]);
-    var said_stop_laser = userSaid(transcript.toLowerCase(), ["stop laser pointer", "stop laser", "stop cursor", "stop laser pointer"]);
-
-    if (userSaid(transcript.toLowerCase(), ["stop"]) && highlightOn) {
+    if (userSaid(transcript.toLowerCase(), ["stop"]) && (yellowHighlightOn || orangeHighlightOn || pinkHighlightOn)) {
       var said_stop_highlight = true;
     } else if (userSaid(transcript.toLowerCase(), ["stop"])) {
       said_stop_laser = true;
+      // var said_stop_highlight = false;
     }
 
     if (said_stop_highlight) said_highlight = false;
+
+    // laser
+    var said_laser = userSaid(transcript.toLowerCase(), ["laser", "cursor", "laser pointer"]);
+    var said_stop_laser = userSaid(transcript.toLowerCase(), ["stop laser", "stop laser pointer", "turn off laser"]);
+
+
 
     if (said_small_blue_circle) {
       drawCircle(48, '#0040ff');
@@ -282,42 +295,73 @@ var processSpeech = function(transcript) {
 
     if (said_highlight) {
       console.log("I heard you wanted to make a highlight");
-      cursorSurface.setProperties({backgroundColor: Colors.YELLOW})
-      cursorModifier.setOpacity(0.75);
-      console.log(highlightStart);
-      highlightOn = true;
+      if (said_pink_highlight) {
+        cursorSurface.setProperties({backgroundColor: '#FF00FF'});
+        pinkHighlightOn = true;
+      } else if (said_orange_highlight) {
+        cursorSurface.setProperties({backgroundColor: '#FF9900'});
+        orangeHighlightOn = true;
+      } else {
+        cursorSurface.setProperties({backgroundColor: Colors.YELLOW});
+        yellowHighlightOn = true;
+      }
+
+      cursorModifier.setOpacity(0.65);
+
+      // console.log(highlightStart);
+
     }
 
-    if (said_start_highlight && highlightOn) {
+    // console.log(said_start_highlight);
+    // console.log((yellowHighlightOn || orangeHighlightOn || pinkHighlightOn));
+    if (said_start_highlight && (yellowHighlightOn || orangeHighlightOn || pinkHighlightOn)) {
       highlightStart = [cursorPosition[0], cursorPosition[1]];
     }
 
-    if (said_stop_highlight) {
+    // console.log("i am here");
+    // console.log(highlightStart != previousHighlightStart);
+    if (said_stop_highlight && highlightStart != previousHighlightStart) {
+      // console.log(highlightStart != previousHighlightStart);
+      // console.log(highlightStart);
+      // console.log(previousHighlightStart);
+      previousHighlightStart = highlightStart;
+
+
+      var color;
+      if (yellowHighlightOn) {
+        color = Colors.YELLOW;
+      } else if (orangeHighlightOn) {
+        color = '#FF9900';
+      } else if (pinkHighlightOn) {
+        color = '#FF00FF';
+      }
       console.log("I heard you wanted to stop the highlight");
 
       highlightEnd = [cursorPosition[0], cursorPosition[1]];
       console.log(highlightEnd);
       var highlightSurface = new Surface({
-        // size: [Math.abs(highlightEnd[0]-highlightStart[0]), Math.abs(highlightEnd[1]-highlightStart[1])],
-        size: [Math.abs(highlightEnd[0]-highlightStart[0]), 80], // set standard highlight height
+        size: [Math.abs(highlightEnd[0]-highlightStart[0]), Math.abs(highlightEnd[1]-highlightStart[1])],
+        // size: [Math.abs(highlightEnd[0]-highlightStart[0]), 80], // set standard highlight height
         properties: {
-          backgroundColor: Colors.YELLOW
+          backgroundColor: color
         }
       });
       var highlightModifier = new Modifier({
-        opacity: 0.70
+        opacity: 0.60
       })
       var highlightStateMod = new StateModifier({
         transform: Transform.translate(highlightStart[0], highlightStart[1], 0)
       });
       mainContext.add(highlightStateMod).add(highlightModifier).add(highlightSurface);
-      // highlightOn = false;
       addedElementModifiers.push(highlightModifier);
+
     }
 
     if (said_off_highlight) {
       cursorModifier.setOpacity(0);
-      highlightOn = false;
+      yellowHighlightOn = false;
+      orangeHighlightOn = false;
+      pinkHighlightOn = false;
     }
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that

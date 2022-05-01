@@ -4,12 +4,15 @@
 
 const express = require('express');
 const path = require('path');
+// const sphp = require('sphp');
+
+
 const app = express();
 const port = 8000;
 
 // main prezzy
-// app.use(express.static(path.join(__dirname, 'public/presentation')));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/presentation')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // where to find node_mods
 app.use('/scripts', express.static(path.join(__dirname, 'node_modules')));

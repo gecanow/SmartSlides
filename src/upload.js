@@ -14,6 +14,7 @@ function dragNdrop() {
 function dragenter(e) {
     e.stopPropagation();
     e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
 
     document.getElementById("dropbox-text").textContent = "+";
     document.getElementById("dropbox").style.backgroundColor = "lightgreen";
@@ -34,6 +35,29 @@ function drop(e) {
     handleDataTransfer(dt);
 }
 
+/**
+ * Unpacking the data transfer
+ */
+
+ function appendStyleToHead(fullPath) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = fullPath;
+    document.head.appendChild(link);
+    contentLoaded++;
+    if (contentLoaded >= 5) beginPresentation();
+}
+
+function appendScriptToHTML(fullPath) {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = fullPath;
+    document.body.appendChild(script);
+    contentLoaded++;
+    if (contentLoaded >= 5) beginPresentation();
+}
+
 function unpackPDFJS(pdfjs) {
     pdfjs.createReader().readEntries(function(results) {
         results.forEach(entry => {
@@ -42,15 +66,18 @@ function unpackPDFJS(pdfjs) {
                     es.forEach(e => {
                         if (!e.isDirectory && e.name === "compatibility.js") {
                             console.log("compatibility", e);
+                            appendScriptToHTML(e.fullPath);
                         }
                     });
                 });
             } 
             else if (!entry.isDirectory && entry.name === "bcmaps.js") {
                 console.log("bcmaps", entry);
+                appendScriptToHTML(entry.fullPath);
             }
             else if (!entry.isDirectory && entry.name === "pdf.js") {
                 console.log("pdf", entry);
+                appendScriptToHTML(entry.fullPath);
             }
         });
     });
@@ -64,18 +91,16 @@ function unpackPlayer(player) {
             } 
             else if (!entry.isDirectory && entry.name === "styles.css") {
                 console.log("styles", entry);
+                appendStyleToHead(entry.fullPath);
             }
             else if (!entry.isDirectory && entry.name === "main.js") {
                 console.log("main", entry);
+                console.log("main-URL", (new FileReader()).readAsDataURL(entry));
+                appendScriptToHTML(entry.fullPath);
+                // entry.copyTo(".");
             }
         });
     });
-
-    // let stylesheet = assets.getFile("player/styles.css");
-    // let f1 = assets.getFile("/player/pdfjs/bcmaps.js");
-    // let f2 = assets.getFile("/player/pdfjs/web/compatibility.js");
-    // let f3 = assets.getFile("/player/pdfjs/pdf.js");
-    // let f4 = assets.getFile("/player/main.js");
 }
 
 function unpackAssets(dir) {
@@ -83,6 +108,7 @@ function unpackAssets(dir) {
     if (dir.name === "assets") {
         console.log(dir);
         // unpack the assets
+
         dir.createReader().readEntries(function(results) {
             results.forEach(entry => {
                 if (entry.isDirectory && entry.name === "player") {
@@ -90,6 +116,10 @@ function unpackAssets(dir) {
                 }
             });
         });
+
+        // window.requestFileSystem(Window.TEMPORARY, (res) => {
+        //     console.log("res", res);
+        // })
         return true;
     }
 
@@ -101,8 +131,11 @@ function unpackAssets(dir) {
     });
 }
 
-function handleDataTransfer(dt) {
+async function handleDataTransfer(dt) {
     if (!dt.items.length) return;
+
+    const fsHandle = await dt.items[0].getAsFileSystemHandle();
+    console.log(fsHandle);
 
     // filter for only the ASSETS folder
     const allTopFolders = [...Array(dt.items.length).keys()]
@@ -111,12 +144,25 @@ function handleDataTransfer(dt) {
     
     allTopFolders.forEach(f => {
         unpackAssets(f);
+        // console.log(f);
+        // f.copyTo(".");
     });
+}
+
+function saveFiles(f) {
+    Window.requestFileSystem(Window.TEMPORARY, )
 }
 
 /**
  * ---------------- Start
  */
- document.addEventListener('DOMContentLoaded', function() {
+contentLoaded = 0;
+document.addEventListener('DOMContentLoaded', function() {
     dragNdrop();
+
 }, false);
+
+function beginPresentation() {
+    document.getElementById("dropbox").style.display = "none";
+    document.getElementById("presentation").style.display = "block";
+}

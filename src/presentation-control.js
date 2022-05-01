@@ -19,13 +19,13 @@ function setup() {
         <div style="flex-direction:column; align-items: center;">
             <h1>SmartSlides</h1>
             <input id="slideX"></input>
-            <button id="appleBttn">Run Apple Script</button>
+            <p>('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
         </div>
     `;
     document.body.insertBefore(jumboDiv, document.body.firstChild);
 
     // restyle the stagingArea
-    const stage = document.getElementById("div");
+    const stage = document.getElementById("stageArea");
     stage.style.display = 'none';
     stage.style.marginTop = "100px";
     stage.style.display = 'block';
@@ -49,15 +49,10 @@ function setup() {
             let value = parseInt(document.getElementById("slideX")?.nodeValue ?? gShowController.currentSlideIndex);
             jumpScene(value);
         }
-        else if (e.key === 'i') {
-            convertToHTML();
-        }
 
     });
 
-    document.getElementById("appleBttn")?.addEventListener("onclick", function(e) {
-        convertToHTML();
-    });
+    console.log("...done...");
 }
 
 // Programmatically move to the prev slide
@@ -109,49 +104,6 @@ function ffScene(x) {
     console.log("ffScene");
     jumpScene(gShowController, gShowController.currentSlideIndex + x);
 }
-
-async function convertToHTML() {
-    // Very basic AppleScript command. Returns the song name of each
-    // currently selected track in iTunes as an 'Array' of 'String's.
-    const script = `
-    -- https://iworkautomation.com/keynote/document-export.html
-    tell application "Keynote"
-        activate
-        
-        set tempDir to "tmp"
-        
-        -- destination folder
-        tell application "Finder"
-            set currentFolder to container of (path to me) as alias
-            set the chosenDocumentFile to (choose file default location currentFolder with prompt "Choose the presentation:")
-            set the targetFolderHFSPath to (currentFolder & tempDir) as string
-        end tell
-        
-        --export doc
-        set the chosenDocument to (open chosenDocumentFile)
-        with timeout of 1200 seconds
-            export chosenDocument as HTML to file targetFolderHFSPath
-        end timeout
-        close chosenDocument
-        
-        -- move the new assets into the public/presentation folder
-        tell application "Finder"
-            activate
-            set assetsFolder to POSIX path of (currentFolder as string) & (tempDir as string) & ("/assets" as string)
-            set destFolder to POSIX path of (currentFolder as string) & ("../../../public/presentation/assets" as string)
-            move folder assetsFolder to folder destFolder
-        end tell
-        
-        display dialog "Done"
-    end tell
-    `;
-
-    // const runAppleScript = require('run-applescript');
-    console.log(`attempting to run ${script}`);
-    const result = await runAppleScript(script);
-    console.log(result);
-}
-
 
 /**
  * ---------------- Start

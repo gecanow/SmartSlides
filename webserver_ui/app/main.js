@@ -26,6 +26,9 @@ var CAN_ADVANCE_SLIDESHOW = true;
 var goToNextSlide = function() {
   if (!CAN_ADVANCE_SLIDESHOW) return;
   // go to next slide
+  addedElementModifiers.forEach(function (item, index) {
+    item.setOpacity(0);
+  });
   let stage = document.getElementById("stageArea");
   console.log("found stage", stage);
   // var e = document.createEvent("KeyEvents");
@@ -37,8 +40,58 @@ var goToNextSlide = function() {
   stage.click(); // only thing working right now
 
   CAN_ADVANCE_SLIDESHOW = false;
-  setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 1000);
+  setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
 }
+
+// var recordTextBox = function() {
+//   console.log("recording for text box")
+//   var debouncedProcessSpeech = _.debounce(processSpeech, 500);
+//   console.log("debounced")
+//   var textBoxRecognition = new webkitSpeechRecognition();
+//   console.log("made new webkit")
+//   var endTextBox = "stop now";
+//   textBoxRecognition.start();
+//   console.log("started recognition")
+//   textBoxRecognition.continuous = true;
+//   textBoxRecognition.interimResults = true;
+//   console.log("about to start function")
+//   textBoxRecognition.onresult = function(event) {
+//     console.log("in text event")
+//     // Build the interim transcript, so we can process speech faster
+//     var textBoxTranscript = '';
+//     var hasFinal = false;
+//     for (var i = event.resultIndex; i < event.results.length; ++i) {
+//       console.log("in text result")
+//       if (event.results[i].isFinal) {
+//         hasFinal = true;
+//         textBoxRecognition.stop();
+//         console.log("stopped recording because hasFinal=true");
+//         console.log("textBoxTranscript:");
+//         console.log(textBoxTranscript);
+//       } else {
+//         textBoxTranscript += event.results[i][0].transcript;
+//         if (endTextBox in textBoxTranscript) {
+//           textBoxRecognition.stop();
+//           console.log("stopped recording because of stop now command");
+//           console.log("transcript:");
+//           console.log(textBoxTranscript);
+//         }
+//       }
+//     }
+//
+//     var processed = debouncedProcessSpeech(textBoxTranscript);
+//
+//     // If we reacted to speech, kill recognition and restart
+//     if (processed) {
+//       textBoxRecognition.stop();
+//       console.log("stopped recording because processed")
+//       console.log("textBoxTranscript:");
+//       console.log(textBoxTranscript);
+//     }
+//   };
+//
+//
+// }
 
 //
 // MAIN GAME LOOP
@@ -85,7 +138,7 @@ Leap.loop({ hand: function(hand) {
           //     // startButton.setContent("I detected a screen tap gesture.");
           //     break;
           case "swipe":
-              console.log("Swipe Gesture");
+              // console.log("Swipe Gesture");
               // startButton.setContent("I detected a swipe gesture.");
 
               //Classify swipe as either horizontal or vertical
@@ -95,29 +148,37 @@ Leap.loop({ hand: function(hand) {
             if (isHorizontal) {
               if (gesture.direction[0] > 0) {
                 swipeDirection = "right";
-                // startButton.setContent("I detected a right swipe.");
-              } else {
-                swipeDirection = "left";
-                // startButton.setContent("I detected a left swipe.");
-              }
-            } else { //vertical
-              if (gesture.direction[1] > 0) {
-                swipeDirection = "up";
-                startButton.setContent("I detected an up swipe.");
+                startButton.setContent("I detected a right swipe.");
                 console.log(`Found hand type: ${handType}`);
                 if (handType == "right") {
                   // go to next slide
                   goToNextSlide();
-                } else {
-                  // go to prev slide
                 }
-                // start delay
+              } else {
+                swipeDirection = "left";
+                startButton.setContent("I detected a left swipe.");
+                console.log(`Found hand type: ${handType}`);
+                if (handType == "left") {
+                  // go to previous slide
+                }
+              }
+            } else { //vertical
+              if (gesture.direction[1] > 0) {
+                swipeDirection = "up";
+                // startButton.setContent("I detected an up swipe.");
+                // console.log(`Found hand type: ${handType}`);
+                // if (handType == "right") {
+                //   // go to next slide
+                //   goToNextSlide();
+                // } else {
+                //   // go to prev slide
+                // }
               } else {
                 swipeDirection = "down";
                 // startButton.setContent("I detected a down swipe.");
               }
             }
-              console.log(swipeDirection)
+              // console.log(swipeDirection)
               break;
         }
     });
@@ -272,6 +333,8 @@ var processSpeech = function(transcript) {
     var said_stop_laser = userSaid(transcript.toLowerCase(), ["stop laser", "stop laser pointer", "turn off laser"]);
 
 
+    var said_text_box = userSaid(transcript.toLowerCase(), ["text box", "textbox"]);
+
 
     if (said_small_blue_circle) {
       drawCircle(48, '#0040ff');
@@ -378,10 +441,6 @@ var processSpeech = function(transcript) {
 
     if (said_next_slide) {
       console.log("I heard you wanted to go to the next slide.");
-      addedElementModifiers.forEach(function (item, index) {
-        item.setOpacity(0);
-      });
-
       goToNextSlide();
     }
 
@@ -393,7 +452,50 @@ var processSpeech = function(transcript) {
       });
     }
 
+    function editTranscript(transcript) {
+      for (let i = 0; i < transcript.length; i++) {
+        var box = transcript.slice(i, i+3);
+        // console.log("box? ", box);
+        if (box == "box") {
+          var text = transcript.slice(i+4);
+          console.log("text to display: ", text)
+          return text;
+        }
+      }
+    }
 
+    if (said_text_box) {
+      console.log("I heard you want to place a text box.");
+      // var text = recordTextBox()
+      // console.log("text: ", text);
+      console.log("transcript: ", transcript);
+      var text = editTranscript(transcript);
+
+      var textSurface = new Surface({
+        content: "",
+        size: [500, 500],
+        properties: {
+          backgroundColor: Colors.WHITE,
+          color: "black",
+          fontSize: "2em",
+        }
+      });
+      var textModifier = new StateModifier({
+        origin: [0.0, 1.0],
+        align: [0.0, 0.65],
+        transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)
+      });
+      var textOpacity = new Modifier({
+        opacity: 0.0
+      });
+      opacityModifiers.push(textOpacity);
+      mainContext.add(textModifier).add(textOpacity).add(textSurface);
+      addedElementModifiers.push(textOpacity);
+      textOpacity.setOpacity(1);
+      console.log("about to write text")
+      textSurface.setContent(text);
+
+    }
   }
 
   return processed;

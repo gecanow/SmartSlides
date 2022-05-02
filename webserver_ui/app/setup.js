@@ -379,7 +379,7 @@ var setupUserInterface = function() {
   mainContext.add(gestureModifier).add(opacity15).add(gestureSurface);
 
   var gestureSurface = new Surface({
-    content: "NEXT SLIDE: hand swipe up with right hand",
+    content: "NEXT SLIDE: hand swipe right with right hand",
     size: [225, 25],
     properties: {
       backgroundColor: Colors.GREY,
@@ -398,7 +398,7 @@ var setupUserInterface = function() {
   mainContext.add(gestureModifier).add(opacity16).add(gestureSurface);
 
   var gestureSurface = new Surface({
-    content: "PREVIOUS SLIDE: hand swipe up with left hand",
+    content: "PREVIOUS SLIDE: hand swipe left with left hand",
     size: [200, 25],
     properties: {
       backgroundColor: Colors.GREY,

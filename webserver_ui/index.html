@@ -81,9 +81,9 @@
         </div>
 
         <div id="instructions" style="margin-top:10px; margin-left:20px;">
-            <!-- <div style="flex-direction:center;  align-items: center; justify-content: center;">
-                <h2>Say "Start" to enter presentation mode.</h2>
-            </div> -->
+          <div style="display: flex; justify-content: center;">
+              <h2>Press the 'h' key to toggle between help screen and slideshow.</h2>
+          </div>
             <div class="row">
               <div class="col">
                 <h2>Speech Commands. </h2>
@@ -110,17 +110,18 @@
 
               <div class="w-100"></div>
               <div class="col">
-                <p> - start laser pointer = "laser"</p>
-                <p> - stop laser = "stop laser", "turn off laser"</p>
+                <p> - start laser = "laser"</p>
+                <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
               </div>
               <div class="col">
-                <p> - laser position position = hand position </p>
+                <p> - laser position = hand position from leap sensor </p>
               </div>
 
               <div class="w-100"></div>
               <div class="col">
-                <p> - draw circle = "circle", "small circle", "big circle", "blue circle", "green circle", "big blue circle", "small blue circle", "big green circle", "small green circle"</p>
-                <p> &emsp; - default circle color is red </p>
+                <p> - draw circle = "circle" </p>
+                <p> &emsp; - sizes = "small," "big"</p>
+                <p> &emsp; - colors = "green," "blue," "red" (default)</p>
               </div>
               <div class="col">
                 <p> - hand position / cursor position is center of circle drawn </p>
@@ -130,18 +131,36 @@
               <div class="col">
                 <p> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
                 <p> &emsp; - when in highlight mode, can see cursor and define top left and bottom right corners for highlighted rectangle area </p>
-                <p> - top left corner of highlight = "start" </p>
-                <p> - bottom right corner of highlight = "stop" </p>
-                <p> - turn off highlight mode = "turn off highlight" </p>
+                <p> &emsp; - top left corner of highlight = "start" </p>
+                <p> &emsp; - bottom right corner of highlight = "stop" </p>
+                <p> &emsp; - turn off highlight mode = "turn off highlight" </p>
               </div>
               <div class="col">
-                <p> - hand position / cursor position of cursor used to control highlight </p>
+                <p> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - make text box = "text box"</p>
+                <p> &emsp; - recognized speech will be transcribed in text box on slide
+              </div>
+              <div class="col">
+                <p> - hand position / cursor position of cursor used is where text box will be drawn </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - undo - "undo"   </p>
+                <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
+              </div>
+              <div class="col">
+                <p> </p>
               </div>
 
             </div>
 
             <script>
-            document.getElementById("instructions").style.opacity = "0.0";
+            document.getElementById("stage").style.opacity = "0.0";
             document.onkeyup = function changeStyle() {
               var keycode = event.keyCode;
 

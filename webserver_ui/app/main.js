@@ -507,7 +507,7 @@ var processSpeech = function(transcript) {
       mainContext.add(textModifier).add(textOpacity).add(textSurface);
       addedElementModifiers.push(textOpacity);
       textOpacity.setOpacity(1);
-      console.log("about to write text")
+      console.log("about to write text");
       textSurface.setContent(text);
 
     }

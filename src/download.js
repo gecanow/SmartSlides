@@ -1,7 +1,6 @@
 /**
- * ---------------- Start
+ * Set up the welcome page and add some listeners.
  */
-
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("start-help").addEventListener("click", function (e) {
         const help = document.getElementById("start-help-text")
@@ -29,7 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }); 
 }, false);
 
-
+/**
+ * Set up the slide deck confirmation to show all the asset thumbnails
+ */
 function setup_confirmation() {
     const thumbnails = document.getElementById("thumbnails");
 
@@ -43,5 +44,6 @@ function setup_confirmation() {
             });
         })
     });
+
     document.getElementById("step2").style.opacity = "100%";
 }

@@ -315,6 +315,10 @@ var processSpeech = function(transcript) {
     var said_big_green_circle = userSaid(transcript.toLowerCase(), ["big green circle", "large green circle"]);
     var said_big_blue_circle = userSaid(transcript.toLowerCase(), ["big blue circle", "large blue circle"]);
 
+    var said_red_circle = userSaid(transcript.toLowerCase(), ["red circle"]);
+    var said_small_red_circle = userSaid(transcript.toLowerCase(), ["small red circle"]);
+    var said_big_red_circle = userSaid(transcript.toLowerCase(), ["big red circle", "large red circle"]);
+
     // highlight -- probably going to get rid of this
     var said_highlight = userSaid(transcript.toLowerCase(), ["turn on highlight", "highlight", "highlights"]);
     var said_pink_highlight = userSaid(transcript.toLowerCase(), ["turn on pink highlight", "pink highlight"]); // '#FF00FF'
@@ -322,6 +326,8 @@ var processSpeech = function(transcript) {
 
     var said_off_highlight = userSaid(transcript.toLowerCase(), ["turn off", "turn off highlight", "turn off highlights", "turn off my light"]); // commonly mishears turn off highlight as turn off my light
     var said_start_highlight = userSaid(transcript.toLowerCase(), ["start"]);
+
+    var said_undo = userSaid(transcript.toLowerCase(), ["undo"]);
 
     if (userSaid(transcript.toLowerCase(), ["stop"]) && (yellowHighlightOn || orangeHighlightOn || pinkHighlightOn)) {
       var said_stop_highlight = true;
@@ -352,11 +358,11 @@ var processSpeech = function(transcript) {
       drawCircle(100, '#0040ff');
     } else if (said_green_circle) {
       drawCircle(100, '#00CC44');
-    } else if (said_small_circle) {
+    } else if (said_small_circle || said_small_red_circle) {
       drawCircle(48, '#FF3333'); // red
-    } else if (said_big_circle) {
+    } else if (said_big_circle || said_big_red_circle) {
       drawCircle(240, '#FF3333'); // red
-    } else if (said_create_circle) { // default circle
+    } else if (said_create_circle || said_red_circle) { // default circle
       drawCircle(); // red, regular size
     }
 
@@ -454,6 +460,11 @@ var processSpeech = function(transcript) {
       addedElementModifiers.forEach(function (item, index) {
         item.setOpacity(0);
       });
+    }
+
+    if (said_undo) {
+      console.log("I heard you wanted to undo the last drawing.");
+      addedElementModifiers[addedElementModifiers.length - 1].setOpacity(0);
     }
 
     function editTranscript(transcript) {

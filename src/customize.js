@@ -2,6 +2,9 @@ const COMMAND_HEIGHT = 300;
 const COMMAND_MODAL_ID = "command-modal";
 const ADD_SAY_BUTTON_ID = "SAY-BUTTON";
 const ADD_GESTURE_BUTTON_ID = "GESTURE-BUTTON";
+const SAVE_COMMAND_ID = "save-change";
+const CUSTOM_COMMAND_ID = 'iscommand-'
+const COMMAND_TYPE = function (str) { return str.split('-')[1]; };
 
 /**
  * Setup the DOM once the other content has loaded.
@@ -11,14 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(THUMBNAIL_IDS);
         setup();
 
-        document.getElementById(ADD_SAY_BUTTON_ID).addEventListener('click', (e) => {
-            console.log("clicked sayButton");
-            document.getElementById("add-command-id").appendChild(sayCommand());
-        });
-
-        document.getElementById(ADD_GESTURE_BUTTON_ID).addEventListener('click', (e) => {
-            console.log("clicked gestureButton");
-            document.getElementById("add-command-id").appendChild(gestureCommand());
+        document.getElementById(SAVE_COMMAND_ID).addEventListener('click', (e) => {
+            console.log("clicked saveButton");
         });
     });
 
@@ -37,8 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function setup() {
     console.log("...setting up...");
 
-    document.body.appendChild(commandPopupHTML());
-    document.body.appendChild(customCommand());
+    let followupCalls1 = commandPopupHTML();
+    let followupCalls2 = customCommand();
+
+    document.body.appendChild(followupCalls1.html);
+    document.body.appendChild(followupCalls2.html);
+
+    followupCalls1.callbacks.forEach(f => f());
+    followupCalls2.callbacks.forEach(f => f());
 
     console.log("...done...");
 }
@@ -73,9 +76,13 @@ function customCommand() {
     plusButton.appendChild(plusIcon);
 
     wrapperDiv.append(plusButton);
-    return wrapperDiv;
+    return {html: wrapperDiv, callbacks: []};
 }
 
+/**
+ * TODO
+ * @returns TODO
+ */
 function imageCheckboxHTML() {
     const wrapperDiv = document.createElement('div');
     wrapperDiv.style.overflow = "auto";
@@ -115,9 +122,13 @@ function imageCheckboxHTML() {
     });
 
     wrapperDiv.appendChild(ul);
-    return wrapperDiv;
+    return {html: wrapperDiv, callbacks: []};
 }
 
+/**
+ * TODO
+ * @returns TODO
+ */
 function commandCheckboxHTML() {
     // A SAY COMMAND
     const sayButton = document.createElement('button');
@@ -151,35 +162,74 @@ function commandCheckboxHTML() {
     div.id = "add-command-id";
     div.style.backgroundColor = "lemonchiffon";
     div.innerHTML = wrapper;
-    return div;
+
+    // SPECIFY CALLBACKS
+    const cb = function() {
+        document.getElementById(ADD_SAY_BUTTON_ID).addEventListener('click', (e) => {
+            console.log("clicked sayButton");
+            const resp = sayCommand();
+            document.getElementById("add-command-id").appendChild(resp.html);
+            resp.callbacks.forEach(f => f());
+        });
+
+        document.getElementById(ADD_GESTURE_BUTTON_ID).addEventListener('click', (e) => {
+            console.log("clicked gestureButton");
+            const resp = gestureCommand();
+            document.getElementById("add-command-id").appendChild(resp.html);
+            resp.callbacks.forEach(f => f());
+        });
+    }
+    return {html: div, callbacks: [cb]};
 }
 
 function sayCommand() {
-    return commandTemplate("say", `<input id="speech-command" style="height: 80%; width: 40%;"></input>`, systemActionOptions());
+    return commandTemplate(
+            "say", 
+            `<input id="speech-command" style="height: 80%; width: 40%;"></input>`, 
+            systemActionOptions(),
+            "peachpuff"
+    );
 }
 
 function gestureCommand() {
-    return commandTemplate("do", gestureOptions(), systemActionOptions());
+    return commandTemplate(
+        "do",
+        gestureOptions(), 
+        systemActionOptions(), 
+        "rosybrown"
+    );
 }
 
-function commandTemplate(type, cause, action) {
+let numCommands = 0;
+function commandTemplate(type, cause, action, bgcolor) {
+    const idNum = numCommands++;
     const label = document.createElement("label");
     label.style.display = "flex";
     label.style.justifyContent = "flex-start";
     label.style.alignItems = "center";
     label.style.width = "95%";
-    label.style.backgroundColor = "rosybrown";
+    label.style.backgroundColor = bgcolor;
     label.style.margin = "10px";
     label.style.padding = "4px";
     label.style.borderRadius = "4px";
     label.style.lineHeight = "normal";
+    label.id = `${CUSTOM_COMMAND_ID}${type}-${idNum}`;
+
     label.innerHTML = `
     <p style="width:120px;">When I ${type}</p>
     ${cause}
     <p style="width:200px;">the system should</p>
     ${action}
+    ${trashHTML(`trash-${idNum}`)}
     `;
-    return label;
+
+    const cb = function () {
+        document.getElementById(`trash-${idNum}`).addEventListener('click', (e) => {
+            console.log("clicked trash");
+            document.getElementById(`${CUSTOM_COMMAND_ID}${type}-${idNum}`).remove();
+        });
+    }
+    return {html: label, callbacks: [cb]};
 }
 
 function gestureOptions() {
@@ -194,7 +244,7 @@ function gestureOptions() {
 
 function systemActionOptions() {
     return `
-    <select id="gesture-options">
+    <select id="sys-action-option">
         <option value="action1">action1</option>
         <option value="action2">action2</option>
         <option value="action3">action3</option>
@@ -202,9 +252,47 @@ function systemActionOptions() {
     `;
 }
 
+function trashHTML(id) {
+    const trashButton = `
+    <button id=${id} style="width: 15px; background-color: transparent; border: 0px; padding: 0px; line-height: normal;">
+        <img src="/nm/bootstrap-icons/icons/trash3-fill.svg" style="width: 15px; height: 15px; margin: 0px; line-height: normal;">
+    </button>
+    `;
+    return trashButton;
+}
+
+/**
+ * @returns {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[]}
+ */
+function compileCommands() {
+    let voiceCommands = {};
+    let gestureCommands = {};
+
+    document.querySelectorAll(`[id^=${CUSTOM_COMMAND_ID}]`).forEach(div => {
+        let actions = div.getElementById("sys-action-option");
+        let command = ""; let action = "";
+        switch(COMMAND_TYPE(div)) {
+            case "say":
+                command = div.getElementById("speech-command").value;
+                action = actions.options[actions.selectedIndex].value;
+                voiceCommands.put(command, action);
+                break;
+            case "do":
+                let commands = div.getElementById("gesture-options")
+                command = commands.options[commands.selectedIndex].value;
+                action = actions.options[actions.selectedIndex].value;
+                voiceCommands.put(command, action);
+                break;
+            default:
+                console.log("should not get here!!!");
+        }
+    });
+}
+
 function commandPopupHTML() {
+    const slideImgs = imageCheckboxHTML();
+    const commandOptions = commandCheckboxHTML();
     // https://getbootstrap.com/docs/4.0/components/modal/
-    console.log(imageCheckboxHTML().innerHTML);
     const popup = `
     <!-- Modal -->
     <div class="modal fade" id=${COMMAND_MODAL_ID} tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -218,19 +306,26 @@ function commandPopupHTML() {
             </div>
             <div class="modal-body">
                 <p>On slides:</p>
-                ${imageCheckboxHTML().outerHTML}
+                ${slideImgs.html.outerHTML}
                 <p>Execute the following commands:</p>
-                ${commandCheckboxHTML().outerHTML}
+                ${commandOptions.html.outerHTML}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button id=${SAVE_COMMAND_ID} type="button" class="btn btn-primary">Save changes</button>
             </div>
             </div>
         </div>
     </div>
     `;
+
+    const saveF = function() {
+        document.getElementById(SAVE_COMMAND_ID).addEventListener("click", (e) => {
+            compileCommands();
+        })
+    }
     const div = document.createElement('div');
     div.innerHTML = popup;
-    return div;
+
+    return {html: div, callbacks: slideImgs.callbacks.concat(commandOptions.callbacks).concat([saveF])};
 }

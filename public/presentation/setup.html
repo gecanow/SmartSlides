@@ -4,10 +4,27 @@
         <title>Smart Slides</title>
         <meta name="viewport" content="initial-scale = 1.0, minimum-scale = 1.0, maximum-scale = 1.0, user-scalable = no, width = device-width" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link type="text/css" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
+        <!-- <link type="text/css" rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+        <!-- https://stackoverflow.com/questions/65441890/example-modal-not-loading-from-bootstrap -->
+        <!-- Bootstrap CSS -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+            crossorigin="anonymous"
+        />
+        <link type="text/css" rel="stylesheet" href="/src/styles/checkbox.css">
     </head>
     <body id="body" bgcolor="black">
+        <!-- Bootstrap Bundle with Popper -->
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"
+        ></script>
+
+        <!-- Slides Setup -->
+
         <div style="text-align: center;  background-color:rosybrown; display:inline-block; justify-content: center; padding: 15px; width: 100%;">
             <input id="slideX"></input>
             <p style="padding: 10px; line-height: 100%; color: black;">('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
@@ -15,30 +32,7 @@
             <p id="full-present" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Present ></a></p>
         </div>
 
-        <div id="stageArea">
-            <div id="stage" class="stage">
-            </div>
-            <div id="hyperlinkPlane" class="stage">
-            </div>
-        </div>
-        <div id="slideshowNavigator">
-        </div>
-        <div id="slideNumberControl">
-        </div>
-        <div id="slideNumberDisplay">
-        </div>
-        <div id="helpPlacard">
-        </div>
-        <div id="waitingIndicator">
-            <div id="waitingSpinner">
-            </div>
-        </div>
-        <script type="text/javascript" src="assets/player/pdfjs/bcmaps.js"></script></body>
-        <script type="text/javascript" src="assets/player/pdfjs/web/compatibility.js"></script></body>
-        <script type="text/javascript" src="assets/player/pdfjs/pdf.js"></script></body>
-        <script type="text/javascript" src="assets/player/main.js"></script></body>
-
         <script type="text/javascript" src="/src/setup.js"></script>
-        <script type="text/javascript" src="/src/control.js"></script>
+        
     </body>
 </html>

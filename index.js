@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public/presentation')));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 // where to find node_mods
-app.use('/scripts', express.static(path.join(__dirname, 'node_modules')));
+app.use('/nm', express.static(path.join(__dirname, 'node_modules')));
 
 // src
 app.use('/src', express.static(path.join(__dirname, 'src')));

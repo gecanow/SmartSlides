@@ -1,31 +1,15 @@
+let observer = new MutationObserver(() => {});
 window.addEventListener('load', function () {
-    // https://stackoverflow.com/questions/3219758/detect-changes-in-the-dom
-    // Select the node that will be observed for mutations
-    var targetNode = document.getElementById('stageArea');
-
-    // Options for the observer (which mutations to observe)
-    var config = { attributes: true, childList: true, subtree: true };
-
-    // Callback function to execute when mutations are observed
-    var callback = function(mutationsList) {
-        fullscreen();
-    };
-
-    // Create an observer instance linked to the callback function
-    var observer = new MutationObserver(callback);
-
-    // Start observing the target node for configured mutations
-    observer.observe(targetNode, config);
-
-    // Later, you can stop observing
-    // observer.disconnect();
-
-    // ALSO - from gaby - call fullscreen after some time to get the ball rolling.
+    // call fullscreen after some time to get the ball rolling.
     setTimeout(function () {
         fullscreen();
+        canvasListener();
     }, 300);
 });
 
+/** 
+ * Automate the process of going fullscreen.
+ */
 function fullscreen() {
     let stage = document.getElementById('stageArea');
     stage.style.top = "0";
@@ -47,4 +31,29 @@ function fullscreen() {
                     e.style.height = "100%";
                     e.style.aspectRatio = "1/1";
                 });
+}
+
+/**
+ * Observe when the canvas changes to trigger fullscreens.
+ */
+
+function canvasListener() {
+    // https://stackoverflow.com/questions/3219758/detect-changes-in-the-dom
+    // var targetNode = document.getElementsByTagName('canvas')[0];
+    var targetNode = document.getElementById('stageArea');
+    var config = { attributes: true, childList: true, subtree: true };
+
+    // Callback function to execute when mutations are observed
+    let callback = function(mutationsList) {
+        // console.log(mutationsList);
+        console.log(`on slide: ${gShowController.currentSlideIndex}`)
+        fullscreen();
+    };
+
+    // Create an observer instance linked to the callback function
+    observer.disconnect();
+    observer = new MutationObserver(callback);
+
+    // Start observing the target node for configured mutations
+    observer.observe(targetNode, config);
 }

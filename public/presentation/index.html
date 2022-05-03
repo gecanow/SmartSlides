@@ -12,9 +12,9 @@
             <div class="jumbotron" style="padding: 50px; flex-direction:column; justify-content: center; align-items: center;">
                 <h1>SmartSlides</h1>
                 <p>
-                    <strong>A new way to give presentations.</strong>
+                    <strong>A new way to present.</strong>
                     <br><br>6.835 Spring 2022 Final Project
-                    <br><i>{gschein, gecanow, marlenag}@mit.edu</i>
+                    <br>{<i>gschein, gecanow, marlenag</i>}@mit.edu
                 </p>
             </div>
 
@@ -32,18 +32,23 @@
                     <p style="width: 70%;">Run the <strong>SmartSlidesBegin</strong> app to automatically choose and convert your presentation.</p>
                 </div>
                 <p><a id="start-help" style="color:rgb(38, 110, 182); cursor: pointer;">Help</a></p>
-                <p id="start-help-text" style="text-align: left; display: none; visibility: hidden;">
-                    The SmartSlidesBegin app is a helpful way to automatically walk you through uploading your .key, .ppt, or .pptx presentation into our system.
-                    <br>It can be found in the SmartSlides project folder, which you should already have (it's how you're seeing this webpage!
-                    If you don't have the project folder, you can <a id="download-link" href="https://github.com/gecanow/SmartSlides/archive/refs/heads/main.zip" download>download it here</a>).
-                    <br>To run SmartSlidesBegin, double-click on SmartSlidesBegin.app in Finder.
-                    <br>If you run into trouble using the app, you can also convert your presentation manually by:
-                    <br>- Opening it in Keynote and exporting it to HTML 
-                    <br>- Dragging the <i>assets</i> folder into this project folder's public/presentation/ directory
-                    <br>- Reloading localhost:8000 
-                    <br><br>
-                    If see your presentation displayed in Step 2, it has been successfully uploaded.
-                </p>
+                <div id="start-help-text" style="text-align: left; display: none; visibility: hidden;">
+                    <p>
+                        The SmartSlidesBegin app is a helpful way to automatically walk you through uploading your .key, .ppt, or .pptx presentation into our system.
+                        <br>It can be found in the SmartSlides project folder, which you should already have. (It's how you're seeing this webpage!
+                        If you don't have the project folder, you can <a id="download-link" href="https://github.com/gecanow/SmartSlides/archive/refs/heads/main.zip" download>download it here</a>.)
+                        <br><i>&emsp;For your convienience, we've also hid all other files in the SmartSlides project folder. To reveal them, press Command + Shift + Period.</i>
+                    </p>
+                    <p>
+                        <br>To run SmartSlidesBegin, double-click on SmartSlidesBegin.app in Finder.
+                        <br>If you run into trouble using the app, you can also convert your presentation manually by:
+                        <br>&emsp;- Opening it in Keynote and exporting it to HTML 
+                        <br>&emsp;- Dragging the <strong>assets</strong> folder into this project's <strong>public/presentation/</strong> directory
+                        <br>&emsp;- Reloading <a href="http://localhost:8000">localhost:8000</a>
+                        <br><br>
+                        If see your presentation thumbnails displayed in Step 2, it has been successfully uploaded.
+                    </p>
+                </div>
             </div>
 
             <div class="jumbotron" id="step2" style="width: 90%; display: inline-block; padding: 10px; background-color:peachpuff; opacity: 0.5;">
@@ -56,12 +61,12 @@
             <div class="jumbotron" id="step3" style="width: 90%; display: inline-block; padding: 10px; background-color:rosybrown; opacity: 0.5;">
                 <h4>Step 3</h4>
                 <p>
-                    <a id="start-present" style="color:rgb(38, 110, 182); cursor: pointer;">Present</a> your slides!
+                    <a id="start-present" style="color:rgb(38, 110, 182); cursor: pointer;">Customize</a> your presentation experience.
                 </p>
             </div>
         </div>
 
-        <div style="display: none; visibility: hidden; opacity: 0;">
+        <div style="display: none; visibility: hidden; opacity: 0; pointer-events: none;">
             <div id="stageArea">
                 <div id="stage" class="stage">
                 </div>

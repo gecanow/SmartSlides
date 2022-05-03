@@ -1,9 +1,8 @@
 /**
- * Setup the control listeners once the other content has loaded.
+ * Hook up the control listeners once the other content has loaded.
  */
  document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function (e) {
-        // console.log(gShowController);
         if (e.key === 'r') {
             prev();
         }

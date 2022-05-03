@@ -21,8 +21,8 @@ function setup() {
     // restyle the stagingArea
     const stage = document.getElementById("stageArea");
     stage.style.display = 'none';
-    stage.style.marginTop = "100px";
-    stage.style.display = 'block';
+    stage.style.marginTop = "200px";
+    stage.style.display = 'inline-block';
     stage.style.width = "100%";
 
     console.log("...done...");

@@ -18,12 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById("start-present").addEventListener("click", function (e) {
-        window.location.href = "setup.html";
+        window.location.href = "customize.html";
     });
 
     fetch("/assets/thumbnail.jpeg").then(function(response) {
         if (response.status === 200) {
-            setup_confirmation();
+            grabThumbnails().then(() => {
+                console.log("setup_confirmatio");
+                setup_confirmation();
+            });
         }
     }); 
 }, false);
@@ -33,16 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function setup_confirmation() {
     const thumbnails = document.getElementById("thumbnails");
-
-    fetch("/assets/header.json").then(function(response) {
-        response.json().then(obj => {
-            obj.slideList.forEach(slideID => {
-                const i = document.createElement("img");
-                i.src = `/assets/${slideID}/thumbnail.jpeg`;
-                i.style.padding = "20px";
-                thumbnails.appendChild(i);
-            });
-        })
+    
+    THUMBNAIL_IDS.forEach(slideID => {
+        const i = document.createElement("img");
+        i.src = `/assets/${slideID}/thumbnail.jpeg`;
+        i.style.padding = "20px";
+        thumbnails.appendChild(i);
     });
 
     document.getElementById("step2").style.opacity = "100%";

@@ -12,15 +12,13 @@ function setup() {
     
     // add the jumbotron
     const jumboDiv = document.createElement("div");
-    jumboDiv.className = "jumbotron";
-    jumboDiv.style.display = "flex";
     jumboDiv.style.justifyContent = "center";
+    jumboDiv.style.alignContent = "center";
+    jumboDiv.style.backgroundColor = "black";
+    jumboDiv.style.padding = "5px";
     jumboDiv.innerHTML = `
-        <div style="flex-direction:column; align-items: center;">
-            <h1>SmartSlides</h1>
-            <input id="slideX"></input>
-            <p>('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
-        </div>
+        <input id="slideX"></input>
+        <p style="line-height: 100%; color: white;">('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
     `;
     document.body.insertBefore(jumboDiv, document.body.firstChild);
 
@@ -29,12 +27,11 @@ function setup() {
     stage.style.display = 'none';
     stage.style.marginTop = "100px";
     stage.style.display = 'block';
+    stage.style.width = "100%";
 
     // finally, connect the script!
     document.addEventListener('keydown', function (e) {
-        // console.log(e);
         // console.log(gShowController);
-
         if (e.key === 'r') {
             prev();
         }

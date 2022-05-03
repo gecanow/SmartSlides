@@ -2,9 +2,9 @@
  * ..... Express Webapp .....
  */
 
+const fs = require('fs');
 const express = require('express');
 const path = require('path');
-// const sphp = require('sphp');
 
 
 const app = express();
@@ -36,3 +36,23 @@ app.get('/', function(req, res) {
 app.listen(port, function() {
   console.log(`Listening to requests on http://localhost:${port}`)
 });
+
+// https://stackoverflow.com/questions/13695046/watch-a-folder-for-changes-using-node-js-and-print-file-paths-when-they-are-cha
+// let assetFolder = 'public/presentation/assets';
+// let assetWatchers = [];
+// fs.watch(path.join(__dirname, assetFolder), (eventType, filename) => {
+//   console.log(`${filename} has been ${eventType}d`);
+
+//   fs.exists(path.join(__dirname, assetFolder + "/player"), (e) => {
+//     if (!e) return;
+    
+//     //window.location.reload();
+//     // document.getElementById("step2").style.visibility = "visible";
+//     // console.log(gShowController.thumbnailContainer.thumbnailItems);
+//     // Creating a POST request
+//     app.post('/', (req, res) => {
+//       console.log("POST Request Called for /api endpoint")
+//       res.send("POST Request Called")
+//     })
+//   });
+// });

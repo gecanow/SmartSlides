@@ -4,7 +4,7 @@ const ADD_SAY_BUTTON_ID = "SAY-BUTTON";
 const ADD_GESTURE_BUTTON_ID = "GESTURE-BUTTON";
 const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
-const COMMAND_TYPE = function (str) { return str.split('-')[1]; };
+const COMMAND_TYPE = function (str) { return str.toString().split('-')[1]; };
 
 /**
  * Setup the DOM once the other content has loaded.
@@ -265,28 +265,38 @@ function trashHTML(id) {
  * @returns {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[]}
  */
 function compileCommands() {
-    let voiceCommands = {};
-    let gestureCommands = {};
+    // get the selected slides
+    let slideIds = [];
+    document.querySelectorAll(`[id^=cb-]`).forEach(div => {
+        if (div.checked) slideIds.push(div.id.substring(3));
+    });
 
+    // compile the commands
+    let voiceCommands = new Map();
+    let gestureCommands = new Map();
     document.querySelectorAll(`[id^=${CUSTOM_COMMAND_ID}]`).forEach(div => {
-        let actions = div.getElementById("sys-action-option");
+        let actions = div.querySelectorAll(`[id^=sys-action-option]`)[0];
         let command = ""; let action = "";
-        switch(COMMAND_TYPE(div)) {
+        switch(COMMAND_TYPE(div.id)) {
             case "say":
-                command = div.getElementById("speech-command").value;
+                command = div.querySelectorAll(`[id^=speech-command]`);
                 action = actions.options[actions.selectedIndex].value;
-                voiceCommands.put(command, action);
+                voiceCommands.set(command[0].value, action);
                 break;
             case "do":
-                let commands = div.getElementById("gesture-options")
+                let commands = div.querySelectorAll(`[id^=gesture-options]`)[0];
                 command = commands.options[commands.selectedIndex].value;
                 action = actions.options[actions.selectedIndex].value;
-                voiceCommands.put(command, action);
+                gestureCommands.set(command, action);
                 break;
             default:
                 console.log("should not get here!!!");
         }
     });
+
+    console.log(slideIds);
+    console.log(voiceCommands);
+    console.log(gestureCommands);
 }
 
 function commandPopupHTML() {

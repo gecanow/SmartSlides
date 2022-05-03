@@ -1,35 +1,7 @@
-function setup() {
-    console.log("...setting up...");
-
-    // configure the head
-    const head = document.head;
-    head.title = "SmartSlides";
-    const link = document.createElement("link");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css";
-    head.appendChild(link);
-    
-    // add the jumbotron
-    const jumboDiv = document.createElement("div");
-    jumboDiv.style.justifyContent = "center";
-    jumboDiv.style.alignContent = "center";
-    jumboDiv.style.backgroundColor = "black";
-    jumboDiv.style.padding = "5px";
-    jumboDiv.innerHTML = `
-        <input id="slideX"></input>
-        <p style="line-height: 100%; color: white;">('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
-    `;
-    document.body.insertBefore(jumboDiv, document.body.firstChild);
-
-    // restyle the stagingArea
-    const stage = document.getElementById("stageArea");
-    stage.style.display = 'none';
-    stage.style.marginTop = "100px";
-    stage.style.display = 'block';
-    stage.style.width = "100%";
-
-    // finally, connect the script!
+/**
+ * Setup the control listeners once the other content has loaded.
+ */
+ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function (e) {
         // console.log(gShowController);
         if (e.key === 'r') {
@@ -48,9 +20,7 @@ function setup() {
         }
 
     });
-
-    console.log("...done...");
-}
+}, false);
 
 // Programmatically move to the prev slide
 function prev() {
@@ -101,10 +71,3 @@ function ffScene(x) {
     console.log("ffScene");
     jumpScene(gShowController, gShowController.currentSlideIndex + x);
 }
-
-/**
- * ---------------- Start
- */
- document.addEventListener('DOMContentLoaded', function() {
-    setup(gShowController);
-}, false);

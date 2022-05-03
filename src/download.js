@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById("start-present").addEventListener("click", function (e) {
-        window.location.href = "prez-index.html";
+        window.location.href = "setup.html";
     });
 
     fetch("/assets/thumbnail.jpeg").then(function(response) {

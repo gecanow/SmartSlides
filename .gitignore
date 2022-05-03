@@ -1,0 +1,7 @@
+**/.DS_Store
+# tmp presentation stuff
+src/apple_script/tmp/**
+# the presentation assets that will be uploaded by the user
+public/presentation/assets/header.json
+public/presentation/assets/header.jsonp
+public/presentation/assets/**

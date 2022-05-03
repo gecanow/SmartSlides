@@ -435,6 +435,12 @@ var setupUserInterface = function() {
   // opacityModifiers.push(opacity18);
   // mainContext.add(gestureModifier).add(opacity18).add(gestureSurface);
 
+  opacityModifiers.forEach(function (item, index) {
+    // console.log(item);
+    // console.log(index);
+    item.setOpacity(0);
+  });
+
   // Draw the cursor
   cursorSurface = new Surface({
     size : [CURSORSIZE, CURSORSIZE],

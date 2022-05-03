@@ -205,27 +205,31 @@ var processSpeech = function(transcript) {
   if (presentationState.get('state') == 'setup') {
     console.log("I am recognizing speech and in setup mode");
 
+    // moved up the below lines, don't start with speech
+    presentationState.startPresentation();
+    processed = true;
+    highlightOn = false;
+    //
 
     // Starting the presentation with speech
     // Detect the 'start' command, and start the game if it was said
-    var said_start = userSaid(transcript, ["start"]); // start commmand is said
-    if (said_start) {
-      presentationState.startPresentation();
-
-      /// get rid of all text and go to full screen (currently black full screen)
-      console.log("I am here yay");
-      startButton.setContent("Beginning Presentation!");
-      background.setContent("");
-      // backgroundModifier.setOpacity(0.0);
-      opacityModifiers.forEach(function (item, index) {
-        // console.log(item);
-        // console.log(index);
-        item.setOpacity(0);
-      });
-      // switchSlideUI();
-      processed = true;
-      highlightOn = false;
-    }
+    // var said_start = userSaid(transcript, ["start"]); // start commmand is said
+    // if (said_start) {
+    //   presentationState.startPresentation();
+    //   // window.location.href = "../index.html";
+    //   /// get rid of all text and go to full screen (currently black full screen)
+    //   console.log("I am here yay");
+    //   startButton.setContent("Beginning Presentation!");
+    //   background.setContent("");
+    //   // backgroundModifier.setOpacity(0.0);
+    //   opacityModifiers.forEach(function (item, index) {
+    //     // console.log(item);
+    //     // console.log(index);
+    //     item.setOpacity(0);
+    //   });
+    //   // switchSlideUI();
+    //
+    // }
   }
 
   else if (presentationState.get('state') == 'presenting') {

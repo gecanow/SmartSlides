@@ -6,6 +6,8 @@ const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[1]; };
 
+const LIST_OF_COMMANDS = [];
+
 /**
  * Setup the DOM once the other content has loaded.
  */
@@ -166,14 +168,12 @@ function commandCheckboxHTML() {
     // SPECIFY CALLBACKS
     const cb = function() {
         document.getElementById(ADD_SAY_BUTTON_ID).addEventListener('click', (e) => {
-            console.log("clicked sayButton");
             const resp = sayCommand();
             document.getElementById("add-command-id").appendChild(resp.html);
             resp.callbacks.forEach(f => f());
         });
 
         document.getElementById(ADD_GESTURE_BUTTON_ID).addEventListener('click', (e) => {
-            console.log("clicked gestureButton");
             const resp = gestureCommand();
             document.getElementById("add-command-id").appendChild(resp.html);
             resp.callbacks.forEach(f => f());
@@ -225,7 +225,6 @@ function commandTemplate(type, cause, action, bgcolor) {
 
     const cb = function () {
         document.getElementById(`trash-${idNum}`).addEventListener('click', (e) => {
-            console.log("clicked trash");
             document.getElementById(`${CUSTOM_COMMAND_ID}${type}-${idNum}`).remove();
         });
     }
@@ -293,10 +292,36 @@ function compileCommands() {
                 console.log("should not get here!!!");
         }
     });
+    return {slideIds: slideIds, voiceCommands: voiceCommands, gestureCommands: gestureCommands};
+}
 
-    console.log(slideIds);
-    console.log(voiceCommands);
-    console.log(gestureCommands);
+function displayCommand(command) {
+    const div = document.createElement("div");
+    div.style.width = "95%";
+    div.style.backgroundColor = "lemonchiffon";
+    div.style.borderRadius = "5px";
+
+    let html = `<p>On the following slides:</p>`;
+    html += `<div style="flex">`;
+    command.slideIds.forEach(id => {
+        html += `<img src=${`/assets/${id}/thumbnail.jpeg`} style="width: 30px;"></img>`;
+    });
+    html += `</div>`;
+
+    html += `<p>When you say...`;
+    command.voiceCommands.forEach((val, key) => {
+        html += `<br>&emsp;<strong>${key}</strong>, the system will do <strong>${val}</strong>`;
+    });
+    html += "</p>"
+
+    html += `<p>When you do...`;
+    command.gestureCommands.forEach((val, key) => {
+        html += `<br>&emsp;<strong>${key}</strong>, the system will do <strong>${val}</strong>`;
+    });
+    html += "</p>"
+
+    div.innerHTML = html;
+    return div;
 }
 
 function commandPopupHTML() {
@@ -310,7 +335,7 @@ function commandPopupHTML() {
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Custom Command</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -321,8 +346,8 @@ function commandPopupHTML() {
                 ${commandOptions.html.outerHTML}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id=${SAVE_COMMAND_ID} type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id=${SAVE_COMMAND_ID} type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
             </div>
             </div>
         </div>
@@ -331,7 +356,9 @@ function commandPopupHTML() {
 
     const saveF = function() {
         document.getElementById(SAVE_COMMAND_ID).addEventListener("click", (e) => {
-            compileCommands();
+            const commands = compileCommands();
+            document.body.appendChild(displayCommand(commands));
+            LIST_OF_COMMANDS.push(commands);
         })
     }
     const div = document.createElement('div');

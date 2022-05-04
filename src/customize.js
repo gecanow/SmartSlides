@@ -184,13 +184,14 @@ function commandCheckboxHTML(popupId) {
             resp.callbacks.forEach(f => f());
 
             document.getElementById(`speech-command-${popupId}`).addEventListener('keypress', e => {
-                console.log(e);
                 const curr = document.getElementById(`speech-command-${popupId}`).value;
-                if (e.charCode === 8) {
-                    document.getElementById(`speech-command-${popupId}`).value = curr.slice(0, -1);
-                } else {
-                    document.getElementById(`speech-command-${popupId}`).value = curr + e.key;
-                }
+                // console.log(e, curr);
+                document.getElementById(`speech-command-${popupId}`).value = curr;
+                // if (e.charCode === 8) {
+                //     document.getElementById(`speech-command-${popupId}`).value = curr.slice(0, -1);
+                // } else {
+                //     document.getElementById(`speech-command-${popupId}`).value = curr + e.key;
+                // }
             });
         });
 

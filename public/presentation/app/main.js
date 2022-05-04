@@ -420,7 +420,11 @@ var processSpeech = function(transcript) {
       console.log(`jumping to ${jumpToMatch.groups.loc} ${n}`)
       switch (`${jumpToMatch.groups.loc}`) {
         case 'slide':
-          siteControl_jumpSlide(n); break;
+          addedElementModifiers.forEach(function (item, index) {
+            item.setOpacity(0);
+          });
+          siteControl_jumpSlide(n);
+          break;
         case 'scene':
           siteControl_jumpScene(n); break;
         default:

@@ -29,7 +29,7 @@ var goToNextSlide = function() {
   addedElementModifiers.forEach(function (item, index) {
     item.setOpacity(0);
   });
-  
+
   siteControl_next();
 
   CAN_ADVANCE_SLIDESHOW = false;
@@ -41,9 +41,9 @@ var goToPrevSlide = function() {
   addedElementModifiers.forEach(function (item, index) {
     item.setOpacity(0);
   });
-  
+
   siteControl_prev();
-  
+
   CAN_ADVANCE_SLIDESHOW = false;
   setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
 }
@@ -196,8 +196,6 @@ Leap.loop({ hand: function(hand) {
   var handPosition = hand.screenPosition();
   var x_offset = 50;
   var y_offset = 300;
-  // var x_offset = 200;
-  // var y_offset = 600;
   cursorPosition[0] = (handPosition[0] + x_offset);
   cursorPosition[1] = (handPosition[1] + y_offset);
 
@@ -229,7 +227,7 @@ Leap.loop({ hand: function(hand) {
 //    processed, a boolean indicating whether the system reacted to the speech or not
 var processSpeech = function(transcript) {
   console.log(LIST_OF_COMMANDS);
-  
+
   // Helper function to detect if any commands appear in a string
   var userSaid = function(str, commands) {
     for (var i = 0; i < commands.length; i++) {
@@ -246,9 +244,7 @@ var processSpeech = function(transcript) {
   var drawCircle = function(circleSize = 100, circleColor = '#FF3333') {
     if (!CAN_DRAW_CIRCLE) return;
     console.log("I heard you wanted to draw a circle");
-    // console.log(circleSize);
-    // console.log(circleColor);
-    // circleSize = 48;
+
     var circleSurface = new Surface({
       size : [circleSize, circleSize],
       properties : {
@@ -389,22 +385,16 @@ var processSpeech = function(transcript) {
 
       cursorModifier.setOpacity(0.65);
 
-      // console.log(highlightStart);
 
     }
 
-    // console.log(said_start_highlight);
-    // console.log((yellowHighlightOn || orangeHighlightOn || pinkHighlightOn));
+
     if (said_start_highlight && (yellowHighlightOn || orangeHighlightOn || pinkHighlightOn)) {
       highlightStart = [cursorPosition[0], cursorPosition[1]];
     }
 
-    // console.log("i am here");
-    // console.log(highlightStart != previousHighlightStart);
+
     if (said_stop_highlight && highlightStart != previousHighlightStart) {
-      // console.log(highlightStart != previousHighlightStart);
-      // console.log(highlightStart);
-      // console.log(previousHighlightStart);
       previousHighlightStart = highlightStart;
 
 
@@ -422,7 +412,6 @@ var processSpeech = function(transcript) {
       console.log(highlightEnd);
       var highlightSurface = new Surface({
         size: [Math.abs(highlightEnd[0]-highlightStart[0]), Math.abs(highlightEnd[1]-highlightStart[1])],
-        // size: [Math.abs(highlightEnd[0]-highlightStart[0]), 80], // set standard highlight height
         properties: {
           backgroundColor: color
         }

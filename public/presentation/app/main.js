@@ -51,56 +51,6 @@ var goToPrevSlide = function() {
   setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
 }
 
-// var recordTextBox = function() {
-//   console.log("recording for text box")
-//   var debouncedProcessSpeech = _.debounce(processSpeech, 500);
-//   console.log("debounced")
-//   var textBoxRecognition = new webkitSpeechRecognition();
-//   console.log("made new webkit")
-//   var endTextBox = "stop now";
-//   textBoxRecognition.start();
-//   console.log("started recognition")
-//   textBoxRecognition.continuous = true;
-//   textBoxRecognition.interimResults = true;
-//   console.log("about to start function")
-//   textBoxRecognition.onresult = function(event) {
-//     console.log("in text event")
-//     // Build the interim transcript, so we can process speech faster
-//     var textBoxTranscript = '';
-//     var hasFinal = false;
-//     for (var i = event.resultIndex; i < event.results.length; ++i) {
-//       console.log("in text result")
-//       if (event.results[i].isFinal) {
-//         hasFinal = true;
-//         textBoxRecognition.stop();
-//         console.log("stopped recording because hasFinal=true");
-//         console.log("textBoxTranscript:");
-//         console.log(textBoxTranscript);
-//       } else {
-//         textBoxTranscript += event.results[i][0].transcript;
-//         if (endTextBox in textBoxTranscript) {
-//           textBoxRecognition.stop();
-//           console.log("stopped recording because of stop now command");
-//           console.log("transcript:");
-//           console.log(textBoxTranscript);
-//         }
-//       }
-//     }
-//
-//     var processed = debouncedProcessSpeech(textBoxTranscript);
-//
-//     // If we reacted to speech, kill recognition and restart
-//     if (processed) {
-//       textBoxRecognition.stop();
-//       console.log("stopped recording because processed")
-//       console.log("textBoxTranscript:");
-//       console.log(textBoxTranscript);
-//     }
-//   };
-//
-//
-// }
-
 //
 // MAIN GAME LOOP
 // Called every time the Leap provides a new frame of data
@@ -118,20 +68,28 @@ Leap.loop({ hand: function(hand) {
         });
 
         switch (gesture.type){
-          // case "circle":
-          //     // console.log("Circle Gesture");
-          //     // CircleGesture circle = new CircleGesture(gesture);
-          //     var clockwise = false;
-          //     var pointableID = gesture.pointableIds[0];
-          //     var direction = frame.pointable(pointableID).direction;
-          //     var dotProduct = Leap.vec3.dot(direction, gesture.normal);
-          //     if (dotProduct  >  0) clockwise = true;
-          //
-          //     if (clockwise){
-          //       // console.log("Clockwise Circle Gesture");
-          //     } else {
-          //       // console.log("Counterclockwise Circle Gesture");
-          //     }
+          case "circle":
+              // console.log("Circle Gesture");
+              // CircleGesture circle = new CircleGesture(gesture);
+              var clockwise = false;
+              var pointableID = gesture.pointableIds[0];
+              var direction = frame.pointable(pointableID).direction;
+              var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+              if (dotProduct  >  0) clockwise = true;
+
+              var circleRadius = gesture.radius;
+
+              if (clockwise){
+                // console.log("Clockwise Circle Gesture");
+                if (handType == "right") { // clockwise circle with right hand
+                  // TODO: can use custom command based on radius (mm)
+                }
+              } else {
+                // console.log("Counterclockwise Circle Gesture");
+                if (handType == "left") { // counterclockwise circle with left hand
+                  // TODO: can use custom command based on radius (mm)
+                }
+              }
           //
           //     break;
           // case "keyTap":
@@ -406,15 +364,12 @@ var processSpeech = function(transcript) {
       }
 
       cursorModifier.setOpacity(0.65);
-
-
     }
 
 
     if (said_start_highlight && (yellowHighlightOn || orangeHighlightOn || pinkHighlightOn)) {
       highlightStart = [cursorPosition[0], cursorPosition[1]];
     }
-
 
     if (said_stop_highlight && highlightStart != previousHighlightStart) {
       previousHighlightStart = highlightStart;
@@ -533,9 +488,6 @@ var processSpeech = function(transcript) {
 
     if (said_text_box) {
       console.log("I heard you want to place a text box.");
-      // var text = recordTextBox()
-      // console.log("text: ", text);
-      console.log("transcript: ", transcript);
       var text = editTranscript(transcript);
 
       var textSurface = new Surface({
@@ -559,9 +511,8 @@ var processSpeech = function(transcript) {
       mainContext.add(textModifier).add(textOpacity).add(textSurface);
       addedElementModifiers.push(textOpacity);
       textOpacity.setOpacity(1);
-      console.log("about to write text");
+      console.log("about to write text: ", text);
       textSurface.setContent(text);
-
     }
   }
 

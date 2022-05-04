@@ -260,8 +260,8 @@ function commandTemplate(popupId, type, cause, action, bgcolor) {
 function gestureOptions(popupId) {
     return `
     <select id="gesture-options-${popupId}" style="width: 40%;">
-        <option value="right-hand-circle">right hand circle</option>
-        <option value="left-hand-circle">left hand circle</option>
+        <option value="right-hand-clockwise-circle">right hand clockwise circle</option>
+        <option value="left-hand-counterclockwise-circle">left hand counterclockwise circle</option>
         <option value="right-hand-swipe-right">right hand swipe right</option>
         <option value="left-hand-swipe-left">left hand swipe left</option>
     </select>
@@ -276,6 +276,7 @@ function systemActionOptions(popupId) {
         <option value="small-circle">small circle</option>
         <option value="medium-circle">medium circle</option>
         <option value="large-circle">large circle</option>
+        <option value="custom-circle">custom circle</option>
     </select>
     `;
 }

@@ -17,11 +17,21 @@ document.addEventListener('DOMContentLoaded', function() {
         setup();
     });
 
+    // document.getElementsByClassName('famous-container').style.background = "invisible";
+    // document.getElementsByClassName('famous-container').style.style.pointerEvents = "none";
+    document.body.insertAdjacentHTML('beforeend', customize_body);
+    
     document.getElementById("reset-slides").addEventListener("click", function (e) {
         window.location.href = "index.html";
     });
     document.getElementById("full-present").addEventListener("click", function (e) {
-        window.location.href = "ui.html";
+        console.log(LIST_OF_COMMANDS);
+        // window.location.href = "ui.html";
+
+        document.getElementById('customize-body').innerHTML = ui_body;
+        ui_script();
+        document.getElementById('stage-container').style.visibility = 'visible';
+        document.getElementById('stage-container').style.display = 'block';
     });
 
 }, false);
@@ -231,9 +241,10 @@ function commandTemplate(popupId, type, cause, action, bgcolor) {
 function gestureOptions(popupId) {
     return `
     <select id="gesture-options-${popupId}" style="width: 40%;">
-        <option value="gesture1">gesture1</option>
-        <option value="gesture2">gesture2</option>
-        <option value="gesture3">gesture3</option>
+        <option value="right-hand-circle">right hand circle</option>
+        <option value="left-hand-circle">left hand circle</option>
+        <option value="right-hand-swipe-right">right hand swipe right</option>
+        <option value="left-hand-swipe-left">left hand swipe left</option>
     </select>
     `;
 }
@@ -241,9 +252,11 @@ function gestureOptions(popupId) {
 function systemActionOptions(popupId) {
     return `
     <select id="sys-action-option-${popupId}">
-        <option value="action1">action1</option>
-        <option value="action2">action2</option>
-        <option value="action3">action3</option>
+        <option value="next-slide">next slide</option>
+        <option value="prev-slide">prev slide</option>
+        <option value="small-circle">small circle</option>
+        <option value="medium-circle">medium circle</option>
+        <option value="large-circle">large circle</option>
     </select>
     `;
 }
@@ -379,4 +392,144 @@ function addCommandPopupHTML() {
     document.getElementById('custom-command-container').insertAdjacentHTML('beforeend', `<div id="custom-command-container-host-${id}"></div>`);
     slideImgs.callbacks.concat(commandOptions.callbacks).forEach(f => f());
     saveF();
+}
+
+
+
+/**
+ * TOGGLE BETWEEN PAGES:
+ */
+const customize_body = `
+<div id="customize-body">
+    <div style="text-align: center;  background-color:rosybrown; display:inline-block; justify-content: center; padding: 15px; width: 100%;">
+            <input id="slideX"></input>
+            <p style="padding: 10px; line-height: 100%; color: black;">('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
+            <p id="reset-slides" style="color:rgb(38, 110, 182); cursor: pointer;"><a>< Choose new slidedeck</a></p>
+            <p id="full-present" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Present ></a></p>
+    </div>
+    <!-- Customizes -->
+    <div id="modal-custom-command" style="text-align:center; display: flex;"></div>
+    <div id="custom-command-container" style="text-align:center;"></div>
+</div>
+`;
+const ui_body = `
+    <div class="jumbotron" style="display: flex; justify-content: center;">
+        <div style="flex-direction:column; align-items: center;">
+            <h1>SmartSlides</h1>
+            <!-- <form action="#">
+                    <label for="customizations">Customization Dropdown</label>
+                    <select name="cusomtizations" id="customizations">
+                    <option value="op1">option1</option>
+                    <option value="op2">option2</option>
+
+                    </select>
+                    <input type="submit" value="Submit" />
+            </form>
+            <button type="button" onclick="changeStyle()">Click Me</button>  -->
+        </div>
+    </div>
+
+    <div id="instructions" style="margin-top:10px; margin-left:20px;">
+        <div style="display: flex; justify-content: center;">
+            <h2>Press the 'h' key to toggle between help screen and slideshow.</h2>
+        </div>
+        <div class="row">
+            <div class="col">
+            <h2>Speech Commands. </h2>
+            </div>
+            <div class="col">
+            <h2>Gesture Commands. </h2>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - next slide = "next"</p>
+            </div>
+            <div class="col">
+            <p> - next slide = hand swipe right or up </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - previous slide = "previous"</p>
+            </div>
+            <div class="col">
+            <p> - previous slide = hand swipe left or down </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - start laser = "laser"</p>
+            <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
+            </div>
+            <div class="col">
+            <p> - laser position = hand position from leap sensor </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - draw circle = "circle" </p>
+            <p> &emsp; - sizes = "small," "big"</p>
+            <p> &emsp; - colors = "green," "blue," "red" (default)</p>
+            </div>
+            <div class="col">
+            <p> - hand position / cursor position is center of circle drawn </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
+            <p> &emsp; - when in highlight mode, can see cursor and define top left and bottom right corners for highlighted rectangle area </p>
+            <p> &emsp; - top left corner of highlight = "start" </p>
+            <p> &emsp; - bottom right corner of highlight = "stop" </p>
+            <p> &emsp; - turn off highlight mode = "turn off highlight" </p>
+            </div>
+            <div class="col">
+            <p> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - make text box = "text box"</p>
+            <p> &emsp; - recognized speech will be transcribed in text box on slide
+            </div>
+            <div class="col">
+            <p> - hand position / cursor position of cursor used is where text box will be drawn </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - undo - "undo"   </p>
+            <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
+            </div>
+            <div class="col">
+            <p> </p>
+            </div>
+
+        </div>
+`;
+const ui_script = function() {
+    document.getElementById("instructions").style.opacity = "0.0";
+    document.onkeyup = function changeStyle() {
+        var keycode = event.keyCode;
+
+        if (keycode === 72) {
+        var element = document.getElementById("instructions");
+        var temp = window.getComputedStyle(element).getPropertyValue("opacity");
+        if (temp == 0.0) {
+            element.style.opacity = "1.0";
+        } else {
+            element.style.opacity = "0.0";
+        }
+
+        var element1 = document.getElementById("stage");
+        var temp1 = window.getComputedStyle(element1).getPropertyValue("opacity");
+        if (temp1 == 0.0) {
+            element1.style.opacity = "1.0";
+        } else {
+            element1.style.opacity = "0.0";
+        }
+        }
+
+    }
 }

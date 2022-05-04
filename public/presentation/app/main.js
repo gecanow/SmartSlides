@@ -51,6 +51,34 @@ var goToPrevSlide = function() {
   setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
 }
 
+// this is not working well for me right now because circles are recognized every millisecond and
+// they all have the same radius for some reason
+var drawCustomCircle = function(circleRadius) {
+  if (!CAN_DRAW_CIRCLE) return;
+  if (!laserOn) return;
+  if (circleRadius < 30) return; // circle gesture is incredibly sensitive
+  console.log("I heard you wanted to draw a circle");
+
+  var circleSurface = new Surface({
+    size : [circleRadius, circleRadius],
+    properties : {
+        border: '4px solid ' + '#FF3333',
+        borderRadius: circleRadius/2 + 'px',
+        zIndex: 1
+    }
+  });
+  var circleModifier = new StateModifier(
+    {origin: [0.5, 0.5],
+    transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
+  var circleOpacity = new Modifier({
+      opacity: 1.0
+  });
+  mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+  addedElementModifiers.push(circleOpacity);
+  CAN_DRAW_CIRCLE = false;
+  setTimeout(() => CAN_DRAW_CIRCLE = true, 5000);
+};
+
 //
 // MAIN GAME LOOP
 // Called every time the Leap provides a new frame of data
@@ -69,7 +97,7 @@ Leap.loop({ hand: function(hand) {
 
         switch (gesture.type){
           case "circle":
-              // console.log("Circle Gesture");
+              console.log("Circle Gesture");
               // CircleGesture circle = new CircleGesture(gesture);
               var clockwise = false;
               var pointableID = gesture.pointableIds[0];
@@ -78,20 +106,22 @@ Leap.loop({ hand: function(hand) {
               if (dotProduct  >  0) clockwise = true;
 
               var circleRadius = gesture.radius;
-
+              console.log(gesture.radius);
               if (clockwise){
                 // console.log("Clockwise Circle Gesture");
                 if (handType == "right") { // clockwise circle with right hand
                   // TODO: can use custom command based on radius (mm)
+                  drawCustomCircle(circleRadius);
                 }
               } else {
                 // console.log("Counterclockwise Circle Gesture");
                 if (handType == "left") { // counterclockwise circle with left hand
                   // TODO: can use custom command based on radius (mm)
+                  drawCustomCircle(circleRadius);
                 }
               }
           //
-          //     break;
+              break;
           // case "keyTap":
           //     // console.log("Key Tap Gesture");
           //     break;
@@ -171,8 +201,6 @@ Leap.loop({ hand: function(hand) {
   //
   // }
 }}).use('screenPosition', {scale: LEAPSCALE})});
-
-
 
 // processSpeech(transcript)
 //  Is called anytime speech is recognized by the Web Speech API
@@ -311,6 +339,85 @@ var processSpeech = function(transcript) {
 
     var said_text_box = userSaid(transcript.toLowerCase(), ["text box", "textbox"]);
 
+    console.log(LIST_OF_COMMANDS);
+    // console.log(slideIds.length);
+    // console.log(slideIds);
+    // console.log(THUMBNAIL_IDS);
+
+    // speech recognition for jumping to slide number
+    // starts with zero index as first slide
+    // speech api is being not nice and only wanting to work accurately if done in this very verbose way so sorry about that
+    if (userSaid(transcript.toLowerCase(), ["jump to slide zero", "jump to slide 0"])) {
+      siteControl_jumpSlide(0);
+      console.log("jump to slide zero");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide one"])) {
+      if (THUMBNAIL_IDS.length > 2) {
+        siteControl_jumpSlide(1);
+      }
+      console.log("jump to slide one");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide two", "jump to slide to"])) {
+      if (THUMBNAIL_IDS.length > 3) {
+        siteControl_jumpSlide(2);
+      }
+      console.log("jump to slide two");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide three", "jump to slide 3"])) {
+      if (THUMBNAIL_IDS.length > 4) {
+        siteControl_jumpSlide(3);
+      }
+      console.log("jump to slide three");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide four", "jump to slide for"])) {
+      if (THUMBNAIL_IDS.length > 5) {
+        siteControl_jumpSlide(4);
+      }
+      console.log("jump to slide four");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide five", "jump to slide 5"])) {
+      if (THUMBNAIL_IDS.length > 6) {
+        siteControl_jumpSlide(5);
+      }
+      console.log("jump to slide five");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide six", "jump to slide 6"])) {
+      if (THUMBNAIL_IDS.length > 7) {
+        siteControl_jumpSlide(6);
+      }
+      console.log("jump to slide six");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide seven", "jump to slide 7"])) {
+      if (THUMBNAIL_IDS.length > 8) {
+        siteControl_jumpSlide(7);
+      }
+      console.log("jump to slide 7");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide eight", "jump to slide 8"])) {
+      if (THUMBNAIL_IDS.length > 9) {
+        siteControl_jumpSlide(8);
+      }
+      console.log("jump to slide 8");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide nine", "jump to slide 9"])) {
+      if (THUMBNAIL_IDS.length > 10) {
+        siteControl_jumpSlide(9);
+      }
+      console.log("jump to slide 9");
+    } else if (userSaid(transcript.toLowerCase(), ["jump to slide ten", "jump to slide 10"])) {
+      if (THUMBNAIL_IDS.length > 11) {
+        siteControl_jumpSlide(10);
+      }
+      console.log("jump to slide 10");
+    }
+
+    // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
+    // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);
+    // for (var i = 0; i < THUMBNAIL_IDS.length; i++) {
+    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
+    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
+    //   console.log(said_slide);
+    //   if (said_slide) {
+    //     if (userSaid(transcript.toLowerCase(), spelled_out_numbers[i+1])) {
+    //       console.log("user said to go to slide " + i+1);
+    //       siteControl_jumpSlide(i);
+    //       said_slide = false;
+    //       break;
+    //     }
+    //   }
+    // }
+
     if (userSaid(transcript.toLowerCase(), ["test"])) {
       var circleSurface = new Surface({
         size : [500, 500],
@@ -410,39 +517,6 @@ var processSpeech = function(transcript) {
       orangeHighlightOn = false;
       pinkHighlightOn = false;
     }
-
-    /// custom circle size, only works for red circle (default) and laser must be on
-    /// because speech recognition api is picky about order and takes me lots of time i don't have to debug :/
-    // if (userSaid(transcript.toLowerCase(), ["here"]) && laserOn) {
-    //   circleStart = [cursorPosition[0], cursorPosition[1]];
-    // }
-    //
-    // if (userSaid(transcript.toLowerCase(), ["here"]) && laserOn) {
-    //   if (previousCircleStart != circleStart) {
-    //     previousCircleStart = circleStart; // preventing drawing multiple circles on top of each other in one instant
-    //     circleEnd = [cursorPosition[0], cursorPosition[1]];
-    //
-    //     var circleRadius = circleEnd[1] - circleStart[1];
-    //     // drawCircle code below but slightly different because need different center
-    //     var circleSurface = new Surface({
-    //       size : [circleRadius, circleRadius],
-    //       properties : {
-    //           border: '4px solid ' + '#FF3333',
-    //           borderRadius: circleRadius/2 + 'px',
-    //           zIndex: 1
-    //       }
-    //     });
-    //     var circleModifier = new StateModifier(
-    //       {origin: [0.5, 0.5],
-    //       transform: Transform.translate((circleStart[0]+circleEnd[0])/2.0, (circleStart[1]+circleEnd[1])/2.0, 0)});
-    //     var circleOpacity = new Modifier({
-    //         opacity: 1.0
-    //     });
-    //     mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
-    //     addedElementModifiers.push(circleOpacity);
-    //   }
-    // }
-
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that
       console.log("I heard you wanted a laser");

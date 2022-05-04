@@ -4,7 +4,7 @@ const ADD_SAY_BUTTON_ID = "SAY-BUTTON";
 const ADD_GESTURE_BUTTON_ID = "GESTURE-BUTTON";
 const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
-const COMMAND_TYPE = function (str) { return str.toString().split('-')[1]; };
+const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
 
 const LIST_OF_COMMANDS = [];
 
@@ -15,10 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
     grabThumbnails().then(() => {
         console.log(THUMBNAIL_IDS);
         setup();
-
-        document.getElementById(SAVE_COMMAND_ID).addEventListener('click', (e) => {
-            console.log("clicked saveButton");
-        });
     });
 
     document.getElementById("reset-slides").addEventListener("click", function (e) {
@@ -36,14 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
 function setup() {
     console.log("...setting up...");
 
-    let followupCalls1 = commandPopupHTML();
-    let followupCalls2 = customCommand();
+    let commands = customCommand();
+    document.getElementById('custom-command-container').appendChild(commands.html);
+    commands.callbacks.forEach(f => f());
 
-    document.body.appendChild(followupCalls1.html);
-    document.body.appendChild(followupCalls2.html);
-
-    followupCalls1.callbacks.forEach(f => f());
-    followupCalls2.callbacks.forEach(f => f());
+    addCommandPopupHTML();
 
     console.log("...done...");
 }
@@ -63,10 +56,11 @@ function customCommand() {
     plusButton.style.border = "0px";
     plusButton.style.padding = "0px";
     plusButton.style.lineHeight = "normal";
+    plusButton.id = "main-plus-button";
 
     plusButton.classList.add("btn", "button-primary");
     plusButton.setAttribute("data-bs-toggle", "modal");
-    plusButton.setAttribute("data-bs-target", `#${COMMAND_MODAL_ID}`);
+    plusButton.setAttribute("data-bs-target", `#${COMMAND_MODAL_ID}-${dynamicPopupID}`);
 
     const plusIcon = document.createElement("img");
     plusIcon.src = "/nm/bootstrap-icons/icons/plus-square-fill.svg";
@@ -78,6 +72,7 @@ function customCommand() {
     plusButton.appendChild(plusIcon);
 
     wrapperDiv.append(plusButton);
+
     return {html: wrapperDiv, callbacks: []};
 }
 
@@ -85,7 +80,7 @@ function customCommand() {
  * TODO
  * @returns TODO
  */
-function imageCheckboxHTML() {
+function imageCheckboxHTML(popupId) {
     const wrapperDiv = document.createElement('div');
     wrapperDiv.style.overflow = "auto";
     wrapperDiv.style.height = `200px`;
@@ -108,11 +103,11 @@ function imageCheckboxHTML() {
 
         const input = document.createElement('input');
         input.type = "checkbox";
-        input.id = `cb-${slideID}`;
+        input.id = `cb${popupId}+${slideID}`;
         li.appendChild(input);
 
         const label = document.createElement('label');
-        label.htmlFor = `cb-${slideID}`;
+        label.htmlFor = `cb${popupId}+${slideID}`;
 
         const i = document.createElement("img");
         i.src = `/assets/${slideID}/thumbnail.jpeg`;
@@ -131,14 +126,14 @@ function imageCheckboxHTML() {
  * TODO
  * @returns TODO
  */
-function commandCheckboxHTML() {
+function commandCheckboxHTML(popupId) {
     // A SAY COMMAND
     const sayButton = document.createElement('button');
     sayButton.style.background = "transparent";
     sayButton.style.border = "0px";
     sayButton.style.padding = "5px";
     sayButton.style.lineHeight = "normal";
-    sayButton.id = ADD_SAY_BUTTON_ID;
+    sayButton.id = `${ADD_SAY_BUTTON_ID}-${popupId}`;
     sayButton.innerHTML = "<p style='color:blue;'>speech</p>"
 
     // A GESTURE COMMAND
@@ -147,7 +142,7 @@ function commandCheckboxHTML() {
     gestureButton.style.border = "0px";
     gestureButton.style.padding = "5px";
     gestureButton.style.lineHeight = "normal";
-    gestureButton.id = ADD_GESTURE_BUTTON_ID;
+    gestureButton.id = `${ADD_GESTURE_BUTTON_ID}-${popupId}`;
     gestureButton.innerHTML = "<p style='color:blue;'>gesture</p>"
 
     // BUILD FORM
@@ -161,47 +156,49 @@ function commandCheckboxHTML() {
     </div>
     `
     const div = document.createElement("div");
-    div.id = "add-command-id";
+    div.id = `add-command-id-${popupId}`;
     div.style.backgroundColor = "lemonchiffon";
     div.innerHTML = wrapper;
 
     // SPECIFY CALLBACKS
     const cb = function() {
-        document.getElementById(ADD_SAY_BUTTON_ID).addEventListener('click', (e) => {
-            const resp = sayCommand();
-            document.getElementById("add-command-id").appendChild(resp.html);
+        document.getElementById(`${ADD_SAY_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
+            const resp = sayCommand(popupId);
+            document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
             resp.callbacks.forEach(f => f());
         });
 
-        document.getElementById(ADD_GESTURE_BUTTON_ID).addEventListener('click', (e) => {
-            const resp = gestureCommand();
-            document.getElementById("add-command-id").appendChild(resp.html);
+        document.getElementById(`${ADD_GESTURE_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
+            const resp = gestureCommand(popupId);
+            document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
             resp.callbacks.forEach(f => f());
         });
     }
     return {html: div, callbacks: [cb]};
 }
 
-function sayCommand() {
+function sayCommand(popupId) {
     return commandTemplate(
-            "say", 
-            `<input id="speech-command" style="height: 80%; width: 40%;"></input>`, 
-            systemActionOptions(),
-            "peachpuff"
+        popupId,
+        "say", 
+        `<input id="speech-command-${popupId}" style="height: 80%; width: 40%;"></input>`, 
+        systemActionOptions(popupId),
+        "peachpuff"
     );
 }
 
-function gestureCommand() {
+function gestureCommand(popupId) {
     return commandTemplate(
+        popupId,
         "do",
-        gestureOptions(), 
-        systemActionOptions(), 
+        gestureOptions(popupId), 
+        systemActionOptions(popupId), 
         "rosybrown"
     );
 }
 
 let numCommands = 0;
-function commandTemplate(type, cause, action, bgcolor) {
+function commandTemplate(popupId, type, cause, action, bgcolor) {
     const idNum = numCommands++;
     const label = document.createElement("label");
     label.style.display = "flex";
@@ -213,7 +210,7 @@ function commandTemplate(type, cause, action, bgcolor) {
     label.style.padding = "4px";
     label.style.borderRadius = "4px";
     label.style.lineHeight = "normal";
-    label.id = `${CUSTOM_COMMAND_ID}${type}-${idNum}`;
+    label.id = `${CUSTOM_COMMAND_ID}${popupId}-${type}-${idNum}`;
 
     label.innerHTML = `
     <p style="width:120px;">When I ${type}</p>
@@ -225,15 +222,15 @@ function commandTemplate(type, cause, action, bgcolor) {
 
     const cb = function () {
         document.getElementById(`trash-${idNum}`).addEventListener('click', (e) => {
-            document.getElementById(`${CUSTOM_COMMAND_ID}${type}-${idNum}`).remove();
+            document.getElementById(`${CUSTOM_COMMAND_ID}${popupId}-${type}-${idNum}`).remove();
         });
     }
     return {html: label, callbacks: [cb]};
 }
 
-function gestureOptions() {
+function gestureOptions(popupId) {
     return `
-    <select id="gesture-options" style="width: 40%;">
+    <select id="gesture-options-${popupId}" style="width: 40%;">
         <option value="gesture1">gesture1</option>
         <option value="gesture2">gesture2</option>
         <option value="gesture3">gesture3</option>
@@ -241,9 +238,9 @@ function gestureOptions() {
     `;
 }
 
-function systemActionOptions() {
+function systemActionOptions(popupId) {
     return `
-    <select id="sys-action-option">
+    <select id="sys-action-option-${popupId}">
         <option value="action1">action1</option>
         <option value="action2">action2</option>
         <option value="action3">action3</option>
@@ -263,18 +260,21 @@ function trashHTML(id) {
 /**
  * @returns {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[]}
  */
-function compileCommands() {
+function compileCommands(id) {
+    console.log(`Compiling commands for popup id ${id}`);
+
     // get the selected slides
     let slideIds = [];
-    document.querySelectorAll(`[id^=cb-]`).forEach(div => {
-        if (div.checked) slideIds.push(div.id.substring(3));
+    document.querySelectorAll(`[id^=cb]`).forEach(div => {
+        if (div.checked) slideIds.push(div.id.split('+')[1]);
     });
 
     // compile the commands
     let voiceCommands = new Map();
     let gestureCommands = new Map();
-    document.querySelectorAll(`[id^=${CUSTOM_COMMAND_ID}]`).forEach(div => {
+    document.querySelectorAll(`[id^=${CUSTOM_COMMAND_ID}${id}]`).forEach(div => {
         let actions = div.querySelectorAll(`[id^=sys-action-option]`)[0];
+        console.log(actions);
         let command = ""; let action = "";
         switch(COMMAND_TYPE(div.id)) {
             case "say":
@@ -292,31 +292,36 @@ function compileCommands() {
                 console.log("should not get here!!!");
         }
     });
-    return {slideIds: slideIds, voiceCommands: voiceCommands, gestureCommands: gestureCommands};
+    return {slideIds: slideIds, voiceCommands: voiceCommands, gestureCommands: gestureCommands, popupId: id};
 }
 
-function displayCommand(command) {
+function displayCommand(commandObj) {
     const div = document.createElement("div");
     div.style.width = "95%";
     div.style.backgroundColor = "lemonchiffon";
+    div.style.padding = "10px";
+    div.style.display = "inline-block";
+    // border
     div.style.borderRadius = "5px";
+    div.style.borderWidth = "1px";
+    div.style.borderColor = "black";
+    div.style.borderStyle = "solid";
 
-    let html = `<p>On the following slides:</p>`;
-    html += `<div style="flex">`;
-    command.slideIds.forEach(id => {
-        html += `<img src=${`/assets/${id}/thumbnail.jpeg`} style="width: 30px;"></img>`;
+    html = `<div style="display: flex;"><p>On these slides:</p>`;
+    commandObj.slideIds.forEach(id => {
+        html += `<img src=${`/assets/${id}/thumbnail.jpeg`} style="width:100px; padding: 5px;"></img>`;
     });
     html += `</div>`;
 
-    html += `<p>When you say...`;
-    command.voiceCommands.forEach((val, key) => {
-        html += `<br>&emsp;<strong>${key}</strong>, the system will do <strong>${val}</strong>`;
+    html += `<p style='text-align: left;'>When you say...`;
+    commandObj.voiceCommands.forEach((val, key) => {
+        html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
     });
     html += "</p>"
 
-    html += `<p>When you do...`;
-    command.gestureCommands.forEach((val, key) => {
-        html += `<br>&emsp;<strong>${key}</strong>, the system will do <strong>${val}</strong>`;
+    html += `<p style='text-align: left;'>When you do...`;
+    commandObj.gestureCommands.forEach((val, key) => {
+        html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
     });
     html += "</p>"
 
@@ -324,13 +329,16 @@ function displayCommand(command) {
     return div;
 }
 
-function commandPopupHTML() {
-    const slideImgs = imageCheckboxHTML();
-    const commandOptions = commandCheckboxHTML();
+let dynamicPopupID = 0;
+function addCommandPopupHTML() {
+    const id = dynamicPopupID++;
+    const slideImgs = imageCheckboxHTML(id);
+    const commandOptions = commandCheckboxHTML(id);
+
     // https://getbootstrap.com/docs/4.0/components/modal/
     const popup = `
     <!-- Modal -->
-    <div class="modal fade" id=${COMMAND_MODAL_ID} tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal fade" id=${COMMAND_MODAL_ID}-${id} tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
@@ -347,7 +355,7 @@ function commandPopupHTML() {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button id=${SAVE_COMMAND_ID} type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                <button id=${SAVE_COMMAND_ID}-${id} type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
             </div>
             </div>
         </div>
@@ -355,14 +363,16 @@ function commandPopupHTML() {
     `;
 
     const saveF = function() {
-        document.getElementById(SAVE_COMMAND_ID).addEventListener("click", (e) => {
-            const commands = compileCommands();
-            document.body.appendChild(displayCommand(commands));
-            LIST_OF_COMMANDS.push(commands);
-        })
+        document.getElementById(`${SAVE_COMMAND_ID}-${id}`).addEventListener("click", (e) => {
+            const commandObj = compileCommands(id);
+            document.getElementById('custom-command-container').appendChild(displayCommand(commandObj));
+            LIST_OF_COMMANDS.push(commandObj);
+            addCommandPopupHTML(); // add one for next use
+        });
     }
-    const div = document.createElement('div');
-    div.innerHTML = popup;
 
-    return {html: div, callbacks: slideImgs.callbacks.concat(commandOptions.callbacks).concat([saveF])};
+    document.getElementById('modal-custom-command').insertAdjacentHTML('beforeend', popup);
+    document.getElementById('main-plus-button').setAttribute("data-bs-target", `#${COMMAND_MODAL_ID}-${id}`);
+    slideImgs.callbacks.concat(commandOptions.callbacks).forEach(f => f());
+    saveF();
 }

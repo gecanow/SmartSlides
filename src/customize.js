@@ -6,8 +6,11 @@ const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
 
-// {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[]}
+const systemActionOptionList = ["next-slide", "prev-slide", "small-circle", "medium-circle", "large-circle"];
+const gestureOptionList = ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
+// {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[], popupId: number}
 const LIST_OF_COMMANDS = new Map();
+let dynamicPopupID = 0;
 
 /**
  * Setup the DOM once the other content has loaded.
@@ -49,11 +52,27 @@ document.addEventListener('DOMContentLoaded', function() {
 function setup() {
     console.log("...setting up...");
 
+    // make the + button
     let commands = customCommandCreationButton();
     document.getElementById('custom-command-container').appendChild(commands.html);
     commands.callbacks.forEach(f => f());
 
-    addCommandPopupHTML();
+    // commands
+    let id = dynamicPopupID++;
+    LIST_OF_COMMANDS.set(0, {
+        slideIds: THUMBNAIL_IDS,
+        voiceCommands: new Map([
+            ['next', 'next-slide'],
+            ['prev', 'prev-slide'],
+            ['medium circle', 'medium-circle'],
+        ]),
+        gestureCommands: new Map([
+            ['right-hand-swipe-right', 'next-slide'],
+            ['left-hand-swipe-left', 'prev-slide'],
+        ]),
+        popupId: id,
+    });
+    addCommandPopupHTML(id, true);  // automatically display = true
 
     console.log("...done...");
 }
@@ -127,7 +146,7 @@ function imageCheckboxHTML(popupId) {
 
         // should it already be checked?
         if (LIST_OF_COMMANDS.has(popupId)) {
-            if (LIST_OF_COMMANDS.get(popupId).slideIds.has(slideID)) {
+            if (LIST_OF_COMMANDS.get(popupId).slideIds.includes(slideID)) {
                 label.checked = true;
             }
         }
@@ -179,49 +198,64 @@ function commandCheckboxHTML(popupId) {
     div.innerHTML = wrapper;
 
     // SPECIFY CALLBACKS
+    function addSayCommand(key=null, value=null) {
+        const resp = sayCommand(popupId, key, value);
+        document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
+        resp.callbacks.forEach(f => f());
+    }
+    function addGestureCommand(key=null, value=null) {
+        const resp = gestureCommand(popupId, key, value);
+        document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
+        resp.callbacks.forEach(f => f());
+    }
     const cb = function() {
         document.getElementById(`${ADD_SAY_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
-            const resp = sayCommand(popupId);
-            document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
-            resp.callbacks.forEach(f => f());
+            addSayCommand();
 
-            document.getElementById(`speech-command-${popupId}`).addEventListener('keypress', e => {
-                const curr = document.getElementById(`speech-command-${popupId}`).value;
-                // console.log(e, curr);
-                document.getElementById(`speech-command-${popupId}`).value = curr;
-                // if (e.charCode === 8) {
-                //     document.getElementById(`speech-command-${popupId}`).value = curr.slice(0, -1);
-                // } else {
-                //     document.getElementById(`speech-command-${popupId}`).value = curr + e.key;
-                // }
-            });
+            for (let i = 0; i <= sayCommandCtr; i++) {
+                document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keypress', e => {
+                    const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
+                    // console.log(e, curr);
+                    document.getElementById(`speech-command-${popupId}-${i}`).value = curr;
+                });
+            }
         });
 
         document.getElementById(`${ADD_GESTURE_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
-            const resp = gestureCommand(popupId);
-            document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
-            resp.callbacks.forEach(f => f());
+            addGestureCommand();
         });
+
+        // Add existing commands, if they exist
+        if (LIST_OF_COMMANDS.has(popupId)) {
+            LIST_OF_COMMANDS.get(popupId).voiceCommands.forEach((value, key) => {
+                addSayCommand(key, value);
+            });
+            LIST_OF_COMMANDS.get(popupId).gestureCommands.forEach((value, key) => {
+                addGestureCommand(key, value);
+            });
+        }
     }
+
     return {html: div, callbacks: [cb]};
 }
 
-function sayCommand(popupId) {
+let sayCommandCtr = 0;
+function sayCommand(popupId, key="", value=null) {
     return commandTemplate(
         popupId,
         "say", 
-        `<input id="speech-command-${popupId}" style="height: 80%; width: 40%;"></input>`, 
-        systemActionOptions(popupId),
+        `<input id="speech-command-${popupId}-${sayCommandCtr++}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
+        systemActionOptions(popupId, value),
         "peachpuff"
     );
 }
 
-function gestureCommand(popupId) {
+function gestureCommand(popupId, key=null, value=null) {
     return commandTemplate(
         popupId,
         "do",
-        gestureOptions(popupId), 
-        systemActionOptions(popupId), 
+        gestureOptions(popupId, null), 
+        systemActionOptions(popupId, null), 
         "rosybrown"
     );
 }
@@ -257,27 +291,32 @@ function commandTemplate(popupId, type, cause, action, bgcolor) {
     return {html: label, callbacks: [cb]};
 }
 
-function gestureOptions(popupId) {
-    return `
-    <select id="gesture-options-${popupId}" style="width: 40%;">
-        <option value="right-hand-circle">right hand circle</option>
-        <option value="left-hand-circle">left hand circle</option>
-        <option value="right-hand-swipe-right">right hand swipe right</option>
-        <option value="left-hand-swipe-left">left hand swipe left</option>
-    </select>
-    `;
+function gestureOptions(popupId, selected) {
+    let html = `<select id="gesture-options-${popupId}" style="width: 40%;">`;
+    gestureOptionList.forEach(o => {
+        // should it already be checked?
+        if (selected && selected === o) {
+            html += `<option value="${o}" selected=true>${o}</option>`;
+        } else {
+            html += `<option value="${o}">${o}</option>`;
+        }
+    });
+    html += `</select>`;
+    return html;
 }
 
-function systemActionOptions(popupId) {
-    return `
-    <select id="sys-action-option-${popupId}">
-        <option value="next-slide">next slide</option>
-        <option value="prev-slide">prev slide</option>
-        <option value="small-circle">small circle</option>
-        <option value="medium-circle">medium circle</option>
-        <option value="large-circle">large circle</option>
-    </select>
-    `;
+function systemActionOptions(popupId, selected) {
+    let html = `<select id="sys-action-option-${popupId}">`;
+    systemActionOptionList.forEach(o => {
+        // should it already be checked?
+        if (selected && selected === o) {
+            html += `<option value="${o}" selected=true>${o}</option>`;
+        } else {
+            html += `<option value="${o}">${o}</option>`;
+        }
+    });
+    html += `</select>`;
+    return html;
 }
 
 function trashHTML(id) {
@@ -290,7 +329,7 @@ function trashHTML(id) {
 }
 
 /**
- * @returns {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[]}
+ * @returns {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[], popupId: id}
  */
 function compileCommands(id) {
     console.log(`Compiling commands for popup id ${id}`);
@@ -364,9 +403,8 @@ function displayCommand(commandObj) {
     return div;
 }
 
-let dynamicPopupID = 0;
-function addCommandPopupHTML() {
-    const id = dynamicPopupID++;
+function addCommandPopupHTML(id=null, display=false) {
+    if (id === null) id = dynamicPopupID++;
     const slideImgs = imageCheckboxHTML(id);
     const commandOptions = commandCheckboxHTML(id);
 
@@ -397,12 +435,15 @@ function addCommandPopupHTML() {
     </div>
     `;
 
+    const displayMe = function() {
+        const commandObj = display ? LIST_OF_COMMANDS.get(id) : compileCommands(id);
+        document.getElementById(`custom-command-container-host-${id}`).innerHTML = displayCommand(commandObj).outerHTML;
+        LIST_OF_COMMANDS.set(id, commandObj);
+        addCommandPopupHTML(); // add one for next use
+    }
     const saveF = function() {
         document.getElementById(`${SAVE_COMMAND_ID}-${id}`).addEventListener("click", (e) => {
-            const commandObj = compileCommands(id);
-            document.getElementById(`custom-command-container-host-${id}`).innerHTML = displayCommand(commandObj).outerHTML;
-            LIST_OF_COMMANDS.set(id, commandObj);
-            addCommandPopupHTML(); // add one for next use
+            displayMe();
         });
     }
 
@@ -411,6 +452,7 @@ function addCommandPopupHTML() {
     document.getElementById('custom-command-container').insertAdjacentHTML('beforeend', `<div id="custom-command-container-host-${id}"></div>`);
     slideImgs.callbacks.concat(commandOptions.callbacks).forEach(f => f());
     saveF();
+    if (display) displayMe();
 }
 
 

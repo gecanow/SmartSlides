@@ -19,6 +19,8 @@ var cursorPosition;
 var highlightStart, highlightEnd, previousHighlightStart = [0,0];
 var CAN_DRAW_CIRCLE = true; // drawing circle timeout
 var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
+var laserOn = false;
+
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
 
@@ -202,19 +204,19 @@ Leap.loop({ hand: function(hand) {
   cursor.setScreenPosition(cursorPosition);
 
   // // SETUP mode
-  if (presentationState.get('state') == 'setup') {
-    background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>start presentation</h3>");
-
-  }
+  // if (presentationState.get('state') == 'setup') {
+  //   background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>start presentation</h3>");
   //
-  // // presenting or END GAME so draw the board and ships (if player's board)
-  // // Note: Don't have to touch this code
-  else {
-    if (presentationState.get('state') == 'presenting') {
-      background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>presenting.../h3>");
-    }
-
-  }
+  // }
+  // //
+  // // // presenting or END GAME so draw the board and ships (if player's board)
+  // // // Note: Don't have to touch this code
+  // else {
+  //   if (presentationState.get('state') == 'presenting') {
+  //     background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>presenting.../h3>");
+  //   }
+  //
+  // }
 }}).use('screenPosition', {scale: LEAPSCALE})});
 
 
@@ -307,7 +309,7 @@ var processSpeech = function(transcript) {
     // current speech recognition
 
     // default circle
-    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle", "circle here"]);
+    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle"]);
 
     // circle options
     var said_small_circle = userSaid(transcript.toLowerCase(), ["small circle"]);
@@ -339,6 +341,7 @@ var processSpeech = function(transcript) {
       said_stop_laser = true;
       // var said_stop_highlight = false;
     }
+
 
     if (said_stop_highlight) said_highlight = false;
 
@@ -434,16 +437,51 @@ var processSpeech = function(transcript) {
       pinkHighlightOn = false;
     }
 
+    /// custom circle size, only works for red circle (default) and laser must be on
+    /// because speech recognition api is picky about order and takes me lots of time i don't have to debug :/
+    // if (userSaid(transcript.toLowerCase(), ["here"]) && laserOn) {
+    //   circleStart = [cursorPosition[0], cursorPosition[1]];
+    // }
+    //
+    // if (userSaid(transcript.toLowerCase(), ["here"]) && laserOn) {
+    //   if (previousCircleStart != circleStart) {
+    //     previousCircleStart = circleStart; // preventing drawing multiple circles on top of each other in one instant
+    //     circleEnd = [cursorPosition[0], cursorPosition[1]];
+    //
+    //     var circleRadius = circleEnd[1] - circleStart[1];
+    //     // drawCircle code below but slightly different because need different center
+    //     var circleSurface = new Surface({
+    //       size : [circleRadius, circleRadius],
+    //       properties : {
+    //           border: '4px solid ' + '#FF3333',
+    //           borderRadius: circleRadius/2 + 'px',
+    //           zIndex: 1
+    //       }
+    //     });
+    //     var circleModifier = new StateModifier(
+    //       {origin: [0.5, 0.5],
+    //       transform: Transform.translate((circleStart[0]+circleEnd[0])/2.0, (circleStart[1]+circleEnd[1])/2.0, 0)});
+    //     var circleOpacity = new Modifier({
+    //         opacity: 1.0
+    //     });
+    //     mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+    //     addedElementModifiers.push(circleOpacity);
+    //   }
+    // }
+
+
     if (said_laser) { // cursor may always be showing right now actually but I can change that
       console.log("I heard you wanted a laser");
       cursorSurface.setProperties({backgroundColor: Colors.RED});
       cursorModifier.setOpacity(1);
+      laserOn = true;
 
     }
 
     if (said_stop_laser) {
       console.log("I heard you wanted to stop the laser");
       cursorModifier.setOpacity(0);
+      laserOn = false;
     }
 
     if (said_next_slide) {

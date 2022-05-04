@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = "index.html";
     });
     document.getElementById("full-present").addEventListener("click", function (e) {
-        window.location.href = "present.html";
+        window.location.href = "ui.html";
     });
 
 }, false);

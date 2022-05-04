@@ -52,7 +52,7 @@ var goToPrevSlide = function() {
 }
 // actions: ["next-slide", "prev-slide", "small-circle", "medium-circle", "large-circle"];
 // gesture commands: ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
-var doAction = function(type, action) {
+var doAction = function(action) {
 
   if (action == "next-slide") {
     console.log("custom next slide")
@@ -214,11 +214,11 @@ Leap.loop({ hand: function(hand) {
               // console.log(handType);
               if ((gestureCommand == "right-hand-swipe-right") && (gesture.type == "swipe") && (handType == "right")) {
                 console.log("do gestureAction: ", gestureAction);
-                doAction("gesture", gestureAction);
+                doAction(gestureAction);
 
               } else if ((gestureCommand == "left-hand-swipe-left") && (gesture.type == "swipe") && (handType == "left")) {
                 console.log("do gestureAction: ", gestureAction);
-                doAction("gesture", gestureAction);
+                doAction(gestureAction);
 
               }
             }
@@ -343,7 +343,7 @@ var processSpeech = function(transcript) {
 
     console.log("current slide " + siteControl_currentSlideIndex());
     console.log("jumping to slide 0 now...");
-    siteControl_jumpSlide(0);
+    siteControl_jumpSlide(1);
     console.log("current slide " + siteControl_currentSlideIndex());
 
 
@@ -709,17 +709,21 @@ var processSpeech = function(transcript) {
       }
       console.log("slide indices: ", slideIndices);
       var voiceCommands = value["voiceCommands"];
+
       for (let [speechCommand, speechAction] of voiceCommands) {
         // console.log("values");
-        console.log(speechCommand + " = " + speechAction);
-        if (userSaid(speechCommand)) {
-          // TODO: do speechAction
+        var sc = [];
+        sc.push(speechCommand);
+        // console.log(speechCommand + " = " + speechAction);
+        // console.log(userSaid(transcript.toLowerCase(), arr) + " " + speechCommand);
+        // console.log(transcript);
+        if (userSaid(transcript.toLowerCase(), sc)) {
+          doAction(speechAction);
           console.log("do speechAction: ", speechAction);
         }
       }
-
-
     }
+
   }
 
   return processed;

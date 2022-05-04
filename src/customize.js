@@ -21,28 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(setup, 100);
     });
 
-    document.body.insertAdjacentHTML('beforeend', customize_body);
-
-    document.getElementById("reset-slides").addEventListener("click", function (e) {
-        window.location.href = "index.html";
-    });
-    document.getElementById("full-present").addEventListener("click", function (e) {
-        console.log(LIST_OF_COMMANDS);
-        // add the body html
-        document.getElementById('customize-body').innerHTML = ui_body;
-        // and the approproate UI scripts
-        ui_srcs.forEach(url => {
-            const script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = url;
-            document.head.appendChild(script);
-        });
-        // run the presentation scripts
-        ui_script();
-        // make the presentation visible
-        document.getElementById('stage-container').style.visibility = 'visible';
-        document.getElementById('stage-container').style.display = 'block';
-    });
+    customize_script();
 
 }, false);
 
@@ -476,51 +455,35 @@ function addCommandPopupHTML(id=null, display=false) {
 /**
  * TOGGLE BETWEEN PAGES:
  */
-const customize_body = `
-<div id="customize-body">
-    <div style="text-align: center;  background-color:rosybrown; display:inline-block; justify-content: center; padding: 15px; width: 100%;">
-            <h1>SmartSlides</h1>
-            <h3>Customize your presentation experience.</h3>
-            <p id="reset-slides" style="color:rgb(38, 110, 182); cursor: pointer;"><a>< Choose new slidedeck</a></p>
-            <p id="full-present" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Present ></a></p>
-    </div>
-    <!-- Customizes -->
-    <div id="modal-custom-command" style="text-align:center; display: flex;"></div>
-    <div id="custom-command-container" style="text-align:center; height: 500px; overflow: auto;"></div>
-</div>
-`;
-const stage_ui = `
-<div id="stage-container">
-    <div id="stageArea" style="margin-top:100px;">
-        <div id="stage" class="stage">
-        </div>
-        <div id="hyperlinkPlane" class="stage">
-        </div>
-    </div>
-    <div id="slideshowNavigator">
-    </div>
-    <div id="slideNumberControl">
-    </div>
-    <div id="slideNumberDisplay">
-    </div>
-    <div id="helpPlacard">
-    </div>
-    <div id="waitingIndicator">
-        <div id="waitingSpinner">
-        </div>
-    </div>
-</div>
-`;
-const stage_srcs = [
-    "assets/player/pdfjs/bcmaps.js",
-    "assets/player/pdfjs/web/compatibility.js",
-    "assets/player/pdfjs/pdf.js",
-    "assets/player/main.js"
-];
+const customize_script = function() {
+    document.getElementById('customize-body').style.visibility = 'visible';
+    document.getElementById('customize-body').style.display = 'block';
+
+    document.getElementById('stage-container').style.visibility = 'hidden';
+    document.getElementById('stage-container').style.display = 'none';
+
+    document.getElementById('present-body').innerHTML = "";
+    ui_srcs.forEach(url => {
+        const s = document.getElementById(url);
+        if (s) s.remove();
+    });
+
+    document.getElementById("reset-slides").addEventListener("click", function (e) {
+        window.location.href = "index.html";
+    });
+    document.getElementById("full-present").addEventListener("click", function (e) {
+        console.log(LIST_OF_COMMANDS);
+        ui_script();
+    });
+}
+
 const ui_body = `
     <div class="jumbotron" style="display: flex; justify-content: center;">
-        <div style="flex-direction:column; align-items: center;">
+        <div style="display: flex; align-items: center;">
+            <button class="btn" id="present-back-button">Back</button>
             <h1>SmartSlides</h1>
+            <button class="btn" id="present-fullscreen-button">Full screen</button>
+
             <!-- <form action="#">
                     <label for="customizations">Customization Dropdown</label>
                     <select name="cusomtizations" id="customizations">
@@ -639,6 +602,24 @@ const ui_srcs = [
     "app/setupSpeech.js"
 ];
 const ui_script = function() {
+    // add the body html
+    document.getElementById('present-body').innerHTML = ui_body;
+    // and the approproate UI scripts
+    ui_srcs.forEach(url => {
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = url;
+        script.id = url;
+        document.head.appendChild(script);
+    });
+
+    // make the presentation visible
+    document.getElementById('customize-body').style.visibility = 'hidden';
+    document.getElementById('customize-body').style.display = 'none';
+
+    document.getElementById('stage-container').style.visibility = 'visible';
+    document.getElementById('stage-container').style.display = 'block';
+
     // document.getElementById("instructions").style.opacity = "0.0";
     document.getElementById("stage").style.opacity = "0.0";
     document.onkeyup = function changeStyle() {
@@ -663,4 +644,10 @@ const ui_script = function() {
         }
 
     }
+
+    document.getElementById("present-back-button").style.backgroundColor = "peachpuff";
+    document.getElementById("present-back-button").style.borderRadius = "4px";
+    document.getElementById("present-back-button").addEventListener("click", function () {
+        customize_script();
+    });
 }

@@ -46,7 +46,6 @@
         <!-- <script type="text/javascript" src="app/main.js"></script>
         <script type="text/javascript" src="app/setupSpeech.js"></script> -->
 
-
         <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
     </head>
     <body id="body" bgcolor="black">
@@ -88,5 +87,19 @@
         <script type="text/javascript" src="assets/player/pdfjs/web/compatibility.js"></script></body>
         <script type="text/javascript" src="assets/player/pdfjs/pdf.js"></script></body>
         <script type="text/javascript" src="assets/player/main.js"></script></body>
+
+        <div id="customize-body">
+            <div style="text-align: center;  background-color:rosybrown; display:inline-block; justify-content: center; padding: 15px; width: 100%;">
+                <h1>SmartSlides</h1>
+                <h3>Customize your presentation experience.</h3>
+                <p id="reset-slides" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Choose new slidedeck</a></p>
+                <p id="full-present" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Present</a></p>
+            </div>
+            <!-- Customizes -->
+            <div id="modal-custom-command" style="text-align:center; display: flex;"></div>
+            <div id="custom-command-container" style="text-align:center; height: 500px; overflow: auto;"></div>
+        </div>
+
+        <div id="present-body"></div>
     </body>
 </html>

@@ -108,19 +108,18 @@ Leap.loop({ hand: function(hand) {
               var circleRadius = gesture.radius;
               console.log(gesture.radius);
               if (clockwise){
-                // console.log("Clockwise Circle Gesture");
+                console.log("Clockwise Circle Gesture");
                 if (handType == "right") { // clockwise circle with right hand
                   // TODO: can use custom command based on radius (mm)
                   drawCustomCircle(circleRadius);
                 }
               } else {
-                // console.log("Counterclockwise Circle Gesture");
+                console.log("Counterclockwise Circle Gesture");
                 if (handType == "left") { // counterclockwise circle with left hand
                   // TODO: can use custom command based on radius (mm)
                   drawCustomCircle(circleRadius);
                 }
               }
-          //
               break;
           // case "keyTap":
           //     // console.log("Key Tap Gesture");
@@ -129,7 +128,7 @@ Leap.loop({ hand: function(hand) {
           //     // console.log("Screen Tap Gesture");
           //     break;
           case "swipe":
-              // console.log("Swipe Gesture");
+              console.log("Swipe Gesture");
 
               //Classify swipe as either horizontal or vertical
               var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
@@ -138,7 +137,7 @@ Leap.loop({ hand: function(hand) {
             if (isHorizontal) {
               if (gesture.direction[0] > 0) {
                 swipeDirection = "right";
-                startButton.setContent("I detected a right swipe.");
+                // startButton.setContent("I detected a right swipe.");
                 console.log(`Found hand type: ${handType}`);
                 if (handType == "right") {
                   // go to next slide
@@ -146,7 +145,7 @@ Leap.loop({ hand: function(hand) {
                 }
               } else {
                 swipeDirection = "left";
-                startButton.setContent("I detected a left swipe.");
+                // startButton.setContent("I detected a left swipe.");
                 console.log(`Found hand type: ${handType}`);
                 if (handType == "left") {
                   // go to previous slide

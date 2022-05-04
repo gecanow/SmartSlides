@@ -21,6 +21,9 @@
     });
 }, false);
 
+// Helper to get current slide
+const currShownSlide = function() { return parseInt(gShowController.currentSlideIndex); }
+
 // Programmatically move to the prev slide
 function siteControl_prev() {
     console.log("prev");
@@ -49,31 +52,31 @@ function siteControl_jumpScene(x) {
 
 // Programmatically rewinds X slides back
 function siteControl_rewindSlide(x) {
-    console.log("rewindSlide");
-    jumpSlide(gShowController, gShowController.currentSlideIndex - x);
+    console.log(`rewindSlide ${currShownSlide() - x}`);
+    siteControl_jumpSlide(gShowController, currShownSlide() - x);
 }
 
 // Programmatically rewinds X scenes back
 function siteControl_rewindScene(x) {
     console.log("rewindScene");
-    jumpScene(gShowController, gShowController.currentSlideIndex - x);
+    siteControl_jumpScene(gShowController, currShownSlide() - x);
 }
 
 // Programmatically fast-forwards X slides back
 function siteControl_ffSlide(x) {
-    console.log("ffSlide");
-    jumpSlide(gShowController, gShowController.currentSlideIndex + x);
+    console.log(`ffSlide ${gShowController.currentSlideIndex - x}`);
+    siteControl_jumpSlide(gShowController, currShownSlide() + x);
 }
 
 // Programmatically fast-forwards  X scenes back
 function siteControl_ffScene(x) {
     console.log("ffScene");
-    jumpScene(gShowController, gShowController.currentSlideIndex + x);
+    siteControl_jumpScene(gShowController, currShownSlide() + x);
 }
 
 // Programmatically get slide index
 function siteControl_currentSlideIndex() {
-    return gShowController.currentSlideIndex;
+    return currShownSlide();
 }
 
 // Programmatically get the slide index from slide id

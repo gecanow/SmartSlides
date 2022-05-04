@@ -227,6 +227,27 @@ var processSpeech = function(transcript) {
     // then... found.groups.ship, found.groups.row, found.groups.col will be accessible
     return regex.exec(str.toLowerCase());
   };
+  // Helper function for parsing spoken numbers
+  var parseSpokenNumber = function (num) {
+    let n;
+    switch (num) {
+      case "one": n = 1; break;
+      case "two":
+      case "too":
+      case "to": n = 2; break;
+      case "three": n = 3; break;
+      case "for":
+      case "four": n = 4; break;
+      case "five": n = 5; break;
+      case "six": n = 6; break;
+      case "seven": n = 7; break;
+      case "eight": n = 8; break;
+      case "nine": n = 9; break;
+      case "ten": n = 10; break;
+      default: n = parseInt(num);
+    }
+    return n;
+  }
 
 
   // draw circle on screen
@@ -355,29 +376,13 @@ var processSpeech = function(transcript) {
     // speech recognition for jumping to slide number
     // starts with zero index as first slide
     // speech api is being not nice and only wanting to work accurately if done in this very verbose way so sorry about that
-    let jumpToSlideRegex = /jump (to|2|two) (?<loc>slide|scene) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*)/mg;
-    let jumpToSlideMatch = userMatched(transcript.toLowerCase(), jumpToSlideRegex);
-    if (jumpToSlideMatch) {
+    let jumpToRegex = /jump (to|2|two) (?<loc>slide|scene) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*)/mg;
+    let jumpToMatch = userMatched(transcript.toLowerCase(), jumpToRegex);
+    if (jumpToMatch) {
       // first parse the n into a valud
-      let n;
-      switch (`${jumpToSlideMatch.groups.num}`) {
-        case "one": n = 1; break;
-        case "two":
-        case "too":
-        case "to": n = 2; break;
-        case "three": n = 3; break;
-        case "for":
-        case "four": n = 4; break;
-        case "five": n = 5; break;
-        case "six": n = 6; break;
-        case "seven": n = 7; break;
-        case "eight": n = 8; break;
-        case "nine": n = 9; break;
-        case "ten": n = 10; break;
-        default: n = parseInt(jumpToSlideMatch.groups.num);
-      }
-      console.log(`jumping to ${jumpToSlideMatch.groups.loc} ${n}`)
-      switch (jumpToSlideMatch.groups.loc) {
+      let n = parseSpokenNumber(`${jumpToMatch.groups.num}`);
+      console.log(`jumping to ${jumpToMatch.groups.loc} ${n}`)
+      switch (`${jumpToMatch.groups.loc}`) {
         case 'slide':
           siteControl_jumpSlide(n); break;
         case 'scene':
@@ -386,6 +391,24 @@ var processSpeech = function(transcript) {
           console.log("could not jump :(");
       }
     }
+
+    // ------------- not working rn -------------
+    // let rewindffRegex = /(?<loc>rewind|'fast forward') (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*) slide[s]?/mg;
+    // let rewindffMatch = userMatched(transcript.toLowerCase(), rewindffRegex);
+    // if (rewindffMatch) {
+    //   console.log(rewindffMatch);
+    //   // first parse the n into a valud
+    //   let n = parseSpokenNumber(`${rewindffMatch.groups.num}`);
+    //   console.log(`jumping to ${rewindffMatch.groups.loc} ${n}`)
+    //   switch (`${rewindffMatch.groups.loc}`) {
+    //     case 'rewind':
+    //       siteControl_rewindSlide(n); break;
+    //     case 'fast forward':
+    //       siteControl_ffSlide(n); break;
+    //     default:
+    //       console.log("could not rewind/fast forward :(");
+    //   }
+    // }
 
     // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
     // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);

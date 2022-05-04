@@ -21,7 +21,7 @@ var highlightStart, highlightEnd, previousHighlightStart = [0,0];
 var CAN_DRAW_CIRCLE = true; // drawing circle timeout
 var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
 var laserOn = false;
-
+var circleStart, circleEnd, previousCircleStart = [0,0];
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
 
@@ -117,31 +117,31 @@ Leap.loop({ hand: function(hand) {
         });
 
         switch (gesture.type){
-          case "circle":
-              console.log("Circle Gesture");
-              // CircleGesture circle = new CircleGesture(gesture);
-              var clockwise = false;
-              var pointableID = gesture.pointableIds[0];
-              var direction = frame.pointable(pointableID).direction;
-              var dotProduct = Leap.vec3.dot(direction, gesture.normal);
-              if (dotProduct  >  0) clockwise = true;
-
-              var circleRadius = gesture.radius;
-              console.log(gesture.radius);
-              if (clockwise){
-                console.log("Clockwise Circle Gesture");
-                if (handType == "right") { // clockwise circle with right hand
-                  // TODO: can use custom command based on radius (mm)
-                  drawCustomCircle(circleRadius);
-                }
-              } else {
-                console.log("Counterclockwise Circle Gesture");
-                if (handType == "left") { // counterclockwise circle with left hand
-                  // TODO: can use custom command based on radius (mm)
-                  drawCustomCircle(circleRadius);
-                }
-              }
-              break;
+          // case "circle":
+              // console.log("Circle Gesture");
+              // // CircleGesture circle = new CircleGesture(gesture);
+              // var clockwise = false;
+              // var pointableID = gesture.pointableIds[0];
+              // var direction = frame.pointable(pointableID).direction;
+              // var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+              // if (dotProduct  >  0) clockwise = true;
+              //
+              // var circleRadius = gesture.radius;
+              // console.log(gesture.radius);
+              // if (clockwise){
+              //   console.log("Clockwise Circle Gesture");
+              //   if (handType == "right") { // clockwise circle with right hand
+              //     // TODO: can use custom command based on radius (mm)
+              //     drawCustomCircle(circleRadius);
+              //   }
+              // } else {
+              //   console.log("Counterclockwise Circle Gesture");
+              //   if (handType == "left") { // counterclockwise circle with left hand
+              //     // TODO: can use custom command based on radius (mm)
+              //     drawCustomCircle(circleRadius);
+              //   }
+              // }
+              // break;
           // case "keyTap":
           //     // console.log("Key Tap Gesture");
           //     break;
@@ -276,6 +276,36 @@ var processSpeech = function(transcript) {
     }
     return false;
   };
+  // Helper function to detect if a user matched a regex
+  var userMatched = function(str, regex) {
+    // EXAMPLE:
+    // str = `battleship to column a row 5`;
+    // regex = /(?<ship>battleship|destroyer|patrolboat)[ a-z]*(?<row>[a-e])[ a-z]*(?<col>[1-5]|one|two|three|four|five)/mg;
+    // found = regex.exec(str);
+    // then... found.groups.ship, found.groups.row, found.groups.col will be accessible
+    return regex.exec(str.toLowerCase());
+  };
+  // Helper function for parsing spoken numbers
+  var parseSpokenNumber = function (num) {
+    let n;
+    switch (num) {
+      case "one": n = 1; break;
+      case "two":
+      case "too":
+      case "to": n = 2; break;
+      case "three": n = 3; break;
+      case "for":
+      case "four": n = 4; break;
+      case "five": n = 5; break;
+      case "six": n = 6; break;
+      case "seven": n = 7; break;
+      case "eight": n = 8; break;
+      case "nine": n = 9; break;
+      case "ten": n = 10; break;
+      default: n = parseInt(num);
+    }
+    return n;
+  }
 
 
   // draw circle on screen
@@ -353,8 +383,8 @@ var processSpeech = function(transcript) {
     // current speech recognition
 
     // default circle
-    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle"]);
 
+    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "circle"]);
     // circle options
     var said_small_circle = userSaid(transcript.toLowerCase(), ["small circle"]);
     var said_big_circle = userSaid(transcript.toLowerCase(), ["big circle", "large circle"]);
@@ -404,60 +434,39 @@ var processSpeech = function(transcript) {
     // speech recognition for jumping to slide number
     // starts with zero index as first slide
     // speech api is being not nice and only wanting to work accurately if done in this very verbose way so sorry about that
-    if (userSaid(transcript.toLowerCase(), ["jump to slide zero", "jump to slide 0"])) {
-      siteControl_jumpSlide(0);
-      console.log("jump to slide zero");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide one"])) {
-      if (THUMBNAIL_IDS.length > 2) {
-        siteControl_jumpSlide(1);
+    let jumpToRegex = /jump (to|2|two) (?<loc>slide|scene) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*)/mg;
+    let jumpToMatch = userMatched(transcript.toLowerCase(), jumpToRegex);
+    if (jumpToMatch) {
+      // first parse the n into a valud
+      let n = parseSpokenNumber(`${jumpToMatch.groups.num}`);
+      console.log(`jumping to ${jumpToMatch.groups.loc} ${n}`)
+      switch (`${jumpToMatch.groups.loc}`) {
+        case 'slide':
+          siteControl_jumpSlide(n); break;
+        case 'scene':
+          siteControl_jumpScene(n); break;
+        default:
+          console.log("could not jump :(");
       }
-      console.log("jump to slide one");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide two", "jump to slide to"])) {
-      if (THUMBNAIL_IDS.length > 3) {
-        siteControl_jumpSlide(2);
-      }
-      console.log("jump to slide two");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide three", "jump to slide 3"])) {
-      if (THUMBNAIL_IDS.length > 4) {
-        siteControl_jumpSlide(3);
-      }
-      console.log("jump to slide three");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide four", "jump to slide for"])) {
-      if (THUMBNAIL_IDS.length > 5) {
-        siteControl_jumpSlide(4);
-      }
-      console.log("jump to slide four");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide five", "jump to slide 5"])) {
-      if (THUMBNAIL_IDS.length > 6) {
-        siteControl_jumpSlide(5);
-      }
-      console.log("jump to slide five");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide six", "jump to slide 6"])) {
-      if (THUMBNAIL_IDS.length > 7) {
-        siteControl_jumpSlide(6);
-      }
-      console.log("jump to slide six");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide seven", "jump to slide 7"])) {
-      if (THUMBNAIL_IDS.length > 8) {
-        siteControl_jumpSlide(7);
-      }
-      console.log("jump to slide 7");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide eight", "jump to slide 8"])) {
-      if (THUMBNAIL_IDS.length > 9) {
-        siteControl_jumpSlide(8);
-      }
-      console.log("jump to slide 8");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide nine", "jump to slide 9"])) {
-      if (THUMBNAIL_IDS.length > 10) {
-        siteControl_jumpSlide(9);
-      }
-      console.log("jump to slide 9");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide ten", "jump to slide 10"])) {
-      if (THUMBNAIL_IDS.length > 11) {
-        siteControl_jumpSlide(10);
-      }
-      console.log("jump to slide 10");
     }
+
+    // ------------- not working rn -------------
+    // let rewindffRegex = /(?<loc>rewind|'fast forward') (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*) slide[s]?/mg;
+    // let rewindffMatch = userMatched(transcript.toLowerCase(), rewindffRegex);
+    // if (rewindffMatch) {
+    //   console.log(rewindffMatch);
+    //   // first parse the n into a valud
+    //   let n = parseSpokenNumber(`${rewindffMatch.groups.num}`);
+    //   console.log(`jumping to ${rewindffMatch.groups.loc} ${n}`)
+    //   switch (`${rewindffMatch.groups.loc}`) {
+    //     case 'rewind':
+    //       siteControl_rewindSlide(n); break;
+    //     case 'fast forward':
+    //       siteControl_ffSlide(n); break;
+    //     default:
+    //       console.log("could not rewind/fast forward :(");
+    //   }
+    // }
 
     // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
     // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);
@@ -493,6 +502,44 @@ var processSpeech = function(transcript) {
       mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
       addedElementModifiers.push(circleOpacity);
     }
+
+
+    if (userSaid(transcript.toLowerCase(), ["start circle here"])) {
+      console.log("start circle here");
+      said_create_circle = false;
+      if (laserOn) {
+        circleStart = [cursorPosition[0], cursorPosition[1]];
+        console.log("circle start " + circleStart);
+      }
+    }
+
+    if (userSaid(transcript.toLowerCase(), ["end circle here"])) {
+      console.log("end circle here");
+      said_create_circle = false;
+      if (laserOn && circleStart != previousCircleStart) {
+        previousCircleStart = circleStart;
+        console.log("circle end");
+        circleEnd = [cursorPosition[0], cursorPosition[1]];
+        var circleDiameter = Math.abs(circleEnd[0] - circleStart[0]);
+        var circleSurface = new Surface({
+          size : [circleDiameter, circleDiameter],
+          properties : {
+              border: '4px solid ' + '#FF3333',
+              borderRadius: circleDiameter/2 + 'px',
+              zIndex: 1
+          }
+        });
+        var circleModifier = new StateModifier(
+          {origin: [0.5, 0.5],
+          transform: Transform.translate((circleStart[0]+circleEnd[0])/2.0, (circleStart[1]+circleEnd[1])/2.0, 0)});
+        var circleOpacity = new Modifier({
+            opacity: 1.0
+        });
+        mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+        addedElementModifiers.push(circleOpacity);
+      }
+    }
+
 
     if (said_small_blue_circle) {
       drawCircle(48, '#0040ff');

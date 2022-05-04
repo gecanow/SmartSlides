@@ -20,7 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // document.getElementsByClassName('famous-container').style.background = "invisible";
     // document.getElementsByClassName('famous-container').style.style.pointerEvents = "none";
     document.body.insertAdjacentHTML('beforeend', customize_body);
-    
+    const ignore = e => { e.stopPropagation(); e.preventDefault(); }
+    document.getElementById('stage-container').addEventListener('click', ignore);
+    document.getElementById('stage-container').addEventListener('keydown', ignore);
+    document.getElementById('stage-container').addEventListener('keypress', ignore);
+    document.getElementById('stageArea').addEventListener('click', ignore);
+    document.getElementById('stageArea').addEventListener('keydown', ignore);
+    document.getElementById('stageArea').addEventListener('keypress', ignore);
+    document.getElementById('stage').addEventListener('click', ignore);
+    document.getElementById('stage').addEventListener('keydown', ignore);
+    document.getElementById('stage').addEventListener('keypress', ignore);
+
     document.getElementById("reset-slides").addEventListener("click", function (e) {
         window.location.href = "index.html";
     });
@@ -32,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ui_script();
         document.getElementById('stage-container').style.visibility = 'visible';
         document.getElementById('stage-container').style.display = 'block';
+        // document.getElementById('stage-container').removeEventListener('click', ignoreKeyboard);
     });
 
 }, false);
@@ -402,8 +413,8 @@ function addCommandPopupHTML() {
 const customize_body = `
 <div id="customize-body">
     <div style="text-align: center;  background-color:rosybrown; display:inline-block; justify-content: center; padding: 15px; width: 100%;">
-            <input id="slideX"></input>
-            <p style="padding: 10px; line-height: 100%; color: black;">('r'=prev, 't'=next, 'y'=jump slide, 'u'=jump scene)</p>
+            <h1>SmartSlides</h1>
+            <h3>Customize your presentation experience.</h3>
             <p id="reset-slides" style="color:rgb(38, 110, 182); cursor: pointer;"><a>< Choose new slidedeck</a></p>
             <p id="full-present" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Present ></a></p>
     </div>

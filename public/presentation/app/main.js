@@ -25,20 +25,25 @@ var addedElementModifiers = []; // list of opacity modifiers for circles and hig
 var CAN_ADVANCE_SLIDESHOW = true;
 var goToNextSlide = function() {
   if (!CAN_ADVANCE_SLIDESHOW) return;
-  // go to next slide
+
   addedElementModifiers.forEach(function (item, index) {
     item.setOpacity(0);
   });
-  let stage = document.getElementById("stageArea");
-  console.log("found stage", stage);
-  // var e = document.createEvent("KeyEvents");
-  // e.initKeyEvent("keypress", true, true, window, false, false, false, false, 0x40, 0x40);
+  
+  siteControl_next();
 
-  // stage.focus();
-  // let event = stage.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
-  // console.log("dispatched event", event);
-  stage.click(); // only thing working right now
+  CAN_ADVANCE_SLIDESHOW = false;
+  setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
+}
+var goToPrevSlide = function() {
+  if (!CAN_ADVANCE_SLIDESHOW) return;
 
+  addedElementModifiers.forEach(function (item, index) {
+    item.setOpacity(0);
+  });
+  
+  siteControl_prev();
+  
   CAN_ADVANCE_SLIDESHOW = false;
   setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
 }
@@ -160,6 +165,7 @@ Leap.loop({ hand: function(hand) {
                 console.log(`Found hand type: ${handType}`);
                 if (handType == "left") {
                   // go to previous slide
+                  goToPrevSlide();
                 }
               }
             } else { //vertical
@@ -222,6 +228,8 @@ Leap.loop({ hand: function(hand) {
 // Output:
 //    processed, a boolean indicating whether the system reacted to the speech or not
 var processSpeech = function(transcript) {
+  console.log(LIST_OF_COMMANDS);
+  
   // Helper function to detect if any commands appear in a string
   var userSaid = function(str, commands) {
     for (var i = 0; i < commands.length; i++) {
@@ -457,9 +465,7 @@ var processSpeech = function(transcript) {
 
     if (said_prev_slide) {
       console.log("I heard you wanted to go to the previous slide.");
-      addedElementModifiers.forEach(function (item, index) {
-        item.setOpacity(0);
-      });
+      goToPrevSlide();
     }
 
     if (said_undo) {

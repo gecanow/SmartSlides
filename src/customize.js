@@ -238,15 +238,9 @@ function sayCommand(popupId, key="", value=null) {
     sayCommandCtr.set(popupId, sayCommandCtr.has(popupId) ? sayCommandCtr.get(popupId)+1 : 0);
     const output = commandTemplate(
         popupId,
-<<<<<<< HEAD
-        "say",
-        `<input id="speech-command-${popupId}" style="height: 80%; width: 40%;"></input>`,
-        systemActionOptions(popupId),
-=======
         "say", 
         `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
         systemActionOptions(popupId, value),
->>>>>>> gaby/customize
         "peachpuff"
     );
     
@@ -276,13 +270,8 @@ function gestureCommand(popupId, key=null, value=null) {
     return commandTemplate(
         popupId,
         "do",
-<<<<<<< HEAD
-        gestureOptions(popupId),
-        systemActionOptions(popupId),
-=======
         gestureOptions(popupId, null), 
         systemActionOptions(popupId, null), 
->>>>>>> gaby/customize
         "rosybrown"
     );
 }
@@ -318,30 +307,6 @@ function commandTemplate(popupId, type, cause, action, bgcolor) {
     return {html: label, callbacks: [cb]};
 }
 
-<<<<<<< HEAD
-function gestureOptions(popupId) {
-    return `
-    <select id="gesture-options-${popupId}" style="width: 40%;">
-        <option value="right-hand-clockwise-circle">right hand clockwise circle</option>
-        <option value="left-hand-counterclockwise-circle">left hand counterclockwise circle</option>
-        <option value="right-hand-swipe-right">right hand swipe right</option>
-        <option value="left-hand-swipe-left">left hand swipe left</option>
-    </select>
-    `;
-}
-
-function systemActionOptions(popupId) {
-    return `
-    <select id="sys-action-option-${popupId}">
-        <option value="next-slide">next slide</option>
-        <option value="prev-slide">prev slide</option>
-        <option value="small-circle">small circle</option>
-        <option value="medium-circle">medium circle</option>
-        <option value="large-circle">large circle</option>
-        <option value="custom-circle">custom circle</option>
-    </select>
-    `;
-=======
 function gestureOptions(popupId, selected) {
     let html = `<select id="gesture-options-${popupId}" style="width: 40%;">`;
     gestureOptionList.forEach(o => {
@@ -368,7 +333,6 @@ function systemActionOptions(popupId, selected) {
     });
     html += `</select>`;
     return html;
->>>>>>> gaby/customize
 }
 
 function trashHTML(id) {

@@ -130,13 +130,13 @@ Leap.loop({ hand: function(hand) {
               // if (clockwise){
               //   console.log("Clockwise Circle Gesture");
               //   if (handType == "right") { // clockwise circle with right hand
-              //     // TODO: can use custom command based on radius (mm)
+              //     // can use custom command based on radius (mm)
               //     drawCustomCircle(circleRadius);
               //   }
               // } else {
               //   console.log("Counterclockwise Circle Gesture");
               //   if (handType == "left") { // counterclockwise circle with left hand
-              //     // TODO: can use custom command based on radius (mm)
+              //     // can use custom command based on radius (mm)
               //     drawCustomCircle(circleRadius);
               //   }
               // }
@@ -208,9 +208,6 @@ Leap.loop({ hand: function(hand) {
           for (let [gestureCommand, gestureAction] of gestureCommands) {
             console.log(gestureCommand + " = " + gestureAction);
             if (slideIndices.includes(currentSlide)) {
-              // console.log(gestureCommand);
-              // console.log(gesture.type);
-              // console.log(handType);
               if ((gestureCommand == "right-hand-swipe-right") && (gesture.type == "swipe") && (handType == "right")) {
                 console.log("do gestureAction: ", gestureAction);
                 doAction(gestureAction);
@@ -415,7 +412,7 @@ var processSpeech = function(transcript) {
     let jumpToRegex = /jump (to|2|two) (?<loc>slide|scene) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*)/mg;
     let jumpToMatch = userMatched(transcript.toLowerCase(), jumpToRegex);
     if (jumpToMatch) {
-      // first parse the n into a valud
+      // first parse the n into a valid
       let n = parseSpokenNumber(`${jumpToMatch.groups.num}`);
       console.log(`jumping to ${jumpToMatch.groups.loc} ${n}`)
       switch (`${jumpToMatch.groups.loc}`) {

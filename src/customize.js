@@ -7,7 +7,7 @@ const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
 
 const systemActionOptionList = ["next-slide", "prev-slide", "small-circle", "medium-circle", "large-circle"];
-const gestureOptionList = ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
+const gestureOptionList = ["right-hand-swipe-right", "left-hand-swipe-left"];
 // {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[], popupId: number}
 const LIST_OF_COMMANDS = new Map();
 let dynamicPopupID = 0;
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(LIST_OF_COMMANDS);
         // add the body html
         document.getElementById('customize-body').innerHTML = ui_body;
-        // and the approproate UI scripts
+        // and the appropriate UI scripts
         ui_srcs.forEach(url => {
             const script = document.createElement("script");
             script.type = "text/javascript";

@@ -201,8 +201,8 @@ function commandCheckboxHTML(popupId) {
 function sayCommand(popupId) {
     return commandTemplate(
         popupId,
-        "say", 
-        `<input id="speech-command-${popupId}" style="height: 80%; width: 40%;"></input>`, 
+        "say",
+        `<input id="speech-command-${popupId}" style="height: 80%; width: 40%;"></input>`,
         systemActionOptions(popupId),
         "peachpuff"
     );
@@ -212,8 +212,8 @@ function gestureCommand(popupId) {
     return commandTemplate(
         popupId,
         "do",
-        gestureOptions(popupId), 
-        systemActionOptions(popupId), 
+        gestureOptions(popupId),
+        systemActionOptions(popupId),
         "rosybrown"
     );
 }
@@ -441,15 +441,16 @@ const ui_body = `
     </div>
 
     <div id="instructions" style="margin-top:10px; margin-left:20px;">
-        <div style="display: flex; justify-content: center;">
-            <h2>Press the 'h' key to toggle between help screen and slideshow.</h2>
+        <div class="row">
+          <h3>Say "start" to setup speech recognition and go to first slide of presentation. </h3>
+          <h3>Then press the 'h' key to toggle between help screen and slideshow.</h3>
         </div>
         <div class="row">
             <div class="col">
-            <h2>Speech Commands. </h2>
+            <h2>--Speech Commands--</h2>
             </div>
             <div class="col">
-            <h2>Gesture Commands. </h2>
+            <h2>--Gesture Commands--</h2>
             </div>
 
             <div class="w-100"></div>
@@ -520,7 +521,8 @@ const ui_body = `
         </div>
 `;
 const ui_script = function() {
-    document.getElementById("instructions").style.opacity = "0.0";
+    // document.getElementById("instructions").style.opacity = "0.0";
+    document.getElementById("stage").style.opacity = "0.0";
     document.onkeyup = function changeStyle() {
         var keycode = event.keyCode;
 

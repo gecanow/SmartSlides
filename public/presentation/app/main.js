@@ -119,7 +119,6 @@ Leap.loop({ hand: function(hand) {
         switch (gesture.type){
           // case "circle":
           //     // console.log("Circle Gesture");
-          //     // startButton.setContent("I detected you made a circle gesture!");
           //     // CircleGesture circle = new CircleGesture(gesture);
           //     var clockwise = false;
           //     var pointableID = gesture.pointableIds[0];
@@ -129,24 +128,19 @@ Leap.loop({ hand: function(hand) {
           //
           //     if (clockwise){
           //       // console.log("Clockwise Circle Gesture");
-          //       // startButton.setContent("I detected a clockwise circle gesture");
           //     } else {
           //       // console.log("Counterclockwise Circle Gesture");
-          //       // startButton.setContent("I detected a counterclockwise circle gesture");
           //     }
           //
           //     break;
           // case "keyTap":
           //     // console.log("Key Tap Gesture");
-          //     // startButton.setContent("I detected a key tap gesture.");
           //     break;
           // case "screenTap":
           //     // console.log("Screen Tap Gesture");
-          //     // startButton.setContent("I detected a screen tap gesture.");
           //     break;
           case "swipe":
               // console.log("Swipe Gesture");
-              // startButton.setContent("I detected a swipe gesture.");
 
               //Classify swipe as either horizontal or vertical
               var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
@@ -173,7 +167,6 @@ Leap.loop({ hand: function(hand) {
             } else { //vertical
               if (gesture.direction[1] > 0) {
                 swipeDirection = "up";
-                // startButton.setContent("I detected an up swipe.");
                 // console.log(`Found hand type: ${handType}`);
                 // if (handType == "right") {
                 //   // go to next slide
@@ -183,7 +176,6 @@ Leap.loop({ hand: function(hand) {
                 // }
               } else {
                 swipeDirection = "down";
-                // startButton.setContent("I detected a down swipe.");
               }
             }
               // console.log(swipeDirection)
@@ -204,10 +196,12 @@ Leap.loop({ hand: function(hand) {
   cursor.setScreenPosition(cursorPosition);
 
   // // SETUP mode
-  // if (presentationState.get('state') == 'setup') {
-  //   background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>start presentation</h3>");
-  //
-  // }
+  if (presentationState.get('state') == 'setup') {
+    // background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>start presentation</h3>");
+    console.log("in setup loop");
+    siteControl_currentSlideIndex();
+
+  }
   // //
   // // // presenting or END GAME so draw the board and ships (if player's board)
   // // // Note: Don't have to touch this code
@@ -271,6 +265,11 @@ var processSpeech = function(transcript) {
 
   if (presentationState.get('state') == 'setup') {
     console.log("I am recognizing speech and in setup mode");
+
+    console.log(siteControl_currentSlideIndex());
+    siteControl_jumpSlide(0);
+    console.log(siteControl_currentSlideIndex());
+    console.log("jumping to slide 0 now...");
 
     // moved up the below lines, don't start with speech
     presentationState.startPresentation();
@@ -352,6 +351,24 @@ var processSpeech = function(transcript) {
 
     var said_text_box = userSaid(transcript.toLowerCase(), ["text box", "textbox"]);
 
+    if (userSaid(transcript.toLowerCase(), ["test"])) {
+      var circleSurface = new Surface({
+        size : [500, 500],
+        properties : {
+            border: '4px solid ' + '#FF3333',
+            borderRadius: 500/2 + 'px',
+            zIndex: 1
+        }
+      });
+      var circleModifier = new StateModifier(
+        {origin: [0.5, 0.5],
+        transform: Transform.translate(300, 300, 0)});
+      var circleOpacity = new Modifier({
+          opacity: 1.0
+      });
+      mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+      addedElementModifiers.push(circleOpacity);
+    }
 
     if (said_small_blue_circle) {
       drawCircle(48, '#0040ff');

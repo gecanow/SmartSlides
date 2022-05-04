@@ -82,7 +82,8 @@
 
         <div id="instructions" style="margin-top:10px; margin-left:20px;">
           <div style="display: flex; justify-content: center;">
-              <h2>Press the 'h' key to toggle between help screen and slideshow.</h2>
+              <h2>Say "start" to setup speech recognition and go to first slide of presentation. </h2>
+              <h2>Then press the 'h' key to toggle between help screen and slideshow.</h2>
           </div>
             <div class="row">
               <div class="col">
@@ -160,7 +161,7 @@
             </div>
 
             <script>
-            document.getElementById("instructions").style.opacity = "0.0";
+            document.getElementById("stage").style.opacity = "0.0";
             document.onkeyup = function changeStyle() {
               var keycode = event.keyCode;
 

@@ -42,6 +42,7 @@ function siteControl_next() {
 function siteControl_jumpSlide(x) {
     console.log("jumpSlide");
     gShowController.jumpToSlide(x);
+    // jumpToSlide(x);
 }
 
 // Programmatically move to scene X

@@ -238,15 +238,15 @@ function sayCommand(popupId, key="", value=null) {
     sayCommandCtr.set(popupId, sayCommandCtr.has(popupId) ? sayCommandCtr.get(popupId)+1 : 0);
     const output = commandTemplate(
         popupId,
-        "say", 
-        `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
+        "say",
+        `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`,
         systemActionOptions(popupId, value),
         "peachpuff"
     );
-    
+
     return {
         html: output.html,
-        callbacks: 
+        callbacks:
             output.callbacks.concat(
                 [function () {
                     const idToCheck = `speech-command-${popupId}-${sayCommandCtr.get(popupId)}`;
@@ -270,8 +270,8 @@ function gestureCommand(popupId, key=null, value=null) {
     return commandTemplate(
         popupId,
         "do",
-        gestureOptions(popupId, null), 
-        systemActionOptions(popupId, null), 
+        gestureOptions(popupId, null),
+        systemActionOptions(popupId, null),
         "rosybrown"
     );
 }
@@ -534,20 +534,19 @@ const ui_body = `
         </div>
     </div>
 
-    <div id="instructions" style="margin-top:10px; margin-left:20px;">
+    <div id="instructions" style="margin-top:10px; margin-left:20px; overflow-y: scroll;">
         <div class="row">
-          <h3>Say "start" to setup speech recognition and go to first slide of presentation. </h3>
-          <h3>Then press the 'h' key to toggle between help screen and slideshow.</h3>
+          <p>Say "start" to setup speech recognition and go to first slide of presentation. Then press the 'h' key to toggle between help screen and slideshow.</p>
         </div>
         <div class="row">
             <div class="col">
-            <h2>--Speech Commands--</h2>
+            <h3>--Speech Commands--</h3>
             </div>
             <div class="col">
-            <h2>--Gesture Commands--</h2>
+            <h3>--Gesture Commands--</h3>
             </div>
 
-            <div class="w-100"></div>
+            <div class="w-100" style="margin-top:2px;"></div>
             <div class="col">
             <p> - next slide = "next"</p>
             </div>
@@ -556,26 +555,35 @@ const ui_body = `
             </div>
 
             <div class="w-100"></div>
-            <div class="col">
-            <p> - previous slide = "previous"</p>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - previous slide = "previous"</p>
             </div>
-            <div class="col">
+            <div class="col" style="margin-top:-5px;">
             <p> - previous slide = hand swipe left or down </p>
             </div>
 
             <div class="w-100"></div>
-            <div class="col">
-            <p> - start laser = "laser"</p>
-            <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - undo - "jump to slide X"   </p>
+            <p"> &emsp; - jumps to slide of integer number X (starting from 1) </p>
             </div>
             <div class="col">
+            <p> </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - start laser = "laser"</p>
+            <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
+            </div>
+            <div class="col" style="margin-top:-5px;">
             <p> - laser position = hand position from leap sensor </p>
             </div>
 
             <div class="w-100"></div>
-            <div class="col">
-            <p> - draw circle = "circle" </p>
-            <p> &emsp; - sizes = "small," "big"</p>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;" > - draw circle = "circle" </p>
+            <p style="margin : 0; padding:0;"> &emsp; - sizes = "small," "big"</p>
             <p> &emsp; - colors = "green," "blue," "red" (default)</p>
             </div>
             <div class="col">
@@ -583,29 +591,40 @@ const ui_body = `
             </div>
 
             <div class="w-100"></div>
-            <div class="col">
-            <p> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
-            <p> &emsp; - when in highlight mode, can see cursor and define top left and bottom right corners for highlighted rectangle area </p>
-            <p> &emsp; - top left corner of highlight = "start" </p>
-            <p> &emsp; - bottom right corner of highlight = "stop" </p>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - draw custom sized circle = "start circle here" </p>
+            <p style="margin : 0; padding:0;"> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red </p>
+            <p style="margin : 0; padding:0;"> - draw custom sized circle = "end circle here" </p>
+            <p> &emsp; - end position of circle / rightmost point of circle </p>
+            </div>
+            <div class="col" style="margin-top:-5px;">
+            <p> - hand position / laser position controls circle start and end points </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
+            <p style="margin : 0; padding:0;"> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight </p>
+            <p style="margin : 0; padding:0;"> &emsp; - top left corner of highlight = "start" </p>
+            <p style="margin : 0; padding:0;"> &emsp; - bottom right corner of highlight = "stop" </p>
             <p> &emsp; - turn off highlight mode = "turn off highlight" </p>
             </div>
-            <div class="col">
+            <div class="col" style="margin-top:-5px;">
             <p> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle </p>
             </div>
 
             <div class="w-100"></div>
-            <div class="col">
-            <p> - make text box = "text box"</p>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - make text box = "text box"</p>
             <p> &emsp; - recognized speech will be transcribed in text box on slide
             </div>
-            <div class="col">
+            <div class="col" style="margin-top:-5px;">
             <p> - hand position / cursor position of cursor used is where text box will be drawn </p>
             </div>
 
             <div class="w-100"></div>
-            <div class="col">
-            <p> - undo - "undo"   </p>
+            <div class="col" style="margin-top:-5px;">
+            <p style="margin : 0; padding:0;"> - undo - "undo"   </p>
             <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
             </div>
             <div class="col">

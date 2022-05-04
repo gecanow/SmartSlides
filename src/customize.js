@@ -478,7 +478,7 @@ const customize_script = function() {
 }
 
 const ui_body = `
-    <div class="jumbotron" style="display: flex; justify-content: center;">
+    <div class="jumbotron" style="display: flex; justify-content: center;" id="presentation-header">
         <div style="display: flex; align-items: center;">
             <button class="btn" id="present-back-button">Back</button>
             <h1>SmartSlides</h1>
@@ -624,30 +624,47 @@ const ui_script = function() {
     document.getElementById("stage").style.opacity = "0.0";
     document.onkeyup = function changeStyle() {
         var keycode = event.keyCode;
+        console.log(keycode);
 
         if (keycode === 72) {
-        var element = document.getElementById("instructions");
-        var temp = window.getComputedStyle(element).getPropertyValue("opacity");
-        if (temp == 0.0) {
-            element.style.opacity = "1.0";
-        } else {
-            element.style.opacity = "0.0";
+            var element = document.getElementById("instructions");
+            var temp = window.getComputedStyle(element).getPropertyValue("opacity");
+            if (temp == 0.0) {
+                element.style.opacity = "1.0";
+            } else {
+                element.style.opacity = "0.0";
+            }
+
+            var element1 = document.getElementById("stage");
+            var temp1 = window.getComputedStyle(element1).getPropertyValue("opacity");
+            if (temp1 == 0.0) {
+                element1.style.opacity = "1.0";
+            } else {
+                element1.style.opacity = "0.0";
+            }
         }
 
-        var element1 = document.getElementById("stage");
-        var temp1 = window.getComputedStyle(element1).getPropertyValue("opacity");
-        if (temp1 == 0.0) {
-            element1.style.opacity = "1.0";
-        } else {
-            element1.style.opacity = "0.0";
+        if (keycode === 69 /** e */) {
+            console.log("disconnecting from full screen");
+            fullscreenObserver.disconnect();
+            document.getElementById('presentation-header').style.visibility = 'visible';
+            document.getElementById('presentation-header').style.display = 'flex';
+            window.dispatchEvent(new Event('resize'));
         }
-        }
-
     }
 
     document.getElementById("present-back-button").style.backgroundColor = "peachpuff";
     document.getElementById("present-back-button").style.borderRadius = "4px";
     document.getElementById("present-back-button").addEventListener("click", function () {
         customize_script();
+    });
+
+    document.getElementById("present-fullscreen-button").style.backgroundColor = "peachpuff";
+    document.getElementById("present-fullscreen-button").style.borderRadius = "4px";
+    document.getElementById("present-fullscreen-button").addEventListener("click", function () {
+        document.getElementById('presentation-header').style.visibility = 'hidden';
+        document.getElementById('presentation-header').style.display = 'none';
+        // fullscreen();
+        canvasListener();
     });
 }

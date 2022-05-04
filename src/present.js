@@ -1,11 +1,11 @@
-let observer = new MutationObserver(() => {});
-window.addEventListener('load', function () {
-    // call fullscreen after some time to get the ball rolling.
-    setTimeout(function () {
-        fullscreen();
-        canvasListener();
-    }, 300);
-});
+let fullscreenObserver = new MutationObserver(() => {});
+// window.addEventListener('load', function () {
+//     // call fullscreen after some time to get the ball rolling.
+//     setTimeout(function () {
+//         fullscreen();
+//         canvasListener();
+//     }, 300);
+// });
 
 /** 
  * Automate the process of going fullscreen.
@@ -51,9 +51,9 @@ function canvasListener() {
     };
 
     // Create an observer instance linked to the callback function
-    observer.disconnect();
-    observer = new MutationObserver(callback);
+    fullscreenObserver.disconnect();
+    fullscreenObserver = new MutationObserver(callback);
 
     // Start observing the target node for configured mutations
-    observer.observe(targetNode, config);
+    fullscreenObserver.observe(targetNode, config);
 }

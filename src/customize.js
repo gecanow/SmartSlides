@@ -212,11 +212,17 @@ function commandCheckboxHTML(popupId) {
         document.getElementById(`${ADD_SAY_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
             addSayCommand();
 
-            for (let i = 0; i <= sayCommandCtr; i++) {
+            for (let i = 0; i <= sayCommandCtr.get(popupId); i++) {
+                console.log(`keypress on speech-command-${popupId}-${i} ?`);
                 document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keypress', e => {
                     const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
-                    // console.log(e, curr);
+                    console.log(e, curr);
                     document.getElementById(`speech-command-${popupId}-${i}`).value = curr;
+                });
+                console.log(`keydown on speech-command-${popupId}-${i} ?`);
+                document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keydown', e => {
+                    const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
+                    console.log(e, curr);
                 });
             }
         });
@@ -239,12 +245,13 @@ function commandCheckboxHTML(popupId) {
     return {html: div, callbacks: [cb]};
 }
 
-let sayCommandCtr = 0;
+let sayCommandCtr = new Map();
 function sayCommand(popupId, key="", value=null) {
+    sayCommandCtr.set(popupId, sayCommandCtr.has(popupId) ? sayCommandCtr.get(popupId)+1 : 0);
     return commandTemplate(
         popupId,
         "say", 
-        `<input id="speech-command-${popupId}-${sayCommandCtr++}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
+        `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
         systemActionOptions(popupId, value),
         "peachpuff"
     );

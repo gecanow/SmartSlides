@@ -36,13 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function setup_confirmation() {
     const thumbnails = document.getElementById("thumbnails");
+    setTimeout(() => {
+        THUMBNAIL_IDS.forEach(slideID => {
+            const i = document.createElement("img");
+            i.src = `/assets/${slideID}/thumbnail.jpeg`;
+            i.style.padding = "20px";
+            thumbnails.appendChild(i);
+        });
+    }, 100);
     
-    THUMBNAIL_IDS.forEach(slideID => {
-        const i = document.createElement("img");
-        i.src = `/assets/${slideID}/thumbnail.jpeg`;
-        i.style.padding = "20px";
-        thumbnails.appendChild(i);
-    });
 
     document.getElementById("step2").style.opacity = "100%";
 }

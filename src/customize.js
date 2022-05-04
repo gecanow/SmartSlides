@@ -18,7 +18,7 @@ let dynamicPopupID = 0;
 document.addEventListener('DOMContentLoaded', function() {
     grabThumbnails().then(() => {
         console.log(THUMBNAIL_IDS);
-        setup();
+        setTimeout(setup, 100);
     });
 
     document.body.insertAdjacentHTML('beforeend', customize_body);

@@ -37,8 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function setup_confirmation() {
     const thumbnails = document.getElementById("thumbnails");
     setTimeout(() => {
-        console.log(THUMBNAIL_IDS);
-        console.log(THUMBNAIL_IDS[0]);
         THUMBNAIL_IDS.forEach(slideID => {
             const i = document.createElement("img");
             i.src = `/assets/${slideID}/thumbnail.jpeg`;

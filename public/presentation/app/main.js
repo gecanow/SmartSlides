@@ -72,8 +72,7 @@ var doAction = function(action) {
   }
 }
 
-// this is not working well for me right now because circles are recognized every millisecond and
-// they all have the same radius for some reason
+// this does not work well because circle gesture recognition accuracy is low
 var drawCustomCircle = function(circleRadius) {
   if (!CAN_DRAW_CIRCLE) return;
   if (!laserOn) return;
@@ -341,10 +340,7 @@ var processSpeech = function(transcript) {
   if (presentationState.get('state') == 'setup') {
     console.log("I am recognizing speech and in setup mode");
 
-    console.log("current slide " + siteControl_currentSlideIndex());
-    console.log("jumping to slide 0 now...");
     siteControl_jumpSlide(1);
-    console.log("current slide " + siteControl_currentSlideIndex());
 
 
     // moved up the below lines, don't start with speech
@@ -353,25 +349,6 @@ var processSpeech = function(transcript) {
     highlightOn = false;
     //
 
-    // Starting the presentation with speech
-    // Detect the 'start' command, and start the game if it was said
-    // var said_start = userSaid(transcript, ["start"]); // start commmand is said
-    // if (said_start) {
-    //   presentationState.startPresentation();
-    //   // window.location.href = "../index.html";
-    //   /// get rid of all text and go to full screen (currently black full screen)
-    //   console.log("I am here yay");
-    //   startButton.setContent("Beginning Presentation!");
-    //   background.setContent("");
-    //   // backgroundModifier.setOpacity(0.0);
-    //   opacityModifiers.forEach(function (item, index) {
-    //     // console.log(item);
-    //     // console.log(index);
-    //     item.setOpacity(0);
-    //   });
-    //   // switchSlideUI();
-    //
-    // }
   }
 
   else if (presentationState.get('state') == 'presenting') {
@@ -695,12 +672,12 @@ var processSpeech = function(transcript) {
     }
 
     // CUSTOM SPEECH COMMANDS
-    console.log("current slide for map in speech: ", siteControl_currentSlideIndex());
+    // console.log("current slide for map in speech: ", siteControl_currentSlideIndex());
     var currentSlide = siteControl_currentSlideIndex();
     console.log("list: ", LIST_OF_COMMANDS);
     // console.log("length: ", LIST_OF_COMMANDS.keys());
     for (let [key, value] of LIST_OF_COMMANDS) {
-      console.log(key + " = " + value);
+      // console.log(key + " = " + value);
       // console.log(value.valueOf());
       let slideIds = value["slideIds"];
       var slideIndices = []
@@ -714,9 +691,6 @@ var processSpeech = function(transcript) {
         // console.log("values");
         var sc = [];
         sc.push(speechCommand);
-        // console.log(speechCommand + " = " + speechAction);
-        // console.log(userSaid(transcript.toLowerCase(), arr) + " " + speechCommand);
-        // console.log(transcript);
         if (userSaid(transcript.toLowerCase(), sc)) {
           doAction(speechAction);
           console.log("do speechAction: ", speechAction);

@@ -146,8 +146,10 @@ function imageCheckboxHTML(popupId) {
 
         // should it already be checked?
         if (LIST_OF_COMMANDS.has(popupId)) {
-            if (LIST_OF_COMMANDS.get(popupId).slideIds.includes(slideID)) {
-                label.checked = true;
+            console.log(`checking ${LIST_OF_COMMANDS.get(popupId).slideIds} for ${slideID}:`);
+            console.log(LIST_OF_COMMANDS.get(popupId).slideIds.indexOf(slideID) >= 0);
+            if (LIST_OF_COMMANDS.get(popupId).slideIds.indexOf(slideID) >= 0) {
+                input.setAttribute("checked", true);
             }
         }
 
@@ -216,20 +218,6 @@ function commandCheckboxHTML(popupId) {
         document.getElementById(`${ADD_GESTURE_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
             addGestureCommand();
         });
-
-        // for (let i = 0; i <= sayCommandCtr.get(popupId); i++) {
-        //     console.log(`keypress on speech-command-${popupId}-${i} ?`);
-        //     document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keypress', e => {
-        //         const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
-        //         console.log(e, curr);
-        //         document.getElementById(`speech-command-${popupId}-${i}`).value = curr;
-        //     });
-        //     console.log(`keydown on speech-command-${popupId}-${i} ?`);
-        //     document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keydown', e => {
-        //         const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
-        //         console.log(e, curr);
-        //     });
-        // }
 
         // Add existing commands, if they exist
         if (LIST_OF_COMMANDS.has(popupId)) {

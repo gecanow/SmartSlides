@@ -6,7 +6,7 @@ const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
 
-const LIST_OF_COMMANDS = [];
+const LIST_OF_COMMANDS = new Map();
 
 /**
  * Setup the DOM once the other content has loaded.
@@ -297,9 +297,10 @@ function compileCommands(id) {
 
 function displayCommand(commandObj) {
     const div = document.createElement("div");
-    div.style.width = "95%";
+    div.style.width = "60%";
     div.style.backgroundColor = "lemonchiffon";
     div.style.padding = "10px";
+    div.style.marginTop = "10px";
     div.style.display = "inline-block";
     // border
     div.style.borderRadius = "5px";
@@ -324,6 +325,8 @@ function displayCommand(commandObj) {
         html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
     });
     html += "</p>"
+
+    html += `<button class="btn button-primary" data-bs-toggle="modal" data-bs-target="#${COMMAND_MODAL_ID}-${commandObj.popupId}">Edit</button>`
 
     div.innerHTML = html;
     return div;
@@ -365,14 +368,15 @@ function addCommandPopupHTML() {
     const saveF = function() {
         document.getElementById(`${SAVE_COMMAND_ID}-${id}`).addEventListener("click", (e) => {
             const commandObj = compileCommands(id);
-            document.getElementById('custom-command-container').appendChild(displayCommand(commandObj));
-            LIST_OF_COMMANDS.push(commandObj);
+            document.getElementById(`custom-command-container-host-${id}`).innerHTML = displayCommand(commandObj).outerHTML;
+            LIST_OF_COMMANDS.set(id, commandObj);
             addCommandPopupHTML(); // add one for next use
         });
     }
 
     document.getElementById('modal-custom-command').insertAdjacentHTML('beforeend', popup);
     document.getElementById('main-plus-button').setAttribute("data-bs-target", `#${COMMAND_MODAL_ID}-${id}`);
+    document.getElementById('custom-command-container').insertAdjacentHTML('beforeend', `<div id="custom-command-container-host-${id}"></div>`);
     slideImgs.callbacks.concat(commandOptions.callbacks).forEach(f => f());
     saveF();
 }

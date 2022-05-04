@@ -466,7 +466,7 @@ var processSpeech = function(transcript) {
     //   }
     // }
 
-    if (userSaid(transcript.toLowerCase(), ["test"])) {
+    if (userSaid(transcript.toLowerCase(), ["turtle"])) {
       var circleSurface = new Surface({
         size : [500, 500],
         properties : {

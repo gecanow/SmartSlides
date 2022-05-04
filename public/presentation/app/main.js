@@ -54,7 +54,7 @@ var goToPrevSlide = function() {
 // gesture commands: ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
 var doAction = function(type, action) {
 
-  if (action == "next-slide") { // TODO: fix circle function calls - maybe not in same scope right now
+  if (action == "next-slide") {
     console.log("custom next slide")
     goToNextSlide();
   } else if (action == "prev-slide") {
@@ -259,6 +259,35 @@ Leap.loop({ hand: function(hand) {
   // }
 }}).use('screenPosition', {scale: LEAPSCALE})});
 
+
+  // draw circle on screen
+  // circleSize: int of pixel size (diameter of circle), default is 100
+  // circleColor: string of hex values, default is red "#FF3333"
+var drawCircle = function(circleSize = 100, circleColor = '#FF3333') {
+  if (!CAN_DRAW_CIRCLE) return;
+  console.log("I heard you wanted to draw a circle");
+
+  var circleSurface = new Surface({
+    size : [circleSize, circleSize],
+    properties : {
+        border: '4px solid ' + circleColor,
+        borderRadius: circleSize/2 + 'px',
+        zIndex: 1
+    }
+  });
+  var circleModifier = new StateModifier(
+    {origin: [0.5, 0.5],
+    transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
+  var circleOpacity = new Modifier({
+      opacity: 1.0
+  });
+  mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+  addedElementModifiers.push(circleOpacity);
+  CAN_DRAW_CIRCLE = false;
+  setTimeout(() => CAN_DRAW_CIRCLE = true, 1000);
+};
+
+
 // processSpeech(transcript)
 //  Is called anytime speech is recognized by the Web Speech API
 // Input:
@@ -266,7 +295,7 @@ Leap.loop({ hand: function(hand) {
 // Output:
 //    processed, a boolean indicating whether the system reacted to the speech or not
 var processSpeech = function(transcript) {
-  console.log(LIST_OF_COMMANDS);
+  // console.log(LIST_OF_COMMANDS);
 
   // Helper function to detect if any commands appear in a string
   var userSaid = function(str, commands) {
@@ -306,34 +335,6 @@ var processSpeech = function(transcript) {
     }
     return n;
   }
-
-
-  // draw circle on screen
-  // circleSize: int of pixel size (diameter of circle), default is 100
-  // circleColor: string of hex values, default is red "#FF3333"
-  var drawCircle = function(circleSize = 100, circleColor = '#FF3333') {
-    if (!CAN_DRAW_CIRCLE) return;
-    console.log("I heard you wanted to draw a circle");
-
-    var circleSurface = new Surface({
-      size : [circleSize, circleSize],
-      properties : {
-          border: '4px solid ' + circleColor,
-          borderRadius: circleSize/2 + 'px',
-          zIndex: 1
-      }
-    });
-    var circleModifier = new StateModifier(
-      {origin: [0.5, 0.5],
-      transform: Transform.translate(cursorPosition[0], cursorPosition[1], 0)});
-    var circleOpacity = new Modifier({
-        opacity: 1.0
-    });
-    mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
-    addedElementModifiers.push(circleOpacity);
-    CAN_DRAW_CIRCLE = false;
-    setTimeout(() => CAN_DRAW_CIRCLE = true, 1000);
-  };
 
   var processed = false;
 

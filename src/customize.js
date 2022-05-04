@@ -211,25 +211,25 @@ function commandCheckboxHTML(popupId) {
     const cb = function() {
         document.getElementById(`${ADD_SAY_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
             addSayCommand();
-
-            for (let i = 0; i <= sayCommandCtr.get(popupId); i++) {
-                console.log(`keypress on speech-command-${popupId}-${i} ?`);
-                document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keypress', e => {
-                    const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
-                    console.log(e, curr);
-                    document.getElementById(`speech-command-${popupId}-${i}`).value = curr;
-                });
-                console.log(`keydown on speech-command-${popupId}-${i} ?`);
-                document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keydown', e => {
-                    const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
-                    console.log(e, curr);
-                });
-            }
         });
 
         document.getElementById(`${ADD_GESTURE_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
             addGestureCommand();
         });
+
+        // for (let i = 0; i <= sayCommandCtr.get(popupId); i++) {
+        //     console.log(`keypress on speech-command-${popupId}-${i} ?`);
+        //     document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keypress', e => {
+        //         const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
+        //         console.log(e, curr);
+        //         document.getElementById(`speech-command-${popupId}-${i}`).value = curr;
+        //     });
+        //     console.log(`keydown on speech-command-${popupId}-${i} ?`);
+        //     document.getElementById(`speech-command-${popupId}-${i}`).addEventListener('keydown', e => {
+        //         const curr = document.getElementById(`speech-command-${popupId}-${i}`).value;
+        //         console.log(e, curr);
+        //     });
+        // }
 
         // Add existing commands, if they exist
         if (LIST_OF_COMMANDS.has(popupId)) {
@@ -248,13 +248,34 @@ function commandCheckboxHTML(popupId) {
 let sayCommandCtr = new Map();
 function sayCommand(popupId, key="", value=null) {
     sayCommandCtr.set(popupId, sayCommandCtr.has(popupId) ? sayCommandCtr.get(popupId)+1 : 0);
-    return commandTemplate(
+    const output = commandTemplate(
         popupId,
         "say", 
         `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
         systemActionOptions(popupId, value),
         "peachpuff"
     );
+    
+    return {
+        html: output.html,
+        callbacks: 
+            output.callbacks.concat(
+                [function () {
+                    const idToCheck = `speech-command-${popupId}-${sayCommandCtr.get(popupId)}`;
+                    console.log(`keypress on ${idToCheck} ?`);
+                    document.getElementById(idToCheck).addEventListener('keypress', e => {
+                        const curr = document.getElementById(idToCheck).value;
+                        console.log(e, curr);
+                        document.getElementById(idToCheck).value = curr;
+                    });
+                    console.log(`keydown on ${idToCheck} ?`);
+                    document.getElementById(idToCheck).addEventListener('keydown', e => {
+                        const curr = document.getElementById(idToCheck).value;
+                        console.log(e, curr);
+                    });
+                }]
+            )
+        };
 }
 
 function gestureCommand(popupId, key=null, value=null) {

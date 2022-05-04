@@ -118,20 +118,28 @@ Leap.loop({ hand: function(hand) {
         });
 
         switch (gesture.type){
-          // case "circle":
-          //     // console.log("Circle Gesture");
-          //     // CircleGesture circle = new CircleGesture(gesture);
-          //     var clockwise = false;
-          //     var pointableID = gesture.pointableIds[0];
-          //     var direction = frame.pointable(pointableID).direction;
-          //     var dotProduct = Leap.vec3.dot(direction, gesture.normal);
-          //     if (dotProduct  >  0) clockwise = true;
-          //
-          //     if (clockwise){
-          //       // console.log("Clockwise Circle Gesture");
-          //     } else {
-          //       // console.log("Counterclockwise Circle Gesture");
-          //     }
+          case "circle":
+              // console.log("Circle Gesture");
+              // CircleGesture circle = new CircleGesture(gesture);
+              var clockwise = false;
+              var pointableID = gesture.pointableIds[0];
+              var direction = frame.pointable(pointableID).direction;
+              var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+              if (dotProduct  >  0) clockwise = true;
+
+              var circleRadius = gesture.radius;
+
+              if (clockwise){
+                // console.log("Clockwise Circle Gesture");
+                if (handType == "right") { // clockwise circle with right hand
+                  // TODO: call custom command if specified
+                }
+              } else {
+                // console.log("Counterclockwise Circle Gesture");
+                if (handType == "left") { // counterclockwise circle with left hand
+                  // TODO: call custom command if specified
+                }
+              }
           //
           //     break;
           // case "keyTap":

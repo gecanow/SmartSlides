@@ -21,7 +21,7 @@ var highlightStart, highlightEnd, previousHighlightStart = [0,0];
 var CAN_DRAW_CIRCLE = true; // drawing circle timeout
 var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
 var laserOn = false;
-
+var circleStart, circleEnd, previousCircleStart = [0,0];
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
 
@@ -96,31 +96,31 @@ Leap.loop({ hand: function(hand) {
         });
 
         switch (gesture.type){
-          case "circle":
-              console.log("Circle Gesture");
-              // CircleGesture circle = new CircleGesture(gesture);
-              var clockwise = false;
-              var pointableID = gesture.pointableIds[0];
-              var direction = frame.pointable(pointableID).direction;
-              var dotProduct = Leap.vec3.dot(direction, gesture.normal);
-              if (dotProduct  >  0) clockwise = true;
-
-              var circleRadius = gesture.radius;
-              console.log(gesture.radius);
-              if (clockwise){
-                console.log("Clockwise Circle Gesture");
-                if (handType == "right") { // clockwise circle with right hand
-                  // TODO: can use custom command based on radius (mm)
-                  drawCustomCircle(circleRadius);
-                }
-              } else {
-                console.log("Counterclockwise Circle Gesture");
-                if (handType == "left") { // counterclockwise circle with left hand
-                  // TODO: can use custom command based on radius (mm)
-                  drawCustomCircle(circleRadius);
-                }
-              }
-              break;
+          // case "circle":
+              // console.log("Circle Gesture");
+              // // CircleGesture circle = new CircleGesture(gesture);
+              // var clockwise = false;
+              // var pointableID = gesture.pointableIds[0];
+              // var direction = frame.pointable(pointableID).direction;
+              // var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+              // if (dotProduct  >  0) clockwise = true;
+              //
+              // var circleRadius = gesture.radius;
+              // console.log(gesture.radius);
+              // if (clockwise){
+              //   console.log("Clockwise Circle Gesture");
+              //   if (handType == "right") { // clockwise circle with right hand
+              //     // TODO: can use custom command based on radius (mm)
+              //     drawCustomCircle(circleRadius);
+              //   }
+              // } else {
+              //   console.log("Counterclockwise Circle Gesture");
+              //   if (handType == "left") { // counterclockwise circle with left hand
+              //     // TODO: can use custom command based on radius (mm)
+              //     drawCustomCircle(circleRadius);
+              //   }
+              // }
+              // break;
           // case "keyTap":
           //     // console.log("Key Tap Gesture");
           //     break;
@@ -295,8 +295,8 @@ var processSpeech = function(transcript) {
     // current speech recognition
 
     // default circle
-    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "draw a circle", "draw circle", "circle"]);
 
+    var said_create_circle = userSaid(transcript.toLowerCase(), ["create circle", "circle this", "circle"]);
     // circle options
     var said_small_circle = userSaid(transcript.toLowerCase(), ["small circle"]);
     var said_big_circle = userSaid(transcript.toLowerCase(), ["big circle", "large circle"]);
@@ -401,22 +401,6 @@ var processSpeech = function(transcript) {
       console.log("jump to slide 10");
     }
 
-    // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
-    // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);
-    // for (var i = 0; i < THUMBNAIL_IDS.length; i++) {
-    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
-    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
-    //   console.log(said_slide);
-    //   if (said_slide) {
-    //     if (userSaid(transcript.toLowerCase(), spelled_out_numbers[i+1])) {
-    //       console.log("user said to go to slide " + i+1);
-    //       siteControl_jumpSlide(i);
-    //       said_slide = false;
-    //       break;
-    //     }
-    //   }
-    // }
-
     if (userSaid(transcript.toLowerCase(), ["test"])) {
       var circleSurface = new Surface({
         size : [500, 500],
@@ -435,6 +419,44 @@ var processSpeech = function(transcript) {
       mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
       addedElementModifiers.push(circleOpacity);
     }
+
+
+    if (userSaid(transcript.toLowerCase(), ["start circle here"])) {
+      console.log("start circle here");
+      said_create_circle = false;
+      if (laserOn) {
+        circleStart = [cursorPosition[0], cursorPosition[1]];
+        console.log("circle start " + circleStart);
+      }
+    }
+
+    if (userSaid(transcript.toLowerCase(), ["end circle here"])) {
+      console.log("end circle here");
+      said_create_circle = false;
+      if (laserOn && circleStart != previousCircleStart) {
+        previousCircleStart = circleStart;
+        console.log("circle end");
+        circleEnd = [cursorPosition[0], cursorPosition[1]];
+        var circleDiameter = Math.abs(circleEnd[0] - circleStart[0]);
+        var circleSurface = new Surface({
+          size : [circleDiameter, circleDiameter],
+          properties : {
+              border: '4px solid ' + '#FF3333',
+              borderRadius: circleDiameter/2 + 'px',
+              zIndex: 1
+          }
+        });
+        var circleModifier = new StateModifier(
+          {origin: [0.5, 0.5],
+          transform: Transform.translate((circleStart[0]+circleEnd[0])/2.0, (circleStart[1]+circleEnd[1])/2.0, 0)});
+        var circleOpacity = new Modifier({
+            opacity: 1.0
+        });
+        mainContext.add(circleModifier).add(circleOpacity).add(circleSurface);
+        addedElementModifiers.push(circleOpacity);
+      }
+    }
+
 
     if (said_small_blue_circle) {
       drawCircle(48, '#0040ff');

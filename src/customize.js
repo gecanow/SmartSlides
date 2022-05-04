@@ -238,15 +238,15 @@ function sayCommand(popupId, key="", value=null) {
     sayCommandCtr.set(popupId, sayCommandCtr.has(popupId) ? sayCommandCtr.get(popupId)+1 : 0);
     const output = commandTemplate(
         popupId,
-        "say", 
-        `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`, 
+        "say",
+        `<input id="speech-command-${popupId}-${sayCommandCtr.get(popupId)}" style="height: 80%; width: 40%;" value="${key ?? ""}"></input>`,
         systemActionOptions(popupId, value),
         "peachpuff"
     );
-    
+
     return {
         html: output.html,
-        callbacks: 
+        callbacks:
             output.callbacks.concat(
                 [function () {
                     const idToCheck = `speech-command-${popupId}-${sayCommandCtr.get(popupId)}`;
@@ -270,8 +270,8 @@ function gestureCommand(popupId, key=null, value=null) {
     return commandTemplate(
         popupId,
         "do",
-        gestureOptions(popupId, null), 
-        systemActionOptions(popupId, null), 
+        gestureOptions(popupId, null),
+        systemActionOptions(popupId, null),
         "rosybrown"
     );
 }
@@ -536,18 +536,17 @@ const ui_body = `
 
     <div id="instructions" style="margin-top:10px; margin-left:20px;">
         <div class="row">
-          <h3>Say "start" to setup speech recognition and go to first slide of presentation. </h3>
-          <h3>Then press the 'h' key to toggle between help screen and slideshow.</h3>
+          <p>Say "start" to setup speech recognition and go to first slide of presentation. Then press the 'h' key to toggle between help screen and slideshow.</p>
         </div>
         <div class="row">
             <div class="col">
-            <h2>--Speech Commands--</h2>
+            <h3>--Speech Commands--</h3>
             </div>
             <div class="col">
-            <h2>--Gesture Commands--</h2>
+            <h3>--Gesture Commands--</h3>
             </div>
 
-            <div class="w-100"></div>
+            <div class="w-10"></div>
             <div class="col">
             <p> - next slide = "next"</p>
             </div>
@@ -577,9 +576,21 @@ const ui_body = `
             <p> - draw circle = "circle" </p>
             <p> &emsp; - sizes = "small," "big"</p>
             <p> &emsp; - colors = "green," "blue," "red" (default)</p>
+            <p> &emsp; - any combination of small, big and the colors of the circles is recognized</p>
             </div>
             <div class="col">
             <p> - hand position / cursor position is center of circle drawn </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - draw custom sized circle = "start circle here" </p>
+            <p> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red </p>
+            <p> - draw custom sized circle = "end circle here" </p>
+            <p> &emsp; - end position of circle / rightmost point of circle </p>
+            </div>
+            <div class="col">
+            <p> - hand position / laser position controls circle start and end points </p>
             </div>
 
             <div class="w-100"></div>
@@ -607,6 +618,15 @@ const ui_body = `
             <div class="col">
             <p> - undo - "undo"   </p>
             <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
+            </div>
+            <div class="col">
+            <p> </p>
+            </div>
+
+            <div class="w-100"></div>
+            <div class="col">
+            <p> - undo - "jump to slide X"   </p>
+            <p> &emsp; - jumps to slide of integer number X (starting from 0) </p>
             </div>
             <div class="col">
             <p> </p>

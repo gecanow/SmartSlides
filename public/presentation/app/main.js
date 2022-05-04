@@ -197,12 +197,12 @@ Leap.loop({ hand: function(hand) {
   cursor.setScreenPosition(cursorPosition);
 
   // // SETUP mode
-  if (presentationState.get('state') == 'setup') {
-    // background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>start presentation</h3>");
-    console.log("in setup loop");
-    siteControl_currentSlideIndex();
-
-  }
+  // if (presentationState.get('state') == 'setup') {
+  //   // background.setContent("<h1>SmartSlides</h1><h3 style='color: #7CD3A2;'>start presentation</h3>");
+  //   console.log("in setup loop");
+  //   siteControl_currentSlideIndex();
+  //
+  // }
   // //
   // // // presenting or END GAME so draw the board and ships (if player's board)
   // // // Note: Don't have to touch this code
@@ -267,10 +267,11 @@ var processSpeech = function(transcript) {
   if (presentationState.get('state') == 'setup') {
     console.log("I am recognizing speech and in setup mode");
 
-    console.log(siteControl_currentSlideIndex());
-    siteControl_jumpSlide(0);
-    console.log(siteControl_currentSlideIndex());
+    console.log("current slide " + siteControl_currentSlideIndex());
     console.log("jumping to slide 0 now...");
+    siteControl_jumpSlide(0);
+    console.log("current slide " + siteControl_currentSlideIndex());
+
 
     // moved up the below lines, don't start with speech
     presentationState.startPresentation();
@@ -528,7 +529,7 @@ var processSpeech = function(transcript) {
           return text;
         }
       }
-    }
+    };
 
     if (said_text_box) {
       console.log("I heard you want to place a text box.");

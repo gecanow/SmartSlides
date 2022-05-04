@@ -463,15 +463,15 @@ function addCommandPopupHTML(id=null, display=false) {
     </div>
     `;
 
-    const displayMe = function() {
-        const commandObj = display ? LIST_OF_COMMANDS.get(id) : compileCommands(id);
+    const displayMe = function(withoutRecompile=false) {
+        const commandObj = withoutRecompile ? LIST_OF_COMMANDS.get(id) : compileCommands(id);
         document.getElementById(`custom-command-container-host-${id}`).innerHTML = displayCommand(commandObj).outerHTML;
         LIST_OF_COMMANDS.set(id, commandObj);
         addCommandPopupHTML(); // add one for next use
     }
     const saveF = function() {
         document.getElementById(`${SAVE_COMMAND_ID}-${id}`).addEventListener("click", (e) => {
-            displayMe();
+            displayMe(false);
         });
     }
 
@@ -480,7 +480,7 @@ function addCommandPopupHTML(id=null, display=false) {
     document.getElementById('custom-command-container').insertAdjacentHTML('beforeend', `<div id="custom-command-container-host-${id}"></div>`);
     slideImgs.callbacks.concat(commandOptions.callbacks).forEach(f => f());
     saveF();
-    if (display) displayMe();
+    if (display) displayMe(true);
 }
 
 

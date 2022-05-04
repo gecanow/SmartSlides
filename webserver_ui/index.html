@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SmartSlides</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/famous.css" />
+    <link rel="stylesheet" type="text/css" href="css/app.css" />
+
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
+
+    <!-- Famo.us -->
+    <script type="text/javascript" src="lib/famous.min.js"></script>
+
+    <!-- Leap -->
+    <script type="text/javascript" src="lib/leap.min.js"></script>
+    <script type="text/javascript" src="lib/leap-plugins.min.js"></script>
+
+    <!-- Underscore/Backbone -->
+    <script type="text/javascript" src="lib/underscore.min.js"></script>
+    <script type="text/javascript" src="lib/backbone.min.js"></script>
+
+    <!-- App code -->
+    <script type="text/javascript" src="app/config.js"></script>
+    <script type="text/javascript" src="app/setup.js"></script>
+    <script type="text/javascript" src="app/models.js"></script>
+    <script type="text/javascript" src="app/helpers.js"></script>
+    <script type="text/javascript" src="app/main.js"></script>
+    <script type="text/javascript" src="app/setupSpeech.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  </head>
+    <body id="body" bgcolor="black">
+        <div class="jumbotron" style="display: flex; justify-content: center;">
+            <div style="flex-direction:column; align-items: center;">
+                <h1>SmartSlides</h1>
+                <!-- <form action="#">
+                      <label for="customizations">Customization Dropdown</label>
+                      <select name="cusomtizations" id="customizations">
+                        <option value="op1">option1</option>
+                        <option value="op2">option2</option>
+
+                      </select>
+                      <input type="submit" value="Submit" />
+                </form>
+                <button type="button" onclick="changeStyle()">Click Me</button>  -->
+            </div>
+        </div>
+
+        <div id="stageArea" style="margin-top:100px;">
+            <div id="stage" class="stage">
+            </div>
+            <div id="hyperlinkPlane" class="stage">
+            </div>
+        </div>
+        <div id="slideshowNavigator">
+        </div>
+        <div id="slideNumberControl">
+        </div>
+        <div id="slideNumberDisplay">
+        </div>
+        <div id="helpPlacard">
+        </div>
+        <div id="waitingIndicator">
+            <div id="waitingSpinner">
+            </div>
+        </div>
+
+        <script type="text/javascript" src="assets/player/pdfjs/bcmaps.js"></script></body>
+        <script type="text/javascript" src="assets/player/pdfjs/web/compatibility.js"></script></body>
+        <script type="text/javascript" src="assets/player/pdfjs/pdf.js"></script></body>
+        <script type="text/javascript" src="assets/player/main.js"></script></body>
+        </div>
+
+        <div id="instructions" style="margin-top:10px; margin-left:20px;">
+          <div style="display: flex; justify-content: center;">
+              <h2>Press the 'h' key to toggle between help screen and slideshow.</h2>
+          </div>
+            <div class="row">
+              <div class="col">
+                <h2>Speech Commands. </h2>
+              </div>
+              <div class="col">
+                <h2>Gesture Commands. </h2>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - next slide = "next"</p>
+              </div>
+              <div class="col">
+                <p> - next slide = hand swipe right or up </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - previous slide = "previous"</p>
+              </div>
+              <div class="col">
+                <p> - previous slide = hand swipe left or down </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - start laser = "laser"</p>
+                <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
+              </div>
+              <div class="col">
+                <p> - laser position = hand position from leap sensor </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - draw circle = "circle" </p>
+                <p> &emsp; - sizes = "small," "big"</p>
+                <p> &emsp; - colors = "green," "blue," "red" (default)</p>
+              </div>
+              <div class="col">
+                <p> - hand position / cursor position is center of circle drawn </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
+                <p> &emsp; - when in highlight mode, can see cursor and define top left and bottom right corners for highlighted rectangle area </p>
+                <p> &emsp; - top left corner of highlight = "start" </p>
+                <p> &emsp; - bottom right corner of highlight = "stop" </p>
+                <p> &emsp; - turn off highlight mode = "turn off highlight" </p>
+              </div>
+              <div class="col">
+                <p> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - make text box = "text box"</p>
+                <p> &emsp; - recognized speech will be transcribed in text box on slide
+              </div>
+              <div class="col">
+                <p> - hand position / cursor position of cursor used is where text box will be drawn </p>
+              </div>
+
+              <div class="w-100"></div>
+              <div class="col">
+                <p> - undo - "undo"   </p>
+                <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
+              </div>
+              <div class="col">
+                <p> </p>
+              </div>
+
+            </div>
+
+            <script>
+            document.getElementById("instructions").style.opacity = "0.0";
+            document.onkeyup = function changeStyle() {
+              var keycode = event.keyCode;
+
+              if (keycode === 72) {
+                var element = document.getElementById("instructions");
+                var temp = window.getComputedStyle(element).getPropertyValue("opacity");
+                if (temp == 0.0) {
+                  element.style.opacity = "1.0";
+                } else {
+                  element.style.opacity = "0.0";
+                }
+
+                var element1 = document.getElementById("stage");
+                var temp1 = window.getComputedStyle(element1).getPropertyValue("opacity");
+                if (temp1 == 0.0) {
+                  element1.style.opacity = "1.0";
+                } else {
+                  element1.style.opacity = "0.0";
+                }
+              }
+
+            }
+            </script>
+
+    </body>
+</html>

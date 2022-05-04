@@ -13,8 +13,10 @@ var Draggable = famous.modifiers.Draggable;
 var GridLayout = famous.views.GridLayout;
 
 // UI SETUP
-siteControl_jumpSlide(1); // first, make sure the slideshow is at 0
 setupUserInterface();
+setTimeout(() => {
+  siteControl_jumpSlide(1); // first, make sure the slideshow is at 1
+}, 100);
 
 var cursorPosition;
 var highlightStart, highlightEnd, previousHighlightStart = [0,0];

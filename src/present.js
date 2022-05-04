@@ -1,42 +1,32 @@
-let observer = new MutationObserver(() => {});
-window.addEventListener('load', function () {
-    // call fullscreen after some time to get the ball rolling.
-    setTimeout(function () {
-        fullscreen();
-        canvasListener();
-    }, 300);
-});
-
+let fullscreenObserver = new MutationObserver(() => {});
 /** 
  * Automate the process of going fullscreen.
  */
-function fullscreen() {
+function fullscreen(toHide) {
     let stage = document.getElementById('stageArea');
-    stage.style.top = "0";
-    stage.style.left = "0";
-    stage.style.width = "100%";
-    stage.style.height = "100%";
-    stage.style.aspectRatio = "1/1";
+    stage.style.marginTop = "-30px";
+    stage.style.transform = "scaleX(1.6) scaleY(1.6)";
 
-    Array.from(stage.getElementsByTagName('div'))
-                .forEach(e => {
-                    e.style.width = "100%";
-                    e.style.height = "100%";
-                    e.style.aspectRatio = "1/1";
-                });
-    
-    Array.from(stage.getElementsByTagName('canvas'))
-                .forEach(e => {
-                    e.style.width = "100%";
-                    e.style.height = "100%";
-                    e.style.aspectRatio = "1/1";
-                });
+    toHide.forEach(h => {
+        document.getElementById(h).style.visibility = 'hidden';
+    });
+    // document.body.style.backgroundColor = "black";
+}
+
+function unfullscreen(toShow) {
+    let stage = document.getElementById('stageArea');
+    stage.style.marginTop = "0px";
+    stage.style.transform = "scaleX(1) scaleY(1)";
+
+    toShow.forEach(h => {
+        document.getElementById(h).style.visibility = 'visible';
+    });
+    // document.body.style.backgroundColor = "white";
 }
 
 /**
  * Observe when the canvas changes to trigger fullscreens.
  */
-
 function canvasListener() {
     // https://stackoverflow.com/questions/3219758/detect-changes-in-the-dom
     // var targetNode = document.getElementsByTagName('canvas')[0];
@@ -51,9 +41,9 @@ function canvasListener() {
     };
 
     // Create an observer instance linked to the callback function
-    observer.disconnect();
-    observer = new MutationObserver(callback);
+    fullscreenObserver.disconnect();
+    fullscreenObserver = new MutationObserver(callback);
 
     // Start observing the target node for configured mutations
-    observer.observe(targetNode, config);
+    fullscreenObserver.observe(targetNode, config);
 }

@@ -21,28 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(setup, 100);
     });
 
-    document.body.insertAdjacentHTML('beforeend', customize_body);
-
-    document.getElementById("reset-slides").addEventListener("click", function (e) {
-        window.location.href = "index.html";
-    });
-    document.getElementById("full-present").addEventListener("click", function (e) {
-        console.log(LIST_OF_COMMANDS);
-        // add the body html
-        document.getElementById('customize-body').innerHTML = ui_body;
-        // and the appropriate UI scripts
-        ui_srcs.forEach(url => {
-            const script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = url;
-            document.head.appendChild(script);
-        });
-        // run the presentation scripts
-        ui_script();
-        // make the presentation visible
-        document.getElementById('stage-container').style.visibility = 'visible';
-        document.getElementById('stage-container').style.display = 'block';
-    });
+    customize_script();
 
 }, false);
 
@@ -476,51 +455,35 @@ function addCommandPopupHTML(id=null, display=false) {
 /**
  * TOGGLE BETWEEN PAGES:
  */
-const customize_body = `
-<div id="customize-body">
-    <div style="text-align: center;  background-color:rosybrown; display:inline-block; justify-content: center; padding: 15px; width: 100%;">
-            <h1>SmartSlides</h1>
-            <h3>Customize your presentation experience.</h3>
-            <p id="reset-slides" style="color:rgb(38, 110, 182); cursor: pointer;"><a>< Choose new slidedeck</a></p>
-            <p id="full-present" style="color:rgb(38, 110, 182); cursor: pointer;"><a>Present ></a></p>
-    </div>
-    <!-- Customizes -->
-    <div id="modal-custom-command" style="text-align:center; display: flex;"></div>
-    <div id="custom-command-container" style="text-align:center; height: 500px; overflow: auto;"></div>
-</div>
-`;
-const stage_ui = `
-<div id="stage-container">
-    <div id="stageArea" style="margin-top:100px;">
-        <div id="stage" class="stage">
-        </div>
-        <div id="hyperlinkPlane" class="stage">
-        </div>
-    </div>
-    <div id="slideshowNavigator">
-    </div>
-    <div id="slideNumberControl">
-    </div>
-    <div id="slideNumberDisplay">
-    </div>
-    <div id="helpPlacard">
-    </div>
-    <div id="waitingIndicator">
-        <div id="waitingSpinner">
-        </div>
-    </div>
-</div>
-`;
-const stage_srcs = [
-    "assets/player/pdfjs/bcmaps.js",
-    "assets/player/pdfjs/web/compatibility.js",
-    "assets/player/pdfjs/pdf.js",
-    "assets/player/main.js"
-];
+const customize_script = function() {
+    document.getElementById('customize-body').style.visibility = 'visible';
+    document.getElementById('customize-body').style.display = 'block';
+
+    document.getElementById('stage-container').style.visibility = 'hidden';
+    document.getElementById('stage-container').style.display = 'none';
+
+    document.getElementById('present-body').innerHTML = "";
+    ui_srcs.forEach(url => {
+        const s = document.getElementById(url);
+        if (s) s.remove();
+    });
+
+    document.getElementById("reset-slides").addEventListener("click", function (e) {
+        window.location.href = "index.html";
+    });
+    document.getElementById("full-present").addEventListener("click", function (e) {
+        console.log(LIST_OF_COMMANDS);
+        ui_script();
+    });
+}
+
 const ui_body = `
-    <div class="jumbotron" style="display: flex; justify-content: center;">
-        <div style="flex-direction:column; align-items: center;">
-            <h1>SmartSlides</h1>
+    <div class="jumbotron" style="display: flex; justify-content: center; margin: 5px;" id="presentation-header">
+        <div>
+            <!-- <button class="btn" id="present-back-button">Controls</button> -->
+            <!-- <button class="btn" id="present-fullscreen-button">Fullscreen</button> -->
+            <!-- <h1>SmartSlides</h1> -->
+
             <!-- <form action="#">
                     <label for="customizations">Customization Dropdown</label>
                     <select name="cusomtizations" id="customizations">
@@ -534,103 +497,68 @@ const ui_body = `
         </div>
     </div>
 
-    <div id="instructions" style="margin-top:10px; margin-left:20px; overflow-y: scroll;">
-        <div class="row">
-          <p>Say "start" to setup speech recognition and go to first slide of presentation. Then press the 'h' key to toggle between help screen and slideshow.</p>
+    <div id="instructions" style="padding-top:10px; padding-left:20px; height: 600px; overflow: auto; position: relative; background-color:peachpuff">
+        <div>
+            <h3>Instructions</h3>
+            <p>
+                Say "start" to setup speech recognition and go to first slide of presentation. 
+                <br>Press the 'h' key to toggle between this help screen and the slideshow.
+                <br>Press the '<' key to go back to the custom controls.
+            </p>
         </div>
-        <div class="row">
-            <div class="col">
-            <h3>--Speech Commands--</h3>
+        <div style="display: flex;">
+            <div style="width: 50%;">
+                <h3>Speech Commands</h3>
+                <div>
+                    <p> 
+                    - next slide = "next"
+                    <br> - previous slide = "previous"
+                    <br> - undo - "jump to slide X"
+                    <br> &emsp; - jumps to slide of integer number X (starting from 1)
+                    <br> - start laser = "laser"
+                    <br> &emsp; - stop laser = "stop laser", "turn off laser"
+                    <br> - draw circle = "circle"
+                    <br> &emsp; - sizes = "small," "big"
+                    <br> &emsp; - colors = "green," "blue," "red"
+                    <br> - draw custom sized circle = "start circle here"
+                    <br> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red
+                    <br> - draw custom sized circle = "end circle here"
+                    <br> &emsp; - end position of circle / rightmost point of circle
+                    <br> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"
+                    <br> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight
+                    <br> &emsp; - top left corner of highlight = "start"
+                    <br> &emsp; - bottom right corner of highlight = "stop"
+                    <br> &emsp; - turn off highlight mode = "turn off highlight"
+                    <br> - make text box = "text box"
+                    <br> &emsp; - recognized speech will be transcribed in text box on slide
+                    <br> - undo - "undo"
+                    <br> &emsp; - erases the last addition (circle or highlight) added to the slide
+                    </p>
+                </div>
             </div>
-            <div class="col">
-            <h3>--Gesture Commands--</h3>
+            <div style="width: 50%;">
+                <h3>Gesture Commands</h3>
+                <div>
+                    <p> 
+                    - next slide = hand swipe right or up
+                    <br> - previous slide = hand swipe left or down
+                    <br>
+                    <br>
+                    <br> - laser position = hand position from leap sensor
+                    <br> - hand position / cursor position is center of circle drawn
+                    <br>
+                    <br>
+                    <br> - hand position / laser position controls circle start and end points
+                    <br>
+                    <br>
+                    <br> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle
+                    <br>
+                    <br>
+                    <br>
+                    <br> - hand position / cursor position of cursor used is where text box will be drawn
+                    </p>
+                </div>
             </div>
-
-            <div class="w-100" style="margin-top:2px;"></div>
-            <div class="col">
-            <p> - next slide = "next"</p>
-            </div>
-            <div class="col">
-            <p> - next slide = hand swipe right or up </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - previous slide = "previous"</p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - previous slide = hand swipe left or down </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - undo - "jump to slide X"   </p>
-            <p"> &emsp; - jumps to slide of integer number X (starting from 1) </p>
-            </div>
-            <div class="col">
-            <p> </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - start laser = "laser"</p>
-            <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - laser position = hand position from leap sensor </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;" > - draw circle = "circle" </p>
-            <p style="margin : 0; padding:0;"> &emsp; - sizes = "small," "big"</p>
-            <p> &emsp; - colors = "green," "blue," "red" (default)</p>
-            </div>
-            <div class="col">
-            <p> - hand position / cursor position is center of circle drawn </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - draw custom sized circle = "start circle here" </p>
-            <p style="margin : 0; padding:0;"> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red </p>
-            <p style="margin : 0; padding:0;"> - draw custom sized circle = "end circle here" </p>
-            <p> &emsp; - end position of circle / rightmost point of circle </p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - hand position / laser position controls circle start and end points </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
-            <p style="margin : 0; padding:0;"> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight </p>
-            <p style="margin : 0; padding:0;"> &emsp; - top left corner of highlight = "start" </p>
-            <p style="margin : 0; padding:0;"> &emsp; - bottom right corner of highlight = "stop" </p>
-            <p> &emsp; - turn off highlight mode = "turn off highlight" </p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - make text box = "text box"</p>
-            <p> &emsp; - recognized speech will be transcribed in text box on slide
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - hand position / cursor position of cursor used is where text box will be drawn </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - undo - "undo"   </p>
-            <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
-            </div>
-            <div class="col">
-            <p> </p>
-            </div>
-
         </div>
     </div>
 `;
@@ -639,28 +567,52 @@ const ui_srcs = [
     "app/setupSpeech.js"
 ];
 const ui_script = function() {
-    // document.getElementById("instructions").style.opacity = "0.0";
-    document.getElementById("stage").style.opacity = "0.0";
+    // add the body html
+    document.getElementById('present-body').innerHTML = ui_body;
+    // and the approproate UI scripts
+    ui_srcs.forEach(url => {
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = url;
+        script.id = url;
+        document.head.appendChild(script);
+    });
+
+    // make the presentation visible
+    document.getElementById('customize-body').style.visibility = 'hidden';
+    document.getElementById('customize-body').style.display = 'none';
+
+    document.getElementById('stage-container').style.visibility = 'visible';
+    document.getElementById('stage-container').style.display = 'block';
+
+    document.getElementById("instructions").style.opacity = "0.0";
+    // document.getElementById("stage").style.opacity = "0.0";
+    fullscreen([]);
     document.onkeyup = function changeStyle() {
         var keycode = event.keyCode;
+        console.log(keycode);
 
         if (keycode === 72) {
-        var element = document.getElementById("instructions");
-        var temp = window.getComputedStyle(element).getPropertyValue("opacity");
-        if (temp == 0.0) {
-            element.style.opacity = "1.0";
-        } else {
-            element.style.opacity = "0.0";
+            var element = document.getElementById("instructions");
+            var temp = window.getComputedStyle(element).getPropertyValue("opacity");
+            if (temp == 0.0) {
+                element.style.opacity = "1.0";
+            } else {
+                element.style.opacity = "0.0";
+            }
+
+            var element1 = document.getElementById("stage");
+            var temp1 = window.getComputedStyle(element1).getPropertyValue("opacity");
+            if (temp1 == 0.0) {
+                element1.style.opacity = "1.0";
+            } else {
+                element1.style.opacity = "0.0";
+            }
         }
 
-        var element1 = document.getElementById("stage");
-        var temp1 = window.getComputedStyle(element1).getPropertyValue("opacity");
-        if (temp1 == 0.0) {
-            element1.style.opacity = "1.0";
-        } else {
-            element1.style.opacity = "0.0";
+        if (keycode === 188 /** < */) {
+            // go back to controls
+            customize_script();
         }
-        }
-
     }
 }

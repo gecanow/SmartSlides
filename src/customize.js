@@ -64,7 +64,7 @@ function setup() {
         voiceCommands: new Map([
             ['next', 'next-slide'],
             ['prev', 'prev-slide'],
-            ['medium circle', 'medium-circle'],
+            ['circle', 'medium-circle'],
         ]),
         gestureCommands: new Map([
             ['right-hand-swipe-right', 'next-slide'],

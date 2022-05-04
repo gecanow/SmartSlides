@@ -50,6 +50,27 @@ var goToPrevSlide = function() {
   CAN_ADVANCE_SLIDESHOW = false;
   setTimeout(() => CAN_ADVANCE_SLIDESHOW = true, 2000);
 }
+// actions: ["next-slide", "prev-slide", "small-circle", "medium-circle", "large-circle"];
+// gesture commands: ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
+var doAction = function(type, action) {
+
+  if (action == "next-slide") { // TODO: fix circle function calls - maybe not in same scope right now
+    console.log("custom next slide")
+    goToNextSlide();
+  } else if (action == "prev-slide") {
+    console.log("custom prev slide")
+    goToPrevSlide();
+  } else if (action == "small-circle") {
+    console.log("custom small circle")
+    drawCircle(48, '#FF3333'); // red
+  } else if (action == "medium-circle") {
+    console.log("custom medium circle")
+    drawCircle();
+  } else if (action == "large-circle") {
+    console.log("custom large circle")
+    drawCircle(240, '#FF3333'); // red
+  }
+}
 
 // this is not working well for me right now because circles are recognized every millisecond and
 // they all have the same radius for some reason
@@ -141,6 +162,7 @@ Leap.loop({ hand: function(hand) {
                 console.log(`Found hand type: ${handType}`);
                 if (handType == "right") {
                   // go to next slide
+                  console.log("should be going to next slide");
                   goToNextSlide();
                 }
               } else {
@@ -149,6 +171,7 @@ Leap.loop({ hand: function(hand) {
                 console.log(`Found hand type: ${handType}`);
                 if (handType == "left") {
                   // go to previous slide
+                  console.log("should be going to previous slide");
                   goToPrevSlide();
                 }
               }
@@ -168,6 +191,41 @@ Leap.loop({ hand: function(hand) {
             }
               // console.log(swipeDirection)
               break;
+        }
+        // CUSTOM GESTURE COMMANDS:
+        console.log("current slide for map in gesture: ", siteControl_currentSlideIndex());
+        var currentSlide = siteControl_currentSlideIndex();
+        console.log("list: ", LIST_OF_COMMANDS);
+        for (let [key, value] of LIST_OF_COMMANDS) {
+        console.log(key + " = " + value);
+        console.log(value.valueOf());
+        let slideIds = value["slideIds"];
+        var slideIndices = []
+        for (let i = 0; i < slideIds.length; i++) {
+          slideIndices.push(siteControl_slideIndex(slideIds[i]));
+        }
+        console.log("slide indices: ", slideIndices);
+        var gestureCommands = value["gestureCommands"];
+          for (let [gestureCommand, gestureAction] of gestureCommands) {
+            console.log(gestureCommand + " = " + gestureAction);
+            if (slideIndices.includes(currentSlide)) {
+              // console.log(gestureCommand);
+              // console.log(gesture.type);
+              // console.log(handType);
+              if ((gestureCommand == "right-hand-swipe-right") && (gesture.type == "swipe") && (handType == "right")) {
+                console.log("do gestureAction: ", gestureAction);
+                doAction("gesture", gestureAction);
+
+              } else if ((gestureCommand == "left-hand-swipe-left") && (gesture.type == "swipe") && (handType == "left")) {
+                console.log("do gestureAction: ", gestureAction);
+                doAction("gesture", gestureAction);
+
+              }
+            }
+          }
+        }
+        for (var i = 0; i<LIST_OF_COMMANDS.length; i++) {
+          console.log("index i: ", LIST_OF_COMMANDS[i]);
         }
     });
   }
@@ -586,6 +644,33 @@ var processSpeech = function(transcript) {
       textOpacity.setOpacity(1);
       console.log("about to write text: ", text);
       textSurface.setContent(text);
+    }
+
+    // CUSTOM SPEECH COMMANDS
+    console.log("current slide for map in speech: ", siteControl_currentSlideIndex());
+    var currentSlide = siteControl_currentSlideIndex();
+    console.log("list: ", LIST_OF_COMMANDS);
+    // console.log("length: ", LIST_OF_COMMANDS.keys());
+    for (let [key, value] of LIST_OF_COMMANDS) {
+      console.log(key + " = " + value);
+      // console.log(value.valueOf());
+      let slideIds = value["slideIds"];
+      var slideIndices = []
+      for (let i = 0; i < slideIds.length; i++) {
+        slideIndices.push(siteControl_slideIndex(slideIds[i]));
+      }
+      console.log("slide indices: ", slideIndices);
+      var voiceCommands = value["voiceCommands"];
+      for (let [speechCommand, speechAction] of voiceCommands) {
+        // console.log("values");
+        console.log(speechCommand + " = " + speechAction);
+        if (userSaid(speechCommand)) {
+          // TODO: do speechAction
+          console.log("do speechAction: ", speechAction);
+        }
+      }
+
+
     }
   }
 

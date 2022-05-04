@@ -478,11 +478,11 @@ const customize_script = function() {
 }
 
 const ui_body = `
-    <div class="jumbotron" style="display: flex; justify-content: center;" id="presentation-header">
-        <div style="display: flex; align-items: center;">
-            <button class="btn" id="present-back-button">Back</button>
-            <h1>SmartSlides</h1>
-            <button class="btn" id="present-fullscreen-button">Full screen</button>
+    <div class="jumbotron" style="display: flex; justify-content: center; margin: 5px;" id="presentation-header">
+        <div>
+            <!-- <button class="btn" id="present-back-button">Controls</button> -->
+            <!-- <button class="btn" id="present-fullscreen-button">Fullscreen</button> -->
+            <!-- <h1>SmartSlides</h1> -->
 
             <!-- <form action="#">
                     <label for="customizations">Customization Dropdown</label>
@@ -497,103 +497,68 @@ const ui_body = `
         </div>
     </div>
 
-    <div id="instructions" style="margin-top:10px; margin-left:20px; overflow-y: scroll;">
-        <div class="row">
-          <p>Say "start" to setup speech recognition and go to first slide of presentation. Then press the 'h' key to toggle between help screen and slideshow.</p>
+    <div id="instructions" style="padding-top:10px; padding-left:20px; height: 600px; overflow: auto; position: relative; background-color:peachpuff">
+        <div>
+            <h3>Instructions</h3>
+            <p>
+                Say "start" to setup speech recognition and go to first slide of presentation. 
+                <br>Press the 'h' key to toggle between this help screen and the slideshow.
+                <br>Press the '<' key to go back to the custom controls.
+            </p>
         </div>
-        <div class="row">
-            <div class="col">
-            <h3>--Speech Commands--</h3>
+        <div style="display: flex;">
+            <div style="width: 50%;">
+                <h3>Speech Commands</h3>
+                <div>
+                    <p> 
+                    - next slide = "next"
+                    <br> - previous slide = "previous"
+                    <br> - undo - "jump to slide X"
+                    <br> &emsp; - jumps to slide of integer number X (starting from 1)
+                    <br> - start laser = "laser"
+                    <br> &emsp; - stop laser = "stop laser", "turn off laser"
+                    <br> - draw circle = "circle"
+                    <br> &emsp; - sizes = "small," "big"
+                    <br> &emsp; - colors = "green," "blue," "red"
+                    <br> - draw custom sized circle = "start circle here"
+                    <br> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red
+                    <br> - draw custom sized circle = "end circle here"
+                    <br> &emsp; - end position of circle / rightmost point of circle
+                    <br> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"
+                    <br> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight
+                    <br> &emsp; - top left corner of highlight = "start"
+                    <br> &emsp; - bottom right corner of highlight = "stop"
+                    <br> &emsp; - turn off highlight mode = "turn off highlight"
+                    <br> - make text box = "text box"
+                    <br> &emsp; - recognized speech will be transcribed in text box on slide
+                    <br> - undo - "undo"
+                    <br> &emsp; - erases the last addition (circle or highlight) added to the slide
+                    </p>
+                </div>
             </div>
-            <div class="col">
-            <h3>--Gesture Commands--</h3>
+            <div style="width: 50%;">
+                <h3>Gesture Commands</h3>
+                <div>
+                    <p> 
+                    - next slide = hand swipe right or up
+                    <br> - previous slide = hand swipe left or down
+                    <br>
+                    <br>
+                    <br> - laser position = hand position from leap sensor
+                    <br> - hand position / cursor position is center of circle drawn
+                    <br>
+                    <br>
+                    <br> - hand position / laser position controls circle start and end points
+                    <br>
+                    <br>
+                    <br> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle
+                    <br>
+                    <br>
+                    <br>
+                    <br> - hand position / cursor position of cursor used is where text box will be drawn
+                    </p>
+                </div>
             </div>
-
-            <div class="w-100" style="margin-top:2px;"></div>
-            <div class="col">
-            <p> - next slide = "next"</p>
-            </div>
-            <div class="col">
-            <p> - next slide = hand swipe right or up </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - previous slide = "previous"</p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - previous slide = hand swipe left or down </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - undo - "jump to slide X"   </p>
-            <p"> &emsp; - jumps to slide of integer number X (starting from 1) </p>
-            </div>
-            <div class="col">
-            <p> </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - start laser = "laser"</p>
-            <p> &emsp; - stop laser = "stop laser", "turn off laser"</p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - laser position = hand position from leap sensor </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;" > - draw circle = "circle" </p>
-            <p style="margin : 0; padding:0;"> &emsp; - sizes = "small," "big"</p>
-            <p> &emsp; - colors = "green," "blue," "red" (default)</p>
-            </div>
-            <div class="col">
-            <p> - hand position / cursor position is center of circle drawn </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - draw custom sized circle = "start circle here" </p>
-            <p style="margin : 0; padding:0;"> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red </p>
-            <p style="margin : 0; padding:0;"> - draw custom sized circle = "end circle here" </p>
-            <p> &emsp; - end position of circle / rightmost point of circle </p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - hand position / laser position controls circle start and end points </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"</p>
-            <p style="margin : 0; padding:0;"> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight </p>
-            <p style="margin : 0; padding:0;"> &emsp; - top left corner of highlight = "start" </p>
-            <p style="margin : 0; padding:0;"> &emsp; - bottom right corner of highlight = "stop" </p>
-            <p> &emsp; - turn off highlight mode = "turn off highlight" </p>
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - make text box = "text box"</p>
-            <p> &emsp; - recognized speech will be transcribed in text box on slide
-            </div>
-            <div class="col" style="margin-top:-5px;">
-            <p> - hand position / cursor position of cursor used is where text box will be drawn </p>
-            </div>
-
-            <div class="w-100"></div>
-            <div class="col" style="margin-top:-5px;">
-            <p style="margin : 0; padding:0;"> - undo - "undo"   </p>
-            <p> &emsp; - erases the last addition (circle or highlight) added to the slide </p>
-            </div>
-            <div class="col">
-            <p> </p>
-            </div>
-
         </div>
     </div>
 `;
@@ -620,8 +585,9 @@ const ui_script = function() {
     document.getElementById('stage-container').style.visibility = 'visible';
     document.getElementById('stage-container').style.display = 'block';
 
-    // document.getElementById("instructions").style.opacity = "0.0";
-    document.getElementById("stage").style.opacity = "0.0";
+    document.getElementById("instructions").style.opacity = "0.0";
+    // document.getElementById("stage").style.opacity = "0.0";
+    fullscreen([]);
     document.onkeyup = function changeStyle() {
         var keycode = event.keyCode;
         console.log(keycode);
@@ -644,27 +610,9 @@ const ui_script = function() {
             }
         }
 
-        if (keycode === 69 /** e */) {
-            console.log("disconnecting from full screen");
-            fullscreenObserver.disconnect();
-            document.getElementById('presentation-header').style.visibility = 'visible';
-            document.getElementById('presentation-header').style.display = 'flex';
-            window.dispatchEvent(new Event('resize'));
+        if (keycode === 188 /** < */) {
+            // go back to controls
+            customize_script();
         }
     }
-
-    document.getElementById("present-back-button").style.backgroundColor = "peachpuff";
-    document.getElementById("present-back-button").style.borderRadius = "4px";
-    document.getElementById("present-back-button").addEventListener("click", function () {
-        customize_script();
-    });
-
-    document.getElementById("present-fullscreen-button").style.backgroundColor = "peachpuff";
-    document.getElementById("present-fullscreen-button").style.borderRadius = "4px";
-    document.getElementById("present-fullscreen-button").addEventListener("click", function () {
-        document.getElementById('presentation-header').style.visibility = 'hidden';
-        document.getElementById('presentation-header').style.display = 'none';
-        // fullscreen();
-        canvasListener();
-    });
 }

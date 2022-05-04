@@ -17,32 +17,27 @@ document.addEventListener('DOMContentLoaded', function() {
         setup();
     });
 
-    // document.getElementsByClassName('famous-container').style.background = "invisible";
-    // document.getElementsByClassName('famous-container').style.style.pointerEvents = "none";
     document.body.insertAdjacentHTML('beforeend', customize_body);
-    const ignore = e => { e.stopPropagation(); e.preventDefault(); }
-    document.getElementById('stage-container').addEventListener('click', ignore);
-    document.getElementById('stage-container').addEventListener('keydown', ignore);
-    document.getElementById('stage-container').addEventListener('keypress', ignore);
-    document.getElementById('stageArea').addEventListener('click', ignore);
-    document.getElementById('stageArea').addEventListener('keydown', ignore);
-    document.getElementById('stageArea').addEventListener('keypress', ignore);
-    document.getElementById('stage').addEventListener('click', ignore);
-    document.getElementById('stage').addEventListener('keydown', ignore);
-    document.getElementById('stage').addEventListener('keypress', ignore);
 
     document.getElementById("reset-slides").addEventListener("click", function (e) {
         window.location.href = "index.html";
     });
     document.getElementById("full-present").addEventListener("click", function (e) {
         console.log(LIST_OF_COMMANDS);
-        // window.location.href = "ui.html";
-
+        // add the body html
         document.getElementById('customize-body').innerHTML = ui_body;
+        // and the approproate UI scripts
+        ui_srcs.forEach(url => {
+            const script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = url;
+            document.head.appendChild(script);
+        });
+        // run the presentation scripts
         ui_script();
+        // make the presentation visible
         document.getElementById('stage-container').style.visibility = 'visible';
         document.getElementById('stage-container').style.display = 'block';
-        // document.getElementById('stage-container').removeEventListener('click', ignoreKeyboard);
     });
 
 }, false);
@@ -187,6 +182,16 @@ function commandCheckboxHTML(popupId) {
             const resp = sayCommand(popupId);
             document.getElementById(`add-command-id-${popupId}`).appendChild(resp.html);
             resp.callbacks.forEach(f => f());
+
+            document.getElementById(`speech-command-${popupId}`).addEventListener('keypress', e => {
+                console.log(e);
+                const curr = document.getElementById(`speech-command-${popupId}`).value;
+                if (e.charCode === 8) {
+                    document.getElementById(`speech-command-${popupId}`).value = curr.slice(0, -1);
+                } else {
+                    document.getElementById(`speech-command-${popupId}`).value = curr + e.key;
+                }
+            });
         });
 
         document.getElementById(`${ADD_GESTURE_BUTTON_ID}-${popupId}`).addEventListener('click', (e) => {
@@ -423,6 +428,34 @@ const customize_body = `
     <div id="custom-command-container" style="text-align:center;"></div>
 </div>
 `;
+const stage_ui = `
+<div id="stage-container">
+    <div id="stageArea" style="margin-top:100px;">
+        <div id="stage" class="stage">
+        </div>
+        <div id="hyperlinkPlane" class="stage">
+        </div>
+    </div>
+    <div id="slideshowNavigator">
+    </div>
+    <div id="slideNumberControl">
+    </div>
+    <div id="slideNumberDisplay">
+    </div>
+    <div id="helpPlacard">
+    </div>
+    <div id="waitingIndicator">
+        <div id="waitingSpinner">
+        </div>
+    </div>
+</div>
+`;
+const stage_srcs = [
+    "assets/player/pdfjs/bcmaps.js",
+    "assets/player/pdfjs/web/compatibility.js",
+    "assets/player/pdfjs/pdf.js",
+    "assets/player/main.js"
+];
 const ui_body = `
     <div class="jumbotron" style="display: flex; justify-content: center;">
         <div style="flex-direction:column; align-items: center;">
@@ -518,7 +551,12 @@ const ui_body = `
             </div>
 
         </div>
+    </div>
 `;
+const ui_srcs = [
+    "app/main.js",
+    "app/setupSpeech.js"
+];
 const ui_script = function() {
     document.getElementById("instructions").style.opacity = "0.0";
     document.onkeyup = function changeStyle() {

@@ -13,6 +13,7 @@ var Draggable = famous.modifiers.Draggable;
 var GridLayout = famous.views.GridLayout;
 
 // UI SETUP
+siteControl_jumpSlide(1); // first, make sure the slideshow is at 0
 setupUserInterface();
 
 var cursorPosition;

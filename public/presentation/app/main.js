@@ -637,10 +637,9 @@ var processSpeech = function(transcript) {
     function editTranscript(transcript) {
       for (let i = 0; i < transcript.length; i++) {
         var box = transcript.slice(i, i+3);
-        // console.log("box? ", box);
         if (box == "box") {
           var text = transcript.slice(i+4);
-          console.log("text to display: ", text)
+          // console.log("text to display: ", text)
           return text;
         }
       }
@@ -671,14 +670,14 @@ var processSpeech = function(transcript) {
       mainContext.add(textModifier).add(textOpacity).add(textSurface);
       addedElementModifiers.push(textOpacity);
       textOpacity.setOpacity(1);
-      console.log("about to write text: ", text);
+      // console.log("about to write text: ", text);
       textSurface.setContent(text);
     }
 
     // CUSTOM SPEECH COMMANDS
     // console.log("current slide for map in speech: ", siteControl_currentSlideIndex());
     var currentSlide = siteControl_currentSlideIndex();
-    console.log("list: ", LIST_OF_COMMANDS);
+    // console.log("list: ", LIST_OF_COMMANDS);
     // console.log("length: ", LIST_OF_COMMANDS.keys());
     for (let [key, value] of LIST_OF_COMMANDS) {
       // console.log(key + " = " + value);
@@ -688,7 +687,6 @@ var processSpeech = function(transcript) {
       for (let i = 0; i < slideIds.length; i++) {
         slideIndices.push(siteControl_slideIndex(slideIds[i]));
       }
-      console.log("slide indices: ", slideIndices);
       var voiceCommands = value["voiceCommands"];
 
       for (let [speechCommand, speechAction] of voiceCommands) {
@@ -696,8 +694,10 @@ var processSpeech = function(transcript) {
         var sc = [];
         sc.push(speechCommand);
         if (userSaid(transcript.toLowerCase(), sc)) {
-          doAction(speechAction);
-          console.log("do speechAction: ", speechAction);
+          if (slideIndices.includes(currentSlide)) {
+            doAction(speechAction);
+            console.log("do speechAction: ", speechAction);
+          }
         }
       }
     }

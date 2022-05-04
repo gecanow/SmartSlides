@@ -218,6 +218,15 @@ var processSpeech = function(transcript) {
     }
     return false;
   };
+  // Helper function to detect if a user matched a regex
+  var userMatched = function(str, regex) {
+    // EXAMPLE:
+    // str = `battleship to column a row 5`;
+    // regex = /(?<ship>battleship|destroyer|patrolboat)[ a-z]*(?<row>[a-e])[ a-z]*(?<col>[1-5]|one|two|three|four|five)/mg;
+    // found = regex.exec(str);
+    // then... found.groups.ship, found.groups.row, found.groups.col will be accessible
+    return regex.exec(str.toLowerCase());
+  };
 
 
   // draw circle on screen
@@ -346,59 +355,36 @@ var processSpeech = function(transcript) {
     // speech recognition for jumping to slide number
     // starts with zero index as first slide
     // speech api is being not nice and only wanting to work accurately if done in this very verbose way so sorry about that
-    if (userSaid(transcript.toLowerCase(), ["jump to slide zero", "jump to slide 0"])) {
-      siteControl_jumpSlide(0);
-      console.log("jump to slide zero");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide one"])) {
-      if (THUMBNAIL_IDS.length > 2) {
-        siteControl_jumpSlide(1);
+    let jumpToSlideRegex = /jump (to|2|two) (?<loc>slide|scene) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*)/mg;
+    let jumpToSlideMatch = userMatched(transcript.toLowerCase(), jumpToSlideRegex);
+    if (jumpToSlideMatch) {
+      // first parse the n into a valud
+      let n;
+      switch (`${jumpToSlideMatch.groups.num}`) {
+        case "one": n = 1; break;
+        case "two":
+        case "too":
+        case "to": n = 2; break;
+        case "three": n = 3; break;
+        case "for":
+        case "four": n = 4; break;
+        case "five": n = 5; break;
+        case "six": n = 6; break;
+        case "seven": n = 7; break;
+        case "eight": n = 8; break;
+        case "nine": n = 9; break;
+        case "ten": n = 10; break;
+        default: n = parseInt(jumpToSlideMatch.groups.num);
       }
-      console.log("jump to slide one");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide two", "jump to slide to"])) {
-      if (THUMBNAIL_IDS.length > 3) {
-        siteControl_jumpSlide(2);
+      console.log(`jumping to ${jumpToSlideMatch.groups.loc} ${n}`)
+      switch (jumpToSlideMatch.groups.loc) {
+        case 'slide':
+          siteControl_jumpSlide(n); break;
+        case 'scene':
+          siteControl_jumpScene(n); break;
+        default:
+          console.log("could not jump :(");
       }
-      console.log("jump to slide two");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide three", "jump to slide 3"])) {
-      if (THUMBNAIL_IDS.length > 4) {
-        siteControl_jumpSlide(3);
-      }
-      console.log("jump to slide three");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide four", "jump to slide for"])) {
-      if (THUMBNAIL_IDS.length > 5) {
-        siteControl_jumpSlide(4);
-      }
-      console.log("jump to slide four");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide five", "jump to slide 5"])) {
-      if (THUMBNAIL_IDS.length > 6) {
-        siteControl_jumpSlide(5);
-      }
-      console.log("jump to slide five");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide six", "jump to slide 6"])) {
-      if (THUMBNAIL_IDS.length > 7) {
-        siteControl_jumpSlide(6);
-      }
-      console.log("jump to slide six");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide seven", "jump to slide 7"])) {
-      if (THUMBNAIL_IDS.length > 8) {
-        siteControl_jumpSlide(7);
-      }
-      console.log("jump to slide 7");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide eight", "jump to slide 8"])) {
-      if (THUMBNAIL_IDS.length > 9) {
-        siteControl_jumpSlide(8);
-      }
-      console.log("jump to slide 8");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide nine", "jump to slide 9"])) {
-      if (THUMBNAIL_IDS.length > 10) {
-        siteControl_jumpSlide(9);
-      }
-      console.log("jump to slide 9");
-    } else if (userSaid(transcript.toLowerCase(), ["jump to slide ten", "jump to slide 10"])) {
-      if (THUMBNAIL_IDS.length > 11) {
-        siteControl_jumpSlide(10);
-      }
-      console.log("jump to slide 10");
     }
 
     // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];

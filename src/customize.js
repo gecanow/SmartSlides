@@ -6,6 +6,7 @@ const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
 
+// {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[]}
 const LIST_OF_COMMANDS = new Map();
 
 /**
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function setup() {
     console.log("...setting up...");
 
-    let commands = customCommand();
+    let commands = customCommandCreationButton();
     document.getElementById('custom-command-container').appendChild(commands.html);
     commands.callbacks.forEach(f => f());
 
@@ -57,12 +58,8 @@ function setup() {
     console.log("...done...");
 }
 
-function customCommand() {
+function customCommandCreationButton() {
     const wrapperDiv = document.createElement('div');
-    // wrapperDiv.style.display = "flex";
-    // wrapperDiv.style.width = "90%";
-    // wrapperDiv.style.height = `${COMMAND_HEIGHT}px`;
-    // wrapperDiv.style.backgroundColor = "gray";
 
     // Button to trigger modal popup
     const plusButton = document.createElement('button');
@@ -73,6 +70,7 @@ function customCommand() {
     plusButton.style.padding = "0px";
     plusButton.style.lineHeight = "normal";
     plusButton.id = "main-plus-button";
+    plusButton.title = "Create a new custom slides command"
 
     plusButton.classList.add("btn", "button-primary");
     plusButton.setAttribute("data-bs-toggle", "modal");
@@ -93,8 +91,7 @@ function customCommand() {
 }
 
 /**
- * TODO
- * @returns TODO
+ * Creates HTML for a checkbox of thumbnail images.
  */
 function imageCheckboxHTML(popupId) {
     const wrapperDiv = document.createElement('div');
@@ -128,9 +125,15 @@ function imageCheckboxHTML(popupId) {
         const i = document.createElement("img");
         i.src = `/assets/${slideID}/thumbnail.jpeg`;
 
+        // should it already be checked?
+        if (LIST_OF_COMMANDS.has(popupId)) {
+            if (LIST_OF_COMMANDS.get(popupId).slideIds.has(slideID)) {
+                label.checked = true;
+            }
+        }
+
         label.appendChild(i);
         li.appendChild(label);
-
         ul.appendChild(li);
     });
 
@@ -139,8 +142,7 @@ function imageCheckboxHTML(popupId) {
 }
 
 /**
- * TODO
- * @returns TODO
+ * Creates HTML for a checkbox of commands.
  */
 function commandCheckboxHTML(popupId) {
     // A SAY COMMAND
@@ -426,7 +428,7 @@ const customize_body = `
     </div>
     <!-- Customizes -->
     <div id="modal-custom-command" style="text-align:center; display: flex;"></div>
-    <div id="custom-command-container" style="text-align:center;"></div>
+    <div id="custom-command-container" style="text-align:center; height: 500px; overflow: auto;"></div>
 </div>
 `;
 const stage_ui = `

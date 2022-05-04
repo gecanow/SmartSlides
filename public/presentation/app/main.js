@@ -431,23 +431,22 @@ var processSpeech = function(transcript) {
       }
     }
 
-    // ------------- not working rn -------------
-    // let rewindffRegex = /(?<loc>rewind|'fast forward') (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*) slide[s]?/mg;
-    // let rewindffMatch = userMatched(transcript.toLowerCase(), rewindffRegex);
-    // if (rewindffMatch) {
-    //   console.log(rewindffMatch);
-    //   // first parse the n into a valud
-    //   let n = parseSpokenNumber(`${rewindffMatch.groups.num}`);
-    //   console.log(`jumping to ${rewindffMatch.groups.loc} ${n}`)
-    //   switch (`${rewindffMatch.groups.loc}`) {
-    //     case 'rewind':
-    //       siteControl_rewindSlide(n); break;
-    //     case 'fast forward':
-    //       siteControl_ffSlide(n); break;
-    //     default:
-    //       console.log("could not rewind/fast forward :(");
-    //   }
-    // }
+    let rewindffRegex = /(?<loc>back|forward) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*) slide[s]?/mg;
+    let rewindffMatch = userMatched(transcript.toLowerCase(), rewindffRegex);
+    if (rewindffMatch) {
+      console.log(rewindffMatch);
+      // first parse the n into a valud
+      let n = parseSpokenNumber(`${rewindffMatch.groups.num}`);
+      console.log(`${rewindffMatch.groups.loc} ${n} slides`)
+      switch (`${rewindffMatch.groups.loc}`) {
+        case 'back':
+          siteControl_rewindSlide(n - 1); break;
+        case 'forward':
+          siteControl_ffSlide(n + 1); break;
+        default:
+          console.log("could not rewind/fast forward :(");
+      }
+    }
 
     // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
     // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);

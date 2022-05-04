@@ -72,7 +72,7 @@ function siteControl_ffScene(x) {
 }
 
 // Programmatically get slide index
-function siteControl_currentSlideIndex(x) {
+function siteControl_currentSlideIndex() {
     return gShowController.currentSlideIndex;
 }
 

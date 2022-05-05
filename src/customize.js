@@ -324,6 +324,15 @@ function trashHTML(id) {
     return trashButton;
 }
 
+function editHTML(attributes) {
+    const editButton = `
+    <button ${attributes}>
+        <img src="/nm/bootstrap-icons/icons/pencil-square.svg" style="width: 15px; height: 15px; margin: 0px; line-height: normal;">
+    </button>
+    `;
+    return editButton;
+}
+
 /**
  * @returns {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[], popupId: id}
  */
@@ -332,7 +341,7 @@ function compileCommands(id) {
 
     // get the selected slides
     let slideIds = [];
-    document.querySelectorAll(`[id^=cb]`).forEach(div => {
+    document.querySelectorAll(`[id^=cb${id}]`).forEach(div => {
         if (div.checked) slideIds.push(div.id.split('+')[1]);
     });
 
@@ -375,25 +384,35 @@ function displayCommand(commandObj) {
     div.style.borderColor = "black";
     div.style.borderStyle = "solid";
 
-    html = `<div style="display: flex; overflow: auto;"><p>On these slides:</p>`;
-    commandObj.slideIds.forEach(id => {
-        html += `<img src=${`/assets/${id}/thumbnail.jpeg`} style="width:100px; padding: 5px;"></img>`;
-    });
-    html += `</div>`;
+    let html = "";
 
-    html += `<p style='text-align: left;'>When you say...`;
-    commandObj.voiceCommands.forEach((val, key) => {
-        html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
-    });
-    html += "</p>"
+    if (commandObj.slideIds.length > 0) {
+        html = `<div style="display: flex; overflow: auto;"><p>On these slides:</p>`;
+        commandObj.slideIds.forEach(id => {
+            html += `<img src=${`/assets/${id}/thumbnail.jpeg`} style="width:100px; padding: 5px;"></img>`;
+        });
+        html += `</div>`;
+    }  
 
-    html += `<p style='text-align: left;'>When you do...`;
-    commandObj.gestureCommands.forEach((val, key) => {
-        html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
-    });
-    html += "</p>"
+    if (commandObj.voiceCommands.size > 0) {
+        html += `<p style='text-align: left;'>When you say...`;
+        commandObj.voiceCommands.forEach((val, key) => {
+            html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
+        });
+        html += "</p>"
+    }
 
-    html += `<button class="btn button-primary" data-bs-toggle="modal" data-bs-target="#${COMMAND_MODAL_ID}-${commandObj.popupId}">Edit</button>`
+    if (commandObj.gestureCommands.size > 0) {
+        html += `<p style='text-align: left;'>When you do...`;
+        commandObj.gestureCommands.forEach((val, key) => {
+            html += `<br>&emsp;- <strong>${key}</strong> the system will do <strong>${val}</strong>`;
+        });
+        html += "</p>"
+    }
+
+    html += editHTML(`class="btn button-primary" data-bs-toggle="modal" data-bs-target="#${COMMAND_MODAL_ID}-${commandObj.popupId}"`);
+    // TODO: implement trashing
+    // html += trashHTML(`fullCommand-trash${commandObj.popupId}`);
 
     div.innerHTML = html;
     return div;

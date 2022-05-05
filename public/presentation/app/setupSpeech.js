@@ -1,7 +1,12 @@
 /*****************************************************************/
 /******** SPEECH RECOGNITION SETUP YOU CAN IGNORE ****************/
 /*****************************************************************/
-var debouncedProcessSpeech = _.debounce(processSpeech, 500);
+try {
+  var debouncedProcessSpeech = _.debounce(processSpeech, 500);
+} catch (e) {
+  console.log(`debouncedProcessSpeech | ${e}`);
+  window.alert("Speech proccessing loading...");
+}
 
 var recognition = new webkitSpeechRecognition();
 recognition.continuous = true;

@@ -393,6 +393,11 @@ var processSpeech = function(transcript) {
       // var said_stop_highlight = false;
     }
 
+    if (userSaid(transcript.toLowerCase(), ["play video"])) {
+      console.log("ok, playing video");
+      siteControl_playVideo();
+    }
+
 
     if (said_stop_highlight) said_highlight = false;
 

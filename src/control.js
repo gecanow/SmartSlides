@@ -24,6 +24,8 @@
 // Helper to get current slide
 const currShownSlide = function() { 
     console.log(`on slide ${parseInt(gShowController.currentSlideIndex)}`);
+    console.log(gShowController);
+    console.log(gShowController.movieCache);
     return parseInt(gShowController.currentSlideIndex); 
 }
 
@@ -86,4 +88,55 @@ function siteControl_currentSlideIndex() {
 // Programmatically get the slide index from slide id
 function siteControl_slideIndex(slideId) {
     return THUMBNAIL_IDS.indexOf(slideId);
+}
+
+if (window.trustedTypes && window.trustedTypes.createPolicy) { // Feature testing
+    window.trustedTypes.createPolicy('default', {
+        createHTML: (string) => DOMPurify.sanitize(string, {RETURN_TRUSTED_TYPE: true}),
+        createScriptURL: string => string, // warning: this is unsafe!
+        createScript: string => string, // warning: this is unsafe!
+    });
+}
+function siteControl_playVideo() {
+    if (gShowController.activeHyperlinks.lenth === 0) return;
+    let url = gShowController.activeHyperlinks[0].url;
+    console.log(`${url}`);
+    if (url.includes("youtube")) url = url.replace('watch?v=', 'embed/');
+    if (url.includes("drive.google")) url = url.replace('http', 'https').replace('/view', '/preview');
+    let rect = gShowController.activeHyperlinks[0].targetRectangle;
+    console.log(`attempting to play ${url} in ${rect}`);
+    // window.open(url, "_blank");
+    
+    /**
+     * e.g. 
+     * <video width="640" height="360" id="player1" preload="none">
+            <source autoplay type="video/youtube" src="http://www.youtube.com/watch?v=nOEw9iiopwI" />
+        </video>
+     */
+    // const src = `<source autoplay type="video/youtube" src="${url}" />`;
+    // const src = `<iframe class="mejs__player" src="${url}" frameborder="0" allowfullscreen></iframe>`;
+    // console.log(`santized src:  ${src}`);
+    // const videoDiv = document.createElement("video");
+    const videoDiv = document.getElementById("videoContainer");
+    // videoDiv.style.backgroundColor = "black";
+    // videoDiv.style.x = `${rect.x}`;
+    // videoDiv.style.y = `${rect.y}`;
+    // videoDiv.style.width = `${rect.width}px`;
+    // videoDiv.style.height = `${rect.height}px`;
+    videoDiv.innerHTML = `
+    <video src=${url} 
+            width="320" 
+            height="240"
+            crossOrigin="anonymous"
+            class="mejs__player"
+            data-mejsoptions='{"pluginPath": "/nm/mediaelement/build/renderers", "alwaysShowControls": "true"}'>
+    </video>`;
+
+
+    // videoDiv.src = `${url}`;
+    // videoDiv.setAttribute("class", "mejs__player");
+    // videoDiv.setAttribute("data-mejsoptions", `{"pluginPath": "/path/to/shims/", "alwaysShowControls": "true"}`);
+
+    // console.log(videoDiv.outerHTML);
+    // document.getElementById(`video-slide${currShownSlide()}`).mediaelementplayer();
 }

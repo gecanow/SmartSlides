@@ -48,6 +48,12 @@
         <script type="text/javascript" src="app/setupSpeech.js"></script> -->
 
         <link rel="stylesheet" type="text/css" href="assets/player/styles.css">
+
+        <script src="/nm/mediaelement/build/mediaelement-and-player.js"></script>
+        <script src="/nm/mediaelement/build/renderers/youtube.js"></script>
+        <!-- Add any other renderers you need; see Use Renderers for more information -->
+        <link rel="stylesheet" href="/nm/mediaelement/build/mediaelementplayer.css" />
+        <script src="/nm/dompurify/dist/purify.min.js"></script>
     </head>
     <body id="body" bgcolor="black">
         <!-- Bootstrap Bundle with Popper -->
@@ -69,6 +75,7 @@
                 </div>
                 <div id="hyperlinkPlane" class="stage">
                 </div>
+                <div id="videoContainer"></div>
             </div>
             <div id="slideshowNavigator">
             </div>

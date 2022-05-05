@@ -34,7 +34,7 @@ function setup() {
 
     // make the + button
     let commands = customCommandCreationButton();
-    document.getElementById('custom-command-container').appendChild(commands.html);
+    document.getElementById('customize-header').appendChild(commands.html);
     commands.callbacks.forEach(f => f());
 
     // commands
@@ -364,8 +364,8 @@ function compileCommands(id) {
 
 function displayCommand(commandObj) {
     const div = document.createElement("div");
-    div.style.width = "60%";
-    div.style.backgroundColor = "lemonchiffon";
+    div.style.width = "80%";
+    div.style.backgroundColor = commandObj.popupId % 2 ? "peachpuff" : "lemonchiffon";
     div.style.padding = "10px";
     div.style.marginTop = "10px";
     div.style.display = "inline-block";
@@ -375,7 +375,7 @@ function displayCommand(commandObj) {
     div.style.borderColor = "black";
     div.style.borderStyle = "solid";
 
-    html = `<div style="display: flex;"><p>On these slides:</p>`;
+    html = `<div style="display: flex; overflow: auto;"><p>On these slides:</p>`;
     commandObj.slideIds.forEach(id => {
         html += `<img src=${`/assets/${id}/thumbnail.jpeg`} style="width:100px; padding: 5px;"></img>`;
     });
@@ -498,13 +498,23 @@ const ui_body = `
         </div>
     </div>
 
-    <div id="instructions" style="padding-top:10px; padding-left:20px; height: 600px; overflow: auto; position: relative; background-color:peachpuff">
+    <div id="instructions" style="padding-top:10px; 
+                                    padding-left:20px; 
+                                    margin: 20px;
+                                    border-radius: 5px;
+                                    border-width: 1px;
+                                    border-color: black;
+                                    border-style: solid;
+                                    height: 600px; 
+                                    overflow: auto; 
+                                    position: relative; 
+                                    background-color:peachpuff">
         <div>
             <h3>Instructions</h3>
             <p>
-                Say "start" to setup speech recognition and go to first slide of presentation. 
-                <br>Press the 'h' key to toggle between this help screen and the slideshow.
-                <br>Press the '<' key to go back to the custom controls.
+                Say <strong>"start"</strong> to setup speech recognition and go to the first slide of presentation. 
+                <br>Press the <strong>'h' key</strong> to toggle between this help screen and the slideshow.
+                <br>Press the <strong>'<' key</strong> to go back to the custom controls.
             </p>
         </div>
         <div style="display: flex;">

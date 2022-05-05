@@ -73,4 +73,23 @@ API for controlling the presentation when displayed on screen.
 
 ### public/presentation
 
-TODO
+Hosts the html pages for the site, the assets folder for the exported presentation, and the app folder for powering the multimodal interaction.
+
+#### app
+
+Powers the multimodel speech and gesture recognition. The main driver is main.js, which hosts Leap.loop and the speech recognition callback.
+
+### Libraries used
+
+#### Site
+- bootstrap for ui (popups, icons, etc.)
+- express for powering client/server
+- browserify for exposing some modules in the browser
+- applescript, currently unused, but for potentially deploying the AppleScript automatically
+
+#### App
+- WebkitSpeech Recognition
+- Leap motion gesture Recognition toolkit
+
+## Contact
+{gecanow, gilaschein, marlenag}@mit.edu

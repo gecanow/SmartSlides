@@ -5,7 +5,8 @@ try {
   var debouncedProcessSpeech = _.debounce(processSpeech, 500);
 } catch (e) {
   console.log(`debouncedProcessSpeech | ${e}`);
-  window.alert("Speech proccessing loading...");
+  window.alert("Speech proccessing loading... Please reload the page.");
+  window.location.reload();
 }
 
 var recognition = new webkitSpeechRecognition();

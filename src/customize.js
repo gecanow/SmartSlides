@@ -5,6 +5,7 @@ const ADD_GESTURE_BUTTON_ID = "GESTURE-BUTTON";
 const SAVE_COMMAND_ID = "save-change";
 const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
+const BACK_TO_CUSTOMIZATION_KEY_CODE = 188;
 
 const systemActionOptionList = ["next-slide", "prev-slide", "small-circle", "medium-circle", "large-circle"];
 const gestureOptionList = ["right-hand-swipe-right", "left-hand-swipe-left"];
@@ -610,7 +611,7 @@ const ui_script = function() {
             }
         }
 
-        if (keycode === 188 /** < */) {
+        if (keycode === BACK_TO_CUSTOMIZATION_KEY_CODE /** < */) {
             // go back to controls
             customize_script();
         }

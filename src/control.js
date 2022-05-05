@@ -87,3 +87,15 @@ function siteControl_currentSlideIndex() {
 function siteControl_slideIndex(slideId) {
     return THUMBNAIL_IDS.indexOf(slideId);
 }
+
+// Play a video on the slide by opening it in a new tab
+function siteControl_playVideo() {
+    if (gShowController.activeHyperlinks.lenth === 0) return;
+    let url = gShowController.activeHyperlinks[0].url;
+    console.log(`${url}`);
+    if (url.includes("youtube")) url = url.replace('watch?v=', 'embed/');
+    if (url.includes("drive.google")) url = url.replace('http', 'https').replace('/view', '/preview');
+    let rect = gShowController.activeHyperlinks[0].targetRectangle;
+    console.log(`attempting to play ${url} in ${rect}`);
+    window.open(url, "_blank");
+}

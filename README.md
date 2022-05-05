@@ -38,13 +38,13 @@ When you are ready to present, click 'Present'.
 
 ### SmartSlidesBegin
 
-## smartslides_script.scpt
+#### smartslides_script.scpt
 SmartSlidesBegin.app is the app-deployed version of smartslides_script.scpt. You can open smartslides_script.scpt on a Mac computer to see exactly what the AppleScript does. 
 
-## open_slides.sh
+#### open_slides.sh
 SmartSlidesBegin also opens and runs open_slides.sh, which runs ```npm install```, ```npm start```, and ```open localhost:8000``` to automate the process of getting started.
 
-## Sample Presentation
+#### Sample Presentation
 The project folder has two example presentations: sample_presentation_1.pptx and sample_presentation_2.pptx.
 
 ### index.js
@@ -55,19 +55,19 @@ index.js is the main entrypoint into the webapp. It sets up the use of Express t
 
 src holds the JS files the powers the site itself.
 
-## thumbnails.js
+#### thumbnails.js
 
 Responsible for opening and reading in all the thumbnail images from the presentation's assets.
 
-## download.js
+#### download.js
 
 Powers the intro index.html page.
 
-## customize.js
+#### customize.js
 
 Powers the customization page and transitioning to the presentation mode.
 
-## control.js
+#### control.js
 
 API for controlling the presentation when displayed on screen.
 

@@ -483,6 +483,11 @@ var processSpeech = function(transcript) {
       addedElementModifiers.push(circleOpacity);
     }
 
+    if (userSaid(transcript.toLowerCase(), ["play video", "play the video"])) {
+      console.log("playing video");
+      siteControl_playVideo();
+    }
+
 
     if (userSaid(transcript.toLowerCase(), ["start circle here"])) {
       console.log("start circle here");

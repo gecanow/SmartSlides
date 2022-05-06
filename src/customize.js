@@ -481,8 +481,10 @@ const customize_script = function() {
 
     document.getElementById('stage-container').style.visibility = 'hidden';
     document.getElementById('stage-container').style.display = 'none';
+    
+    document.getElementById('present-body').style.visibility = 'hidden';
+    document.getElementById('present-body').style.display = 'none';
 
-    document.getElementById('present-body').innerHTML = "";
     ui_srcs.forEach(url => {
         const s = document.getElementById(url);
         if (s) s.remove();
@@ -496,109 +498,15 @@ const customize_script = function() {
         ui_script();
     });
 }
-
-const ui_body = `
-    <div class="jumbotron" style="display: flex; justify-content: center; margin: 5px;" id="presentation-header">
-        <div>
-            <!-- <button class="btn" id="present-back-button">Controls</button> -->
-            <!-- <button class="btn" id="present-fullscreen-button">Fullscreen</button> -->
-            <!-- <h1>SmartSlides</h1> -->
-
-            <!-- <form action="#">
-                    <label for="customizations">Customization Dropdown</label>
-                    <select name="cusomtizations" id="customizations">
-                    <option value="op1">option1</option>
-                    <option value="op2">option2</option>
-
-                    </select>
-                    <input type="submit" value="Submit" />
-            </form>
-            <button type="button" onclick="changeStyle()">Click Me</button>  -->
-        </div>
-    </div>
-
-    <div id="instructions" style="padding-top:10px; 
-                                    padding-left:20px; 
-                                    margin: 20px;
-                                    border-radius: 5px;
-                                    border-width: 1px;
-                                    border-color: black;
-                                    border-style: solid;
-                                    height: 600px; 
-                                    overflow: auto; 
-                                    position: relative; 
-                                    background-color:peachpuff">
-        <div>
-            <h3>Instructions</h3>
-            <p>
-                Say <strong>"start"</strong> to setup speech recognition and go to the first slide of presentation. 
-                <br>Press the <strong>'h' key</strong> to toggle between this help screen and the slideshow.
-                <br>Press the <strong>'<' key</strong> to go back to the custom controls.
-            </p>
-        </div>
-        <div style="display: flex;">
-            <div style="width: 50%;">
-                <h3>Speech Commands</h3>
-                <div>
-                    <p> 
-                    - next slide = "next"
-                    <br> - previous slide = "previous"
-                    <br> - undo - "jump to slide X"
-                    <br> &emsp; - jumps to slide of integer number X (starting from 1)
-                    <br> - start laser = "laser"
-                    <br> &emsp; - stop laser = "stop laser", "turn off laser"
-                    <br> - draw circle = "circle"
-                    <br> &emsp; - sizes = "small," "big"
-                    <br> &emsp; - colors = "green," "blue," "red"
-                    <br> - draw custom sized circle = "start circle here"
-                    <br> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red
-                    <br> - draw custom sized circle = "end circle here"
-                    <br> &emsp; - end position of circle / rightmost point of circle
-                    <br> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"
-                    <br> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight
-                    <br> &emsp; - top left corner of highlight = "start"
-                    <br> &emsp; - bottom right corner of highlight = "stop"
-                    <br> &emsp; - turn off highlight mode = "turn off highlight"
-                    <br> - make text box = "text box"
-                    <br> &emsp; - recognized speech will be transcribed in text box on slide
-                    <br> - undo - "undo"
-                    <br> &emsp; - erases the last addition (circle or highlight) added to the slide
-                    </p>
-                </div>
-            </div>
-            <div style="width: 50%;">
-                <h3>Gesture Commands</h3>
-                <div>
-                    <p> 
-                    - next slide = hand swipe right or up
-                    <br> - previous slide = hand swipe left or down
-                    <br>
-                    <br>
-                    <br> - laser position = hand position from leap sensor
-                    <br> - hand position / cursor position is center of circle drawn
-                    <br>
-                    <br>
-                    <br> - hand position / laser position controls circle start and end points
-                    <br>
-                    <br>
-                    <br> - hand position / cursor position of cursor used to control highlight when specifying the top left and bottom right corners of the rectangle
-                    <br>
-                    <br>
-                    <br>
-                    <br> - hand position / cursor position of cursor used is where text box will be drawn
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-`;
 const ui_srcs = [
     "app/main.js",
     "app/setupSpeech.js"
 ];
 const ui_script = function() {
     // add the body html
-    document.getElementById('present-body').innerHTML = ui_body;
+    document.getElementById('present-body').style.visibility = 'visible';
+    document.getElementById('present-body').style.display = 'block';
+
     // and the approproate UI scripts
     ui_srcs.forEach(url => {
         const script = document.createElement("script");
@@ -616,7 +524,8 @@ const ui_script = function() {
     document.getElementById('stage-container').style.display = 'block';
 
     document.getElementById("instructions").style.opacity = "0.0";
-    // document.getElementById("stage").style.opacity = "0.0";
+    document.getElementById("stage").style.opacity = "1.0";
+
     fullscreen([]);
     document.onkeyup = function changeStyle() {
         var keycode = event.keyCode;

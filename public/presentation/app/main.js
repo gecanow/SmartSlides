@@ -499,7 +499,7 @@ var processSpeech = function(transcript) {
     }
 
 
-    if (userSaid(transcript.toLowerCase(), ["start circle here"])) {
+    if (userSaid(transcript.toLowerCase(), ["start here"])) {
       console.log("start circle here");
       said_create_circle = false;
       if (laserOn) {
@@ -508,7 +508,7 @@ var processSpeech = function(transcript) {
       }
     }
 
-    if (userSaid(transcript.toLowerCase(), ["end circle here"])) {
+    if (userSaid(transcript.toLowerCase(), ["end here"])) {
       console.log("end circle here");
       said_create_circle = false;
       if (laserOn && circleStart != previousCircleStart) {

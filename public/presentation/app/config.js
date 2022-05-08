@@ -1,10 +1,11 @@
 // Configuration of the game
 
 var Colors = {
-  GREY: "#AAAAAA",  // default tile color
-  GREEN: "#7CD3A2", // highlighting
-  RED: "#FA5C4F",   // hits
-  YELLOW: "#FAF36F",// misses
+  GREY: "#AAAAAA", 
+  GREEN: "#7CD3A2", 
+  RED: "#FA5C4F",
+  YELLOW: "#FAF36F",
+  BLUE: "#6495ED", 
 };
 
 var CURSORSIZE = 20;

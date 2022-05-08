@@ -7,6 +7,8 @@ const CUSTOM_COMMAND_ID = 'iscommand-'
 const COMMAND_TYPE = function (str) { return str.toString().split('-')[2]; };
 const BACK_TO_CUSTOMIZATION_KEY_CODE = 188;
 
+let IN_PRESENTATION_STATE = false;
+
 const systemActionOptionList = ["next-slide", "prev-slide", "small-circle", "medium-circle", "large-circle"];
 const gestureOptionList = ["right-hand-swipe-right", "left-hand-swipe-left"];
 // {slideIds: string[], voiceCommands: <string, string>[], gestureCommands: <string, string>[], popupId: number}
@@ -476,6 +478,8 @@ function addCommandPopupHTML(id=null, display=false) {
  * TOGGLE BETWEEN PAGES:
  */
 const customize_script = function() {
+    IN_PRESENTATION_STATE = false;
+
     document.getElementById('customize-body').style.visibility = 'visible';
     document.getElementById('customize-body').style.display = 'block';
 
@@ -503,6 +507,8 @@ const ui_srcs = [
     "app/setupSpeech.js"
 ];
 const ui_script = function() {
+    IN_PRESENTATION_STATE = true;
+
     // add the body html
     document.getElementById('present-body').style.visibility = 'visible';
     document.getElementById('present-body').style.display = 'block';
@@ -551,6 +557,7 @@ const ui_script = function() {
 
         if (keycode === BACK_TO_CUSTOMIZATION_KEY_CODE /** < */) {
             // go back to controls
+            // document.removeEventListener('mousemove', (e) => { mouseFollower(e); cursorModifier.setOpacity(0); });
             customize_script();
         }
     }

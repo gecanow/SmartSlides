@@ -7,6 +7,14 @@ var Cursor = Backbone.Model.extend({
   }
 });
 
+var Mouse = Backbone.Model.extend({
+  defaults: {
+    screenPosition: [0, 0]
+  },
+  setScreenPosition: function(position) {
+    this.set('screenPosition', position.slice(0));
+  }
+});
 
 var PresentationState = Backbone.Model.extend({
   defaults: {
@@ -34,14 +42,5 @@ var PresentationState = Backbone.Model.extend({
     else
       alert("Not presenting, so can't end presentation");
   },
-
-  // nextTurn: function() {
-  //   if (this.get('state') == 'presenting') {
-  //     // this.set('turn', this.isPlayerTurn() ? "cpu" : "player");
-  //     // At beginning of CPU turn, generate shot
-  //     // At beginning of Player turn, waiting for player to fire
-  //     // this.set('waiting', this.isPlayerTurn());
-  //   }
-  // },
 
 });

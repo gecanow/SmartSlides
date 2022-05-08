@@ -59,4 +59,25 @@ var setupUserInterface = function() {
   });
   mainContext.add(cursorOriginModifier).add(cursorModifier).add(cursorSurface);
 
+
+  // Draw the mouse
+  mouseSurface = new Surface({
+    size : [CURSORSIZE, CURSORSIZE],
+    properties : {
+        backgroundColor: Colors.BLUE,
+        borderRadius: CURSORSIZE/2 + 'px',
+        pointerEvents : 'none',
+        zIndex: 1
+    }
+  });
+  var mouseOriginModifier = new StateModifier({origin: [0.5, 0.5]});
+  mouseModifier = new Modifier({
+    opacity: 0.0,
+    transform : function(){
+      var cursorPosition = this.get('screenPosition');
+      return Transform.translate(cursorPosition[0], cursorPosition[1], 0);
+    }.bind(mouse)
+  });
+  mainContext.add(mouseOriginModifier).add(mouseModifier).add(mouseSurface);
+
 };

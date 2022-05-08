@@ -2,6 +2,7 @@
 var initialState = SKIPSETUP ? "presenting" : "setup";
 var presentationState = new PresentationState({state: initialState});
 var cursor = new Cursor();
+var mouse = new Mouse();
 
 var Engine = famous.core.Engine;
 var Modifier = famous.core.Modifier;
@@ -22,7 +23,7 @@ var cursorPosition;
 var highlightStart, highlightEnd, previousHighlightStart = [0,0];
 var CAN_DRAW_CIRCLE = true; // drawing circle timeout
 var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
-var laserOn = false;
+var laserOn = false, mouseOn = false;
 var circleStart, circleEnd, previousCircleStart = [0,0];
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
@@ -257,6 +258,19 @@ Leap.loop({ hand: function(hand) {
   // }
 }}).use('screenPosition', {scale: LEAPSCALE})});
 
+let mouseFollower = (e) => {
+  console.log("mouseFoller", IN_PRESENTATION_STATE);
+  if (IN_PRESENTATION_STATE) {
+    cursorPosition = [e.pageX, e.pageY];
+    mouse.setScreenPosition(cursorPosition);
+  } else {
+    mouseModifier.setOpacity(0);
+  }
+}
+if (document.getElementById("mouse-cursor-checkbox").checked) {
+  document.addEventListener('mousemove', mouseFollower);
+}
+
 
   // draw circle on screen
   // circleSize: int of pixel size (diameter of circle), default is 100
@@ -448,22 +462,6 @@ var processSpeech = function(transcript) {
       }
     }
 
-    // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
-    // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);
-    // for (var i = 0; i < THUMBNAIL_IDS.length; i++) {
-    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
-    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
-    //   console.log(said_slide);
-    //   if (said_slide) {
-    //     if (userSaid(transcript.toLowerCase(), spelled_out_numbers[i+1])) {
-    //       console.log("user said to go to slide " + i+1);
-    //       siteControl_jumpSlide(i);
-    //       said_slide = false;
-    //       break;
-    //     }
-    //   }
-    // }
-
     if (userSaid(transcript.toLowerCase(), ["turtle"])) {
       var circleSurface = new Surface({
         size : [500, 500],
@@ -486,6 +484,18 @@ var processSpeech = function(transcript) {
     if (userSaid(transcript.toLowerCase(), ["play video", "play the video"])) {
       console.log("playing video");
       siteControl_playVideo();
+    }
+
+    if (userSaid(transcript.toLowerCase(), ["follow mouse"])) {
+      console.log("following mouse");
+      cursorSurface.setProperties({backgroundColor: Colors.BLUE});
+      mouseModifier.setOpacity(1);
+      mouseOn = true;
+    }
+    if (userSaid(transcript.toLowerCase(), ["unfollow mouse"])) {
+      console.log("unfollowing mouse");
+      mouseModifier.setOpacity(0);
+      mouseOn = false;
     }
 
 

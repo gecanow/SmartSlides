@@ -23,7 +23,7 @@ var cursorPosition;
 var highlightStart, highlightEnd, previousHighlightStart = [0,0];
 var CAN_DRAW_CIRCLE = true; // drawing circle timeout
 var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
-var laserOn = false, mouseOn = false;
+var laserOn = false;
 var circleStart, circleEnd, previousCircleStart = [0,0];
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
@@ -151,7 +151,7 @@ Leap.loop({ hand: function(hand) {
           //     // console.log("Screen Tap Gesture");
           //     break;
           case "swipe":
-              console.log("Swipe Gesture");
+              // console.log("Swipe Gesture");
 
               //Classify swipe as either horizontal or vertical
               var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
@@ -161,20 +161,20 @@ Leap.loop({ hand: function(hand) {
               if (gesture.direction[0] > 0) {
                 swipeDirection = "right";
                 // startButton.setContent("I detected a right swipe.");
-                console.log(`Found hand type: ${handType}`);
+                // console.log(`Found hand type: ${handType}`);
                 if (handType == "right") {
                   // go to next slide
                   console.log("should be going to next slide");
-                  goToNextSlide();
+                  // goToNextSlide();
                 }
               } else {
                 swipeDirection = "left";
                 // startButton.setContent("I detected a left swipe.");
-                console.log(`Found hand type: ${handType}`);
+                // console.log(`Found hand type: ${handType}`);
                 if (handType == "left") {
                   // go to previous slide
                   console.log("should be going to previous slide");
-                  goToPrevSlide();
+                  // goToPrevSlide();
                 }
               }
             } else { //vertical
@@ -195,37 +195,37 @@ Leap.loop({ hand: function(hand) {
               break;
         }
         // CUSTOM GESTURE COMMANDS:
-        console.log("current slide for map in gesture: ", siteControl_currentSlideIndex());
+        // console.log("current slide for map in gesture: ", siteControl_currentSlideIndex());
         var currentSlide = siteControl_currentSlideIndex();
-        console.log("list: ", LIST_OF_COMMANDS);
+        // console.log("list: ", LIST_OF_COMMANDS);
         for (let [key, value] of LIST_OF_COMMANDS) {
-        console.log(key + " = " + value);
-        console.log(value.valueOf());
+        // console.log(key + " = " + value);
+        // console.log(value.valueOf());
         let slideIds = value["slideIds"];
         var slideIndices = []
         for (let i = 0; i < slideIds.length; i++) {
           slideIndices.push(siteControl_slideIndex(slideIds[i]));
         }
-        console.log("slide indices: ", slideIndices);
+        // console.log("slide indices: ", slideIndices);
         var gestureCommands = value["gestureCommands"];
           for (let [gestureCommand, gestureAction] of gestureCommands) {
-            console.log(gestureCommand + " = " + gestureAction);
+            // console.log(gestureCommand + " = " + gestureAction);
             if (slideIndices.includes(currentSlide)) {
               if ((gestureCommand == "right-hand-swipe-right") && (gesture.type == "swipe") && (handType == "right")) {
-                console.log("do gestureAction: ", gestureAction);
+                // console.log("do gestureAction: ", gestureAction);
                 doAction(gestureAction);
 
               } else if ((gestureCommand == "left-hand-swipe-left") && (gesture.type == "swipe") && (handType == "left")) {
-                console.log("do gestureAction: ", gestureAction);
+                // console.log("do gestureAction: ", gestureAction);
                 doAction(gestureAction);
 
               }
             }
           }
         }
-        for (var i = 0; i<LIST_OF_COMMANDS.length; i++) {
-          console.log("index i: ", LIST_OF_COMMANDS[i]);
-        }
+        // for (var i = 0; i<LIST_OF_COMMANDS.length; i++) {
+        //   console.log("index i: ", LIST_OF_COMMANDS[i]);
+        // }
     });
   }
 
@@ -257,19 +257,6 @@ Leap.loop({ hand: function(hand) {
   //
   // }
 }}).use('screenPosition', {scale: LEAPSCALE})});
-
-let mouseFollower = (e) => {
-  console.log("mouseFoller", IN_PRESENTATION_STATE);
-  if (IN_PRESENTATION_STATE) {
-    cursorPosition = [e.pageX, e.pageY];
-    mouse.setScreenPosition(cursorPosition);
-  } else {
-    mouseModifier.setOpacity(0);
-  }
-}
-if (document.getElementById("mouse-cursor-checkbox").checked) {
-  document.addEventListener('mousemove', mouseFollower);
-}
 
 
   // draw circle on screen
@@ -417,7 +404,7 @@ var processSpeech = function(transcript) {
 
     var said_text_box = userSaid(transcript.toLowerCase(), ["text box", "textbox"]);
 
-    console.log(LIST_OF_COMMANDS);
+    // console.log(LIST_OF_COMMANDS);
     // console.log(slideIds.length);
     // console.log(slideIds);
     // console.log(THUMBNAIL_IDS);
@@ -462,6 +449,22 @@ var processSpeech = function(transcript) {
       }
     }
 
+    // var spelled_out_numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen"];
+    // var said_slide = userSaid(transcript.toLowerCase(), ["jump to slide"]);
+    // for (var i = 0; i < THUMBNAIL_IDS.length; i++) {
+    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
+    //   // console.log(userSaid(transcript.toLowerCase(), spelled_out_numbers[i]) + " " + spelled_out_numbers[i]);
+    //   console.log(said_slide);
+    //   if (said_slide) {
+    //     if (userSaid(transcript.toLowerCase(), spelled_out_numbers[i+1])) {
+    //       console.log("user said to go to slide " + i+1);
+    //       siteControl_jumpSlide(i);
+    //       said_slide = false;
+    //       break;
+    //     }
+    //   }
+    // }
+
     if (userSaid(transcript.toLowerCase(), ["turtle"])) {
       var circleSurface = new Surface({
         size : [500, 500],
@@ -486,32 +489,22 @@ var processSpeech = function(transcript) {
       siteControl_playVideo();
     }
 
-    if (userSaid(transcript.toLowerCase(), ["follow mouse"])) {
-      console.log("following mouse");
-      cursorSurface.setProperties({backgroundColor: Colors.BLUE});
-      mouseModifier.setOpacity(1);
-      mouseOn = true;
-    }
-    if (userSaid(transcript.toLowerCase(), ["unfollow mouse"])) {
-      console.log("unfollowing mouse");
-      mouseModifier.setOpacity(0);
-      mouseOn = false;
-    }
 
-
-    if (userSaid(transcript.toLowerCase(), ["start here"])) {
+    if (userSaid(transcript.toLowerCase(), ["start"])) {
       console.log("start circle here");
       said_create_circle = false;
       if (laserOn) {
         circleStart = [cursorPosition[0], cursorPosition[1]];
+        drawCircle(10, '#FF3333');
         console.log("circle start " + circleStart);
       }
     }
 
-    if (userSaid(transcript.toLowerCase(), ["end here"])) {
+    if (userSaid(transcript.toLowerCase(), ["stop"])) {
       console.log("end circle here");
       said_create_circle = false;
       if (laserOn && circleStart != previousCircleStart) {
+        addedElementModifiers[addedElementModifiers.length - 1].setOpacity(0);
         previousCircleStart = circleStart;
         console.log("circle end");
         circleEnd = [cursorPosition[0], cursorPosition[1]];
@@ -557,16 +550,26 @@ var processSpeech = function(transcript) {
     }
 
     if (said_highlight) {
+      laserOn = false;
       console.log("I heard you wanted to make a highlight");
       if (said_pink_highlight) {
         cursorSurface.setProperties({backgroundColor: '#FF00FF'});
         pinkHighlightOn = true;
+        yellowHighlightOn = false;
+        orangeHighlightOn = false;
+
       } else if (said_orange_highlight) {
         cursorSurface.setProperties({backgroundColor: '#FF9900'});
         orangeHighlightOn = true;
+        pinkHighlightOn = false;
+        yellowHighlightOn = false;
+
       } else {
         cursorSurface.setProperties({backgroundColor: Colors.YELLOW});
         yellowHighlightOn = true;
+        pinkHighlightOn = false;
+        orangeHighlightOn = false;
+
       }
 
       cursorModifier.setOpacity(0.65);
@@ -575,6 +578,13 @@ var processSpeech = function(transcript) {
 
     if (said_start_highlight && (yellowHighlightOn || orangeHighlightOn || pinkHighlightOn)) {
       highlightStart = [cursorPosition[0], cursorPosition[1]];
+      if (pinkHighlightOn) {
+        drawCircle(10, '#FF00FF');
+      } else if (orangeHighlightOn) {
+        drawCircle(10, '#FF9900');
+      } else if (yellowHighlightOn){
+        drawCircle(10, Colors.YELLOW);
+      }
     }
 
     if (said_stop_highlight && highlightStart != previousHighlightStart) {
@@ -590,6 +600,8 @@ var processSpeech = function(transcript) {
         color = '#FF00FF';
       }
       console.log("I heard you wanted to stop the highlight");
+
+      addedElementModifiers[addedElementModifiers.length - 1].setOpacity(0);
 
       highlightEnd = [cursorPosition[0], cursorPosition[1]];
       console.log(highlightEnd);
@@ -619,6 +631,9 @@ var processSpeech = function(transcript) {
 
     if (said_laser) { // cursor may always be showing right now actually but I can change that
       console.log("I heard you wanted a laser");
+      yellowHighlightOn = false;
+      pinkHighlightOn = false;
+      orangeHighlightOn = false;
       cursorSurface.setProperties({backgroundColor: Colors.RED});
       cursorModifier.setOpacity(1);
       laserOn = true;
@@ -659,6 +674,7 @@ var processSpeech = function(transcript) {
     };
 
     if (said_text_box) {
+      said_text_box = false;
       console.log("I heard you want to place a text box.");
       var text = editTranscript(transcript);
 

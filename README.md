@@ -3,21 +3,21 @@
 A new way to present.
 
 6.835 Spring 2022 Final Project
-{gschein, gecanow, marlenag}@mit.edu
+{*gschein, gecanow, marlenag*}@mit.edu
 
 ## Getting Started
 
-SmartSlides works best on Chrome and with a Mac laptop. 
+Requirements: SmartSlides works best on **Chrome** and with a **Mac laptop**. 
 
 ### Mac users
-Download this repo, unzip the SmartSlides folder, and double-click on SmartSlidesBegin to get started.
+**Clone** (don't download!) this repo, open the SmartSlides folder, and double-click on SmartSlidesBegin to get started. This will walk you though uploading a presentation, installing the necessary dependencies, starting the server, and opening localhost.
 
 If you are having trouble, manually navigate to the project folder in your terminal and run
 ```
 $ npm install
 $ npm start
 ```
-And navigate to localhost:8000 for instructions.
+Then, open https://localhost:8000 for instructions.
 
 ### Windows users
 Start the project with
@@ -25,14 +25,14 @@ Start the project with
 $ npm install
 $ npm start
 ```
-And navigate to localhost:8000 for instructions on how to upload a presentation manually by clicking Help under Step 1. You may need to export it on Keynote via a loaner Mac laptop.
+And open https://localhost:8000 for instructions on how to upload a presentation manually by clicking Help under Step 1. You may need to export it on Keynote via a loaner Mac laptop.
 
 ### Navigating the SmartSlides site
-Once your presentation is loaded into the project folder (either via SmartSlidesBegin or manually), you can get started by navigating the localhost:8000, clickingg 'Yes' if the slide thumbnails are correct, and clicking 'Customize' to start customizing.
+Once your presentation is loaded into the project folder (either via SmartSlidesBegin or manually), you can get started by opening localhost:8000, clicking 'Yes' if the slide thumbnails are correct, and clicking 'Customize' to start customizing.
 
-On the customization page, you can add new custom voice or gesture commands. Custom gesture commands are currently in beta. 
+On the customization page, you can add new custom voice or gesture commands and toggle on mouse input. Note that custom gesture commands are currently in beta, and only work if you have a Leap Motion Controller. 
 
-When you are ready to present, click 'Present'. 
+When you are ready to present, click 'Present'. *While presenting, you can press the 'h' key to open an instructions and help page.*
 
 ## Code Organization
 
@@ -89,7 +89,7 @@ Powers the multimodel speech and gesture recognition. The main driver is main.js
 
 #### App
 - WebkitSpeech Recognition
-- Leap motion gesture Recognition toolkit
+- Leap Motion Controller Gesture Recognition toolkit
 
 ## Contact
-{gecanow, gilaschein, marlenag}@mit.edu
+{*gecanow, gilaschein, marlenag*}@mit.edu

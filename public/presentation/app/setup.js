@@ -12,7 +12,7 @@ var GridLayout = famous.views.GridLayout;
 var gridOrigin = [350, 35];
 
 var background, startButton, otherFeedback, tile, mainContext;
-var tile, tileTransformModifier, cursorModifier, cursorSurface;
+var tile, tileTransformModifier, cursorModifier, cursorSurface, mouseModifier, mouseSurface;;
 var testingTextOutput, testingModifier, testingOpacityModifier;
 
 var opacityModifiers = [];

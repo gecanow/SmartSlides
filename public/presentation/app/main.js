@@ -29,7 +29,7 @@ var circleStart, circleEnd, previousCircleStart = [0,0];
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
 
 let mouseFollower = (e) => {
-  console.log("mouseFoller", IN_PRESENTATION_STATE);
+  // console.log("mouseFoller", IN_PRESENTATION_STATE);
   if (IN_PRESENTATION_STATE) {
     cursorPosition = [e.pageX, e.pageY];
     mouse.setScreenPosition(cursorPosition);
@@ -70,22 +70,22 @@ var goToPrevSlide = function() {
 // gesture commands: ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
 var doAction = function(action) {
 
-  if (action == "next-slide") {
-    console.log("custom next slide")
-    goToNextSlide();
-  } else if (action == "prev-slide") {
-    console.log("custom prev slide")
-    goToPrevSlide();
-  } else if (action == "small-circle") {
-    console.log("custom small circle")
-    drawCircle(48, '#FF3333'); // red
-  } else if (action == "medium-circle") {
-    console.log("custom medium circle")
-    drawCircle();
-  } else if (action == "large-circle") {
-    console.log("custom large circle")
-    drawCircle(240, '#FF3333'); // red
-  }
+  // if (action == "next-slide") {
+  //   console.log("custom next slide")
+  //   goToNextSlide();
+  // } else if (action == "prev-slide") {
+  //   console.log("custom prev slide")
+  //   goToPrevSlide();
+  // } else if (action == "small-circle") {
+  //   console.log("custom small circle")
+  //   drawCircle(48, '#FF3333'); // red
+  // } else if (action == "medium-circle") {
+  //   console.log("custom medium circle")
+  //   drawCircle();
+  // } else if (action == "large-circle") {
+  //   console.log("custom large circle")
+  //   drawCircle(240, '#FF3333'); // red
+  // }
 }
 
 // this does not work well because circle gesture recognition accuracy is low
@@ -448,7 +448,7 @@ var processSpeech = function(transcript) {
     let rewindffRegex = /(?<loc>back|forward) (?<num>([0-9]|zero|one|two|to|too|three|four|for|five|six|seven|eight|ate|nine)*) slide[s]?/mg;
     let rewindffMatch = userMatched(transcript.toLowerCase(), rewindffRegex);
     if (rewindffMatch) {
-      console.log(rewindffMatch);
+      // console.log(rewindffMatch);
       // first parse the n into a valud
       let n = parseSpokenNumber(`${rewindffMatch.groups.num}`);
       console.log(`${rewindffMatch.groups.loc} ${n} slides`)
@@ -504,9 +504,14 @@ var processSpeech = function(transcript) {
 
     if (userSaid(transcript.toLowerCase(), ["follow mouse"])) {
       console.log("following mouse");
-      cursorSurface.setProperties({backgroundColor: Colors.BLUE});
+      mouseSurface.setProperties({backgroundColor: Colors.BLUE});
       mouseModifier.setOpacity(1);
       mouseOn = true;
+;
+      laserOn = false
+      pinkHighlightOn = false;
+      yellowHighlightOn = false;
+      orangeHighlightOn = false;
     }
     if (userSaid(transcript.toLowerCase(), ["unfollow mouse"])) {
       console.log("unfollowing mouse");
@@ -517,7 +522,7 @@ var processSpeech = function(transcript) {
     if (userSaid(transcript.toLowerCase(), ["start"])) {
       console.log("start circle here");
       said_create_circle = false;
-      if (laserOn) {
+      if (laserOn || mouseOn) {
         circleStart = [cursorPosition[0], cursorPosition[1]];
         drawCircle(10, '#FF3333');
         console.log("circle start " + circleStart);
@@ -527,7 +532,7 @@ var processSpeech = function(transcript) {
     if (userSaid(transcript.toLowerCase(), ["stop"])) {
       console.log("end circle here");
       said_create_circle = false;
-      if (laserOn && circleStart != previousCircleStart) {
+      if ((laserOn && circleStart != previousCircleStart) || (mouseOn && circleStart != previousCircleStart)) {
         addedElementModifiers[addedElementModifiers.length - 1].setOpacity(0);
         previousCircleStart = circleStart;
         console.log("circle end");
@@ -575,21 +580,25 @@ var processSpeech = function(transcript) {
 
     if (said_highlight) {
       laserOn = false;
+      mouseOn = false;
       console.log("I heard you wanted to make a highlight");
       if (said_pink_highlight) {
         cursorSurface.setProperties({backgroundColor: '#FF00FF'});
+        mouseSurface.setProperties({backgroundColor: '#FF00FF'});
         pinkHighlightOn = true;
         yellowHighlightOn = false;
         orangeHighlightOn = false;
 
       } else if (said_orange_highlight) {
         cursorSurface.setProperties({backgroundColor: '#FF9900'});
+        mouseSurface.setProperties({backgroundColor: '#FF9900'});
         orangeHighlightOn = true;
         pinkHighlightOn = false;
         yellowHighlightOn = false;
 
       } else {
         cursorSurface.setProperties({backgroundColor: Colors.YELLOW});
+        mouseSurface.setProperties({backgroundColor: Colors.YELLOW});
         yellowHighlightOn = true;
         pinkHighlightOn = false;
         orangeHighlightOn = false;
@@ -658,6 +667,7 @@ var processSpeech = function(transcript) {
       yellowHighlightOn = false;
       pinkHighlightOn = false;
       orangeHighlightOn = false;
+      mouseOn = false;
       cursorSurface.setProperties({backgroundColor: Colors.RED});
       cursorModifier.setOpacity(1);
       laserOn = true;

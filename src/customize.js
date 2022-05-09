@@ -551,12 +551,15 @@ const ui_body = `
                     <br> &emsp; - jumps to slide of integer number X (starting from 1)
                     <br> - start laser = "laser"
                     <br> &emsp; - stop laser = "stop laser", "turn off laser"
+                    <br> - follow mouse = "follow mouse"
+                    <br> &emsp; - use mouse as laser pointer (blue)
+                    <br> &emsp; - stop following mouse = "unfollow mouse"
                     <br> - draw circle = "circle"
                     <br> &emsp; - sizes = "small," "big"
                     <br> &emsp; - colors = "green," "blue," "red"
-                    <br> - draw custom sized circle = "start circle here"
-                    <br> &emsp; - start position of circle / leftmost point of circle, laser must be on, color is red
-                    <br> - draw custom sized circle = "end circle here"
+                    <br> - draw custom sized circle = "start"
+                    <br> &emsp; - start position of circle / leftmost point of circle, laser or mouse must be on, color is red
+                    <br> - draw custom sized circle = "stop"
                     <br> &emsp; - end position of circle / rightmost point of circle
                     <br> - start highlight mode = "turn on highlight", "pink highlight", "orange highlight", "yellow highlight"
                     <br> &emsp; - can see highlight cursor and define top left and bottom right corners for rectangle highlight
@@ -602,7 +605,7 @@ const ui_srcs = [
 ];
 const ui_script = function() {
     IN_PRESENTATION_STATE = true;
-    
+
     // add the body html
     document.getElementById('present-body').innerHTML = ui_body;
     // and the approproate UI scripts

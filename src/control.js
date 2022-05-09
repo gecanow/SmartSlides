@@ -29,52 +29,52 @@ const currShownSlide = function() {
 
 // Programmatically move to the prev slide
 function siteControl_prev() {
-    console.log("prev");
+    // console.log("prev");
     let event = new KeyboardEvent('keydown', {'charCode': 37 /*kKeyCode_LeftArrow*/});
     gShowController.handleKeyDownEvent(event);
 }
 
 // Programmatically move to the next slide
 function siteControl_next() {
-    console.log("next");
+    // console.log("next");
     let event = new KeyboardEvent('keydown', {'charCode': 39 /*kKeyCode_RightArrow*/});
     gShowController.handleKeyDownEvent(event);
 }
 
 // Programmatically move to slide X
 function siteControl_jumpSlide(x) {
-    console.log("jumpSlide");
+    // console.log("jumpSlide");
     gShowController.jumpToSlide(x);
     // jumpToSlide(x);
 }
 
 // Programmatically move to scene X
 function siteControl_jumpScene(x) {
-    console.log("jumpScene");
+    // console.log("jumpScene");
     gShowController.jumpToScene(x);
 }
 
 // Programmatically rewinds X slides back
 function siteControl_rewindSlide(x) {
-    console.log(`rewindSlide ${currShownSlide() - x}`);
+    // console.log(`rewindSlide ${currShownSlide() - x}`);
     siteControl_jumpSlide(currShownSlide() - x);
 }
 
 // Programmatically rewinds X scenes back
 function siteControl_rewindScene(x) {
-    console.log("rewindScene");
+    // console.log("rewindScene");
     siteControl_jumpScene(currShownSlide() - x);
 }
 
 // Programmatically fast-forwards X slides back
 function siteControl_ffSlide(x) {
-    console.log(`ffSlide ${currShownSlide() + x}`);
+    // console.log(`ffSlide ${currShownSlide() + x}`);
     siteControl_jumpSlide(currShownSlide() + x);
 }
 
 // Programmatically fast-forwards  X scenes back
 function siteControl_ffScene(x) {
-    console.log("ffScene");
+    // console.log("ffScene");
     siteControl_jumpScene(currShownSlide() + x);
 }
 

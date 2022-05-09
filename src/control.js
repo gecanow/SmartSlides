@@ -22,9 +22,9 @@
 }, false);
 
 // Helper to get current slide
-const currShownSlide = function() { 
-    console.log(`on slide ${parseInt(gShowController.currentSlideIndex)}`);
-    return parseInt(gShowController.currentSlideIndex); 
+const currShownSlide = function() {
+    // console.log(`on slide ${parseInt(gShowController.currentSlideIndex)}`);
+    return parseInt(gShowController.currentSlideIndex);
 }
 
 // Programmatically move to the prev slide

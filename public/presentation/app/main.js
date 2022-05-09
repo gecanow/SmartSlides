@@ -23,10 +23,23 @@ var cursorPosition;
 var highlightStart, highlightEnd, previousHighlightStart = [0,0];
 var CAN_DRAW_CIRCLE = true; // drawing circle timeout
 var yellowHighlightOn = false, orangeHighlightOn = false, pinkHighlightOn = false;
-var laserOn = false;
+var laserOn = false, mouseOn = false;
 var circleStart, circleEnd, previousCircleStart = [0,0];
 
 var addedElementModifiers = []; // list of opacity modifiers for circles and highlights
+
+let mouseFollower = (e) => {
+  console.log("mouseFoller", IN_PRESENTATION_STATE);
+  if (IN_PRESENTATION_STATE) {
+    cursorPosition = [e.pageX, e.pageY];
+    mouse.setScreenPosition(cursorPosition);
+  } else {
+    mouseModifier.setOpacity(0);
+  }
+}
+if (document.getElementById("mouse-cursor-checkbox").checked) {
+  document.addEventListener('mousemove', mouseFollower);
+}
 
 var CAN_ADVANCE_SLIDESHOW = true;
 var goToNextSlide = function() {
@@ -489,6 +502,17 @@ var processSpeech = function(transcript) {
       siteControl_playVideo();
     }
 
+    if (userSaid(transcript.toLowerCase(), ["follow mouse"])) {
+      console.log("following mouse");
+      cursorSurface.setProperties({backgroundColor: Colors.BLUE});
+      mouseModifier.setOpacity(1);
+      mouseOn = true;
+    }
+    if (userSaid(transcript.toLowerCase(), ["unfollow mouse"])) {
+      console.log("unfollowing mouse");
+      mouseModifier.setOpacity(0);
+      mouseOn = false;
+    }
 
     if (userSaid(transcript.toLowerCase(), ["start"])) {
       console.log("start circle here");

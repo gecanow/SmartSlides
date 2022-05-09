@@ -3,6 +3,7 @@
 A new way to present.
 
 6.835 Spring 2022 Final Project
+
 {*gschein, gecanow, marlenag*}@mit.edu
 
 ## Getting Started

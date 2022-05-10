@@ -70,22 +70,22 @@ var goToPrevSlide = function() {
 // gesture commands: ["right-hand-circle", "left-hand-circle", "right-hand-swipe-right", "left-hand-swipe-left"];
 var doAction = function(action) {
 
-  // if (action == "next-slide") {
-  //   console.log("custom next slide")
-  //   goToNextSlide();
-  // } else if (action == "prev-slide") {
-  //   console.log("custom prev slide")
-  //   goToPrevSlide();
-  // } else if (action == "small-circle") {
-  //   console.log("custom small circle")
-  //   drawCircle(48, '#FF3333'); // red
-  // } else if (action == "medium-circle") {
-  //   console.log("custom medium circle")
-  //   drawCircle();
-  // } else if (action == "large-circle") {
-  //   console.log("custom large circle")
-  //   drawCircle(240, '#FF3333'); // red
-  // }
+  if (action == "next-slide") {
+    console.log("custom next slide")
+    goToNextSlide();
+  } else if (action == "prev-slide") {
+    console.log("custom prev slide")
+    goToPrevSlide();
+  } else if (action == "small-circle") {
+    console.log("custom small circle")
+    drawCircle(48, '#FF3333'); // red
+  } else if (action == "medium-circle") {
+    console.log("custom medium circle")
+    drawCircle();
+  } else if (action == "large-circle") {
+    console.log("custom large circle")
+    drawCircle(240, '#FF3333'); // red
+  }
 }
 
 // this does not work well because circle gesture recognition accuracy is low
@@ -178,7 +178,7 @@ Leap.loop({ hand: function(hand) {
                 if (handType == "right") {
                   // go to next slide
                   console.log("should be going to next slide");
-                  // goToNextSlide();
+                  goToNextSlide();
                 }
               } else {
                 swipeDirection = "left";
@@ -187,7 +187,7 @@ Leap.loop({ hand: function(hand) {
                 if (handType == "left") {
                   // go to previous slide
                   console.log("should be going to previous slide");
-                  // goToPrevSlide();
+                  goToPrevSlide();
                 }
               }
             } else { //vertical
@@ -195,13 +195,13 @@ Leap.loop({ hand: function(hand) {
                 swipeDirection = "up";
                 // console.log(`Found hand type: ${handType}`);
                 // if (handType == "right") {
-                //   // go to next slide
-                //   goToNextSlide();
+                  // go to next slide
+                  // goToNextSlide();
                 // } else {
-                //   // go to prev slide
-                // }
-              } else {
-                swipeDirection = "down";
+                  // go to prev slide
+              //   }
+              // } else {
+              //   swipeDirection = "down";
               }
             }
               // console.log(swipeDirection)
@@ -702,7 +702,7 @@ var processSpeech = function(transcript) {
         item.setOpacity(0);
       });
     }
-    
+
     function editTranscript(transcript) {
       for (let i = 0; i < transcript.length; i++) {
         var box = transcript.slice(i, i+3);

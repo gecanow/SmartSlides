@@ -667,7 +667,7 @@ var processSpeech = function(transcript) {
       yellowHighlightOn = false;
       pinkHighlightOn = false;
       orangeHighlightOn = false;
-      mouseOn = false;
+      // mouseOn = false;
       cursorSurface.setProperties({backgroundColor: Colors.RED});
       cursorModifier.setOpacity(1);
       laserOn = true;
@@ -696,6 +696,13 @@ var processSpeech = function(transcript) {
       addedElementModifiers[addedElementModifiers.length - 1].setOpacity(0);
     }
 
+    if (userSaid(transcript.toLowerCase(), ["clear"])) {
+      console.log("I heard you wanted to clear.");
+      addedElementModifiers.forEach(function (item, index) {
+        item.setOpacity(0);
+      });
+    }
+    
     function editTranscript(transcript) {
       for (let i = 0; i < transcript.length; i++) {
         var box = transcript.slice(i, i+3);
